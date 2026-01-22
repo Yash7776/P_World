@@ -5,6 +5,9 @@ class Admin_login(models.Model):
     username = models.CharField(max_length=150, null=True, blank=True)
     password = models.CharField(max_length=150, null=True, blank=True)
 
+    def __str__(self):
+        return self.username
+
 
 class User_Details(models.Model):
     id = models.AutoField(primary_key=True)
@@ -31,6 +34,9 @@ class User_Details(models.Model):
     is_profile_create = models.BooleanField(default = False)
     token = models.CharField(max_length=400, null=True, blank=True)
 
+    def __str__(self):
+        return self.name or self.user_name or f"User #{self.id}"
+
 
 class Set_Availability(models.Model):
     fk_doctor = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True)
@@ -38,6 +44,10 @@ class Set_Availability(models.Model):
     from_shift = models.TimeField(null=True, blank=True)
     to_shift = models.TimeField(null=True, blank=True)
     select_days = models.CharField(max_length=300, null=True, blank=True)
+
+    def __str__(self):
+        return self.add_shift
+    
 
 
 ## Note : Assume pet_type as service_type    
@@ -48,6 +58,9 @@ class User_service(models.Model):
     pet_type = models.CharField(max_length=100, null=True, blank=True)
     charges = models.CharField(max_length=30, null=True, blank=True)
     created_at = models.DateField(auto_now=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
 
 
 class New_Pet(models.Model):
@@ -63,6 +76,9 @@ class New_Pet(models.Model):
     pet_image = models.ImageField(upload_to='pet_image/', null=True, blank=True)
     created_datetime = models.DateTimeField(null=True, blank=True)
 
+    def __str__(self):
+        return self.pet_name
+
 
 class Add_Pet_Reminder(models.Model):
     fk_user = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True)
@@ -71,6 +87,9 @@ class Add_Pet_Reminder(models.Model):
     select_date = models.DateField(null=True, blank=True)
     select_time = models.TimeField(null=True, blank=True)
     reminder_status = models.BooleanField(default = True)
+
+    def __str__(self):
+        return self.reminder_name
 
 
 class DoctorsAppointment(models.Model):
@@ -94,6 +113,9 @@ class DoctorsAppointment(models.Model):
     review_status = models.BooleanField(default = False)
     time = models.TimeField(auto_now= True)
     date = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return self.id
     
 class UserLike(models.Model):
     fk_user_sender = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True,
@@ -102,6 +124,9 @@ class UserLike(models.Model):
                                          related_name='like_receiver')
     date = models.DateTimeField(null=True, blank=True)
     status = models.BooleanField(null=True, blank=True, default=False)
+
+    def __str__(self):
+        return self.id
 
 
 
@@ -113,18 +138,31 @@ class Notification(models.Model):
     receiver = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True, related_name='receiver')
     date = models.DateTimeField(blank=True, null=True)
 
+    def __str__(self):
+        return self.title
+
 class CountryMaster(models.Model):
     sortname = models.CharField(max_length=100, null=True, blank=True)
     name = models.CharField(max_length=100, null=True, blank=True)
     country_code = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
     
 class PetMaster(models.Model): 
     name = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
 
 
 
 class ItemCategoryMaster(models.Model):
     category_name = models.CharField(max_length = 200 , blank = True , null = True)
+    
+    def __str__(self):
+        return self.category_name
 
 class AdminProduct(models.Model):  # Products added from backend (Admin)
     ap_item_name = models.CharField(max_length=200, blank=True, null=True)
@@ -163,6 +201,9 @@ class StoreProduct(models.Model):
     pet_type = models.CharField(max_length = 100 , null = True , blank = True)
     available_status = models.BooleanField(default = False)
     item_description = models.TextField(blank = True , null = True)
+
+    def __str__(self):
+        return self.item_name
     
     
 class AddtoCart(models.Model):
@@ -176,6 +217,10 @@ class AddtoCart(models.Model):
     delivery_charge = models.FloatField(blank = True , null = True)
     taxes = models.FloatField(blank = True , null = True)
     total_amount = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return self.id
+    
     
 class OrdersTable(models.Model):
     order_no = models.CharField(max_length = 100 , blank = True , null = True)
@@ -212,6 +257,9 @@ class OrdersTable(models.Model):
     province = models.CharField(max_length=100,blank=True,null=True)
     city = models.CharField(max_length=100,blank=True,null=True)
     postalcode = models.CharField(max_length=100,blank=True,null=True)
+
+    def __str__(self):
+        return self.order_no
     
 class OrderItemTable(models.Model):
     fk_orders = models.ForeignKey(OrdersTable, on_delete=models.CASCADE, null=True, blank=True)
@@ -222,7 +270,10 @@ class OrderItemTable(models.Model):
     item_price = models.FloatField(blank = True , null = True)
     item_total_price = models.FloatField(blank = True , null = True)
     booking_time = models.TimeField(auto_now = True )
-    booking_date = models.DateField( auto_now = True) 
+    booking_date = models.DateField( auto_now = True)
+
+    def __str__(self):
+        return self.id 
     
    
 
@@ -238,14 +289,24 @@ class UserRatingReview(models.Model):
     created_datetime = models.DateTimeField(null=True, blank=True, auto_now = True)
     status = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.rating
+
 
 class CityMaster(models.Model):
     city = models.CharField(max_length=100,blank=True,null=True)
     state_id = models.IntegerField(blank= True,null=True)
+
+    def __str__(self):
+        return self.city or f"City #{self.id}"
    
 class ProvinceMaster(models.Model):
     name = models.CharField(max_length=100,blank=True,null=True)
     country_id = models.IntegerField(blank= True,null=True)
+
+    def __str__(self):
+        return self.name
+
     
 class deliveryAddress(models.Model):
     fk_users = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True)
@@ -259,6 +320,9 @@ class deliveryAddress(models.Model):
     province = models.CharField(max_length=100,blank=True,null=True)
     city = models.CharField(max_length=100,blank=True,null=True)
     postalcode = models.CharField(max_length=100,blank=True,null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class SupportTicket(models.Model):

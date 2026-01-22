@@ -74,14 +74,45 @@ class PetMasterAdmin(admin.ModelAdmin):
     list_display = ['id', 'category_name' ]
     
 
-@admin.register(AdminProduct)
-class AdminProductAdmin(admin.ModelAdmin):
-    list_display = ['id','ap_item_name','ap_item_price','ap_fk_category','ap_pet_type','ap_available_status',]
+@admin.register(MasterItem)
+class MasterItemAdmin(admin.ModelAdmin):
+    list_display = [
+        'item_name',           # was ap_item_name
+        'fk_category',         # was ap_fk_category
+        'pet_type',            # was ap_pet_type
+        'available_status',    # was ap_available_status
+        'created_at',
+        'updated_at',
+    ]
 
 @admin.register(StoreItem)
-class PetMasterAdmin(admin.ModelAdmin):
-    list_display = ['id', 'fk_vendor', 'fk_category','item_name' , 'item_price' ]
-    
+class PetMasterAdmin(admin.ModelAdmin):  # ← consider renaming class to StoreItemAdmin
+    list_display = [
+        'get_store_name',       # we'll define this
+        'get_master_item_name', # we'll define this
+        'item_price',
+        'get_category',         # optional
+        'get_pet_type',         # optional
+    ]
+    list_filter = ['fk_store', 'fk_master__fk_category']
+    search_fields = ['fk_master__item_name', 'fk_store__username']  # adjust according to User_Details fields
+
+    # Helper methods (these fix the "not a field" problem)
+    @admin.display(description='Store / Vendor')
+    def get_store_name(self, obj):
+        return obj.fk_store.username if obj.fk_store else '-'
+
+    @admin.display(description='Item Name')
+    def get_master_item_name(self, obj):
+        return obj.fk_master.item_name if obj.fk_master else '-'
+
+    @admin.display(description='Category')
+    def get_category(self, obj):
+        return obj.fk_master.fk_category if obj.fk_master and obj.fk_master.fk_category else '-'
+
+    @admin.display(description='Pet Type')
+    def get_pet_type(self, obj):
+        return obj.fk_master.pet_type if obj.fk_master else '-'
 
 @admin.register(AddtoCart)
 class AddtoCartAdmin(admin.ModelAdmin):

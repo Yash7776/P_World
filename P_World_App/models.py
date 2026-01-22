@@ -164,46 +164,22 @@ class ItemCategoryMaster(models.Model):
     def __str__(self):
         return self.category_name
 
-class AdminProduct(models.Model):  # Products added from backend (Admin)
-    ap_item_name = models.CharField(max_length=200, blank=True, null=True)
-    ap_item_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    ap_fk_category = models.ForeignKey(
-        ItemCategoryMaster,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='admin_products'
-    )
-    ap_item_image = models.ImageField(
-        upload_to='admin_product_image/',
-        null=True,
-        blank=True
-    )
-    ap_pet_type = models.CharField(
-        max_length=100, null=True, blank=True
-    )
-    ap_available_status = models.BooleanField(default=False)
-    ap_item_description = models.TextField(
-        blank=True, null=True
-    )
-    ap_created_at = models.DateTimeField(auto_now_add=True)
-    ap_updated_at = models.DateTimeField(auto_now=True)
+class MasterItem(models.Model):  # Products added from backend (Admin)
+    item_name = models.CharField(max_length=200, blank=True, null=True)
+    fk_category = models.ForeignKey(ItemCategoryMaster,on_delete=models.CASCADE,null=True,blank=True,related_name='admin_products')
+    item_image = models.ImageField(upload_to='admin_product_image/',null=True,blank=True)
+    pet_type = models.CharField(max_length=1000, null=True, blank=True)
+    available_status = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.ap_item_name
 
 class StoreItem(models.Model):
-    fk_vendor = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True)
-    fk_category = models.ForeignKey(ItemCategoryMaster , on_delete=models.CASCADE , null = True , blank = True)
-    item_name = models.CharField(max_length = 200 , blank = True , null = True)
+    fk_store = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True)
+    fk_master = models.ForeignKey(MasterItem, on_delete=models.CASCADE, null=True, blank=True)
     item_price = models.FloatField(blank = True , null = True, default=0)
-    item_image = models.ImageField(upload_to='item_image/', null=True, blank=True)
-    pet_type = models.CharField(max_length = 100 , null = True , blank = True)
-    available_status = models.BooleanField(default = False)
     item_description = models.TextField(blank = True , null = True)
 
-    def __str__(self):
-        return self.item_name
     
     
 class AddtoCart(models.Model):

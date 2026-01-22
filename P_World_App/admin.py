@@ -100,7 +100,7 @@ class PetMasterAdmin(admin.ModelAdmin):  # ← consider renaming class to StoreI
     # Helper methods (these fix the "not a field" problem)
     @admin.display(description='Store / Vendor')
     def get_store_name(self, obj):
-        return obj.fk_store.username if obj.fk_store else '-'
+        return obj.fk_store.user_name if obj.fk_store else '-'
 
     @admin.display(description='Item Name')
     def get_master_item_name(self, obj):

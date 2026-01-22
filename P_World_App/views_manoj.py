@@ -14,7 +14,7 @@ import random
 import calendar
 import h3
 from haversine import haversine
-
+from django.db.models import Count, Q
 
 
 def Cart_Count(request):
@@ -488,31 +488,53 @@ def Search_by_PetType_Item(request):
 
 #### product items page
 @cache_control(no_cache=True, must_revalidate=True, no_store=True) 
+
 def items(request):
-    items = StoreItem.objects.filter(available_status = True).order_by('-id')
-    total_count = items.count()
-    category = ItemCategoryMaster.objects.all()
-    
-    pet_type = PetMaster.objects.all()
-    for i in items:
-        rating_lst = list(map(lambda a: a.rating, UserRatingReview.objects.filter(fk_user_receiver__id=i.fk_vendor.id)))
-        count = UserRatingReview.objects.filter(fk_user_receiver__id=i.fk_vendor.id).count()
-        
-        if count != 0:
-            i.rating = sum(rating_lst) / count
-        else:
-            i.rating = 0.0  
-        print(i.rating)
-    rendered = render_to_string('render_to_string/r_t_s_product_category.html',{'item':(sorted(items, key=lambda x: x.rating ,reverse = True))})
-    category_count=0
-    for i in category:
-        i.item_count = StoreItem.objects.filter(fk_category__id = i.id).count()
-        category_count += StoreItem.objects.filter(fk_category__id = i.id).count()
-    print(category_count,"...............................count cate")
-    for i in pet_type:
-        i.item_count = StoreItem.objects.filter(pet_type = i.name).count()
-    return render(request, 'customer/product_category.html',{'item':rendered,'category':category,'pets':pet_type,'Item_count':Cart_Count(request),'total_count':total_count,'category_count':category_count})
-   
+    # Base queryset - only available items
+    queryset = MasterItem.objects.filter(available_status=True)
+
+    # ── Pet type filter preparation ───────────────────────────────────────
+    # Get distinct pet types + count of available items per pet type
+    pet_types = (
+        queryset
+        .exclude(pet_type__isnull=True)
+        .exclude(pet_type='')
+        .values('pet_type')
+        .annotate(item_count=Count('id'))
+        .order_by('pet_type')
+    )
+
+    total_count = queryset.count()
+
+    # ── Category filter preparation ───────────────────────────────────────
+    categories = (
+        ItemCategoryMaster.objects
+        .annotate(
+            item_count=Count(
+                'admin_products',  # using the related_name you defined
+                filter=Q(admin_products__available_status=True)
+            )
+        )
+        .filter(item_count__gt=0)          # optional: hide empty categories
+        .order_by('category_name')
+    )
+
+    category_count = categories.aggregate(total=Count('id'))['total'] or 0
+    # Alternatively: category_count = queryset.values('fk_category').distinct().count()
+
+    # ── Items to display (initially all) ──────────────────────────────────
+    items = queryset.select_related('fk_category').order_by('-created_at')  # or any ordering you prefer
+
+    context = {
+        'item': items,               # you'll loop over this in template
+        'pets': pet_types,           # list of dicts: {'pet_type': '...', 'item_count': N}
+        'total_count': total_count,
+        'category': categories,      # queryset of ItemCategoryMaster with .item_count
+        'category_count': category_count or total_count,
+    }
+
+    return render(request, 'customer/product_category.html', context)
+ 
 #### product details page
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def product_details(request, id):

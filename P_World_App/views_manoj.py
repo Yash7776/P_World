@@ -13,6 +13,8 @@ from datetime import datetime , date
 import random
 import calendar
 import h3
+from haversine import haversine
+
 
 
 def Cart_Count(request):
@@ -173,63 +175,102 @@ def Save_Edit_Pet(request):
         return JsonResponse({'status':'0','msg':'Something went wrong.'})
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def Show_all_services(request): 
-    vendor_type = ['Trainer','Sitter','Walker']
-    vendor_data = []  
-    todays_day = calendar.day_name[date.today().weekday()]  
-    rating_obj = UserRatingReview.objects.raw("select m.id, m.fk_user_receiver_id, avg(m.rating) as RatingAvg from P_World_App_userratingreview as m group by m.fk_user_receiver_id")   
-    rating = None
-    is_available = None
-    user_obj = None 
-    if request.session.get('customer_id') :
-        user_obj = User_Details.objects.get(id = request.session.get('customer_id') )
-    for v in vendor_type :
+def Show_all_services(request):
+    vendor_type = ['Trainer', 'Sitter', 'Walker']
+    vendor_data = []
+
+    todays_day = calendar.day_name[date.today().weekday()]
+
+    rating_obj = UserRatingReview.objects.raw(
+        """
+        SELECT id, fk_user_receiver_id, AVG(rating) AS RatingAvg
+        FROM P_World_App_userratingreview
+        GROUP BY fk_user_receiver_id
+        """
+    )
+
+    user_obj = None
+    customer_id = request.session.get('customer_id')
+    if customer_id:
+        user_obj = User_Details.objects.filter(id=customer_id).first()
+
+    for v in vendor_type:
         data_list = []
-        vendor_obj = User_Details.objects.filter(user_type = v) 
-        for i in vendor_obj: 
-            available_obj = Set_Availability.objects.filter(fk_doctor= i)  
-            if available_obj:
-                is_available = 0
-                for k in available_obj: 
-                    if todays_day  in k.select_days:
-                        is_available = 1
-                if is_available == 1 : 
-                    rating = 0
-                    for j in rating_obj: 
-                        if j.fk_user_receiver == i:
-                            rating = j.RatingAvg  
-                    distance = 0
-                    if user_obj and user_obj.latitude and i.latitude :
-                        coords_1 = (float(user_obj.latitude) , float(user_obj.longitude))
-                        coords_2 = (float(i.latitude) , float(i.longitude))
-                        distance = round(h3.point_dist(coords_1, coords_2, unit='km'),1)        
-                    data = {
-                        'id' : i.id,  
-                        'user_name' : i.user_name ,  
-                        'mobile_no' : i.mobile_no,  
-                        'country_code' : i.country_code,  
-                        'email' : i.email ,
-                        'name' : i.name,
-                        'about_me' : i.about_me , 
-                        'bussiness_name' : i.bussiness_name, 
-                        'bussiness_address' : i.bussiness_address, 
-                        'map_location' : i.map_location , 
-                        'latitude' : i.latitude  ,
-                        'longitude' : i.longitude , 
-                        'address' : i.address ,
-                        'profile_image' : i.profile_image,
-                        'rating': rating,
-                        "distance":distance,
-                    }
-                    data_list.append(data) 
-        data_list = sorted(data_list, key=lambda x: x['rating'], reverse=True) 
-        temp_data = {
-        "vendor_type" : v,
-        "data_list" : data_list,
-        }            
-        vendor_data.append(temp_data)            
-    string = render_to_string('render_to_string/r_t_s_show_all_vendors.html',{"vendor_data":vendor_data})  
-    return render(request,'customer/show_all_services.html',{'string':string, 'Item_count':Cart_Count(request)})
+        vendor_obj = User_Details.objects.filter(user_type=v)
+
+        for i in vendor_obj:
+
+            available_obj = Set_Availability.objects.filter(fk_doctor=i)
+            is_available = 0
+
+            for k in available_obj:
+                if todays_day in k.select_days:
+                    is_available = 1
+                    break
+
+            if is_available != 1:
+                continue
+
+            # ⭐ Rating
+            rating = 0
+            for j in rating_obj:
+                if j.fk_user_receiver_id == i.id:
+                    rating = j.RatingAvg or 0
+                    break
+
+            # 📍 Distance
+            distance = 0
+            if (
+                user_obj and
+                user_obj.latitude and user_obj.longitude and
+                i.latitude and i.longitude
+            ):
+                coords_1 = (float(user_obj.latitude), float(user_obj.longitude))
+                coords_2 = (float(i.latitude), float(i.longitude))
+                distance = round(haversine(coords_1, coords_2), 1)  # KM
+
+            data = {
+                'id': i.id,
+                'user_name': i.user_name,
+                'mobile_no': i.mobile_no,
+                'country_code': i.country_code,
+                'email': i.email,
+                'name': i.name,
+                'about_me': i.about_me,
+                'bussiness_name': i.bussiness_name,
+                'bussiness_address': i.bussiness_address,
+                'map_location': i.map_location,
+                'latitude': i.latitude,
+                'longitude': i.longitude,
+                'address': i.address,
+                'profile_image': i.profile_image,
+                'rating': rating,
+                'distance': distance,
+            }
+
+            data_list.append(data)
+
+        # 🔽 Sort vendors by rating
+        data_list = sorted(data_list, key=lambda x: x['rating'], reverse=True)
+
+        vendor_data.append({
+            "vendor_type": v,
+            "data_list": data_list,
+        })
+
+    string = render_to_string(
+        'render_to_string/r_t_s_show_all_vendors.html',
+        {"vendor_data": vendor_data}
+    )
+
+    return render(
+        request,
+        'customer/show_all_services.html',
+        {
+            'string': string,
+            'Item_count': Cart_Count(request)
+        }
+    )
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def Show_Appointments(request):
@@ -474,26 +515,49 @@ def items(request):
    
 #### product details page
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def product_details(request,id):
-    item_obj = StoreProduct.objects.filter(id = id)[0]
+def product_details(request, id):
+
+    item_obj = StoreProduct.objects.get(id=id)
+
     user_obj = None
     item_count = None
-    distance = None
-    if User_Details.objects.filter(id = request.session.get('customer_id')).exists() :
-        user_obj = User_Details.objects.get(id = request.session.get('customer_id')) 
-           
-        if AddtoCart.objects.filter(fk_user = user_obj , fk_item = item_obj).exists():
-            item_count = AddtoCart.objects.filter(fk_user = user_obj , fk_item = item_obj)[0]
-    
-    ratings_obj  = UserRatingReview.objects.filter(fk_order__fk_vendors__id = item_obj.fk_vendor.id)
     distance = 0
-    if user_obj and user_obj.latitude and item_obj.fk_vendor.latitude :
-        coords_1 = (float(user_obj.latitude) , float(user_obj.longitude))
-        coords_2 = (float(item_obj.fk_vendor.latitude) , float(item_obj.fk_vendor.longitude))
-        distance = round(h3.point_dist(coords_1, coords_2, unit='km'),1) 
-        
-    return render(request, 'customer/product_details.html',{"item_obj":item_obj,'ratings_obj':ratings_obj,'distance' : distance ,'item_count':item_count,'Item_count':Cart_Count(request)})   
- 
+
+    customer_id = request.session.get('customer_id')
+
+    if customer_id and User_Details.objects.filter(id=customer_id).exists():
+        user_obj = User_Details.objects.get(id=customer_id)
+
+        item_count = AddtoCart.objects.filter(
+            fk_user=user_obj,
+            fk_item=item_obj
+        ).first()
+
+    ratings_obj = UserRatingReview.objects.filter(
+        fk_order__fk_vendors__id=item_obj.fk_vendor.id
+    )
+
+    if (
+        user_obj and
+        user_obj.latitude and user_obj.longitude and
+        item_obj.fk_vendor.latitude and item_obj.fk_vendor.longitude
+    ):
+        coords_1 = (float(user_obj.latitude), float(user_obj.longitude))
+        coords_2 = (float(item_obj.fk_vendor.latitude), float(item_obj.fk_vendor.longitude))
+
+        distance = round(haversine(coords_1, coords_2), 1)  # KM
+
+    return render(
+        request,
+        'customer/product_details.html',
+        {
+            "item_obj": item_obj,
+            "ratings_obj": ratings_obj,
+            "distance": distance,
+            "item_count": item_count,
+            "Item_count": Cart_Count(request),
+        }
+    )
 
 @csrf_exempt
 def Item_AddtoCart(request):

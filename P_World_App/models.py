@@ -126,6 +126,33 @@ class PetMaster(models.Model):
 class ItemCategoryMaster(models.Model):
     category_name = models.CharField(max_length = 200 , blank = True , null = True)
 
+class AdminProduct(models.Model):  # Products added from backend (Admin)
+    ap_item_name = models.CharField(max_length=200, blank=True, null=True)
+    ap_item_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    ap_fk_category = models.ForeignKey(
+        ItemCategoryMaster,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='admin_products'
+    )
+    ap_item_image = models.ImageField(
+        upload_to='admin_product_image/',
+        null=True,
+        blank=True
+    )
+    ap_pet_type = models.CharField(
+        max_length=100, null=True, blank=True
+    )
+    ap_available_status = models.BooleanField(default=False)
+    ap_item_description = models.TextField(
+        blank=True, null=True
+    )
+    ap_created_at = models.DateTimeField(auto_now_add=True)
+    ap_updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.ap_item_name
 
 class StoreProduct(models.Model):
     fk_vendor = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True)

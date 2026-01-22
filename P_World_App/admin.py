@@ -74,7 +74,7 @@ class PetMasterAdmin(admin.ModelAdmin):
     list_display = ['id', 'category_name' ]
     
 
-@admin.register(ItemMaster)
+@admin.register(StoreProduct)
 class PetMasterAdmin(admin.ModelAdmin):
     list_display = ['id', 'fk_vendor', 'fk_category','item_name' , 'item_price' ]
     

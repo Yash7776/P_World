@@ -127,7 +127,7 @@ class ItemCategoryMaster(models.Model):
     category_name = models.CharField(max_length = 200 , blank = True , null = True)
 
 
-class ItemMaster(models.Model):
+class StoreProduct(models.Model):
     fk_vendor = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True)
     fk_category = models.ForeignKey(ItemCategoryMaster , on_delete=models.CASCADE , null = True , blank = True)
     item_name = models.CharField(max_length = 200 , blank = True , null = True)
@@ -140,7 +140,7 @@ class ItemMaster(models.Model):
     
 class AddtoCart(models.Model):
     fk_b = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True, related_name='fk_b')
-    fk_item = models.ForeignKey(ItemMaster, on_delete=models.CASCADE, null=True, blank=True)
+    fk_item = models.ForeignKey(StoreProduct, on_delete=models.CASCADE, null=True, blank=True)
     fk_vendor = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True , related_name='fk_vendor')
     fk_user = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True , related_name='fk_user')
     quantity = models.IntegerField(blank = True , null = True)
@@ -188,7 +188,7 @@ class OrdersTable(models.Model):
     
 class OrderItemTable(models.Model):
     fk_orders = models.ForeignKey(OrdersTable, on_delete=models.CASCADE, null=True, blank=True)
-    fk_item = models.ForeignKey(ItemMaster, on_delete=models.CASCADE, null=True, blank=True)
+    fk_item = models.ForeignKey(StoreProduct, on_delete=models.CASCADE, null=True, blank=True)
     fk_vendors = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True, related_name='fk_vendors')
     fk_busines = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True, related_name='fk_busines')
     item_quantity = models.IntegerField(blank = True , null = True)

@@ -1023,7 +1023,7 @@ def add_new_item(request):
             available = True
         else :
             available = False
-        ItemMaster.objects.create(fk_vendor=vendor_obj ,fk_category = category_obj, item_name = title,item_price=charges,item_image = item_image,pet_type = pet_type,item_description = description, available_status = available ) 
+        StoreProduct.objects.create(fk_vendor=vendor_obj ,fk_category = category_obj, item_name = title,item_price=charges,item_image = item_image,pet_type = pet_type,item_description = description, available_status = available ) 
         return JsonResponse({"status":1, "msg" : 'Item Added Successfully.'})
     else :         
         return JsonResponse({"status":0,"msg" : 'Something Went Wrong...'})    
@@ -1031,7 +1031,7 @@ def add_new_item(request):
 #show_vendors_item     
 def show_vendors_item(request):
     if request.session.get("user_type") == "Store" : 
-        item_obj = ItemMaster.objects.filter(fk_vendor__id = request.session.get("customer_id") ).order_by('-id') 
+        item_obj = StoreProduct.objects.filter(fk_vendor__id = request.session.get("customer_id") ).order_by('-id') 
         context = { 
         'item_obj' : item_obj,
         }
@@ -1082,7 +1082,7 @@ def store_dashboard(request):
 def delete_store_item(request):
     if request.method == "POST" :
         item_id = request.POST.get("id")
-        ItemMaster.objects.get(id=item_id).delete()   
+        StoreProduct.objects.get(id=item_id).delete()   
         return JsonResponse({"status":1,"msg" : 'Item Deleted Successfully..'})    
     else :
         return JsonResponse({"status":0,"msg" : 'Something Went Wrong...'})    
@@ -1092,7 +1092,7 @@ def edit_item(request, id):
     if request.session.get("user_type") == "Store" :
         pet_obj = PetMaster.objects.all().order_by("-id")
         item_category = ItemCategoryMaster.objects.all().order_by("-id")
-        item_obj = ItemMaster.objects.get(id = id ) 
+        item_obj = StoreProduct.objects.get(id = id ) 
         context = {
         'pet_obj':pet_obj,
         'item_category':item_category, 
@@ -1121,7 +1121,7 @@ def edit_store_item(request):
             available = True
         else :
             available = False 
-        item_obj = ItemMaster.objects.get(id=item_id)
+        item_obj = StoreProduct.objects.get(id=item_id)
         item_obj.fk_category = category_obj
         item_obj.item_name = title
         item_obj.item_price=charges

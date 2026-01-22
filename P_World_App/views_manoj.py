@@ -398,9 +398,9 @@ def Search_by_Category_Item(request):
             category_id = request.POST.get('category_id')
             items=None
             if category_id=="All":
-                items = ItemMaster.objects.filter(available_status = True)
+                items = StoreProduct.objects.filter(available_status = True)
             else:
-                items = ItemMaster.objects.filter(fk_category__id = category_id,available_status = True).order_by('-id')
+                items = StoreProduct.objects.filter(fk_category__id = category_id,available_status = True).order_by('-id')
             for i in items:
                 rating_lst = list(map(lambda a: a.rating, UserRatingReview.objects.filter(fk_user_receiver__id=i.fk_vendor.id)))
                 count = UserRatingReview.objects.filter(fk_user_receiver__id=i.fk_vendor.id).count()
@@ -424,9 +424,9 @@ def Search_by_PetType_Item(request):
         if request.method == 'POST':
             pet_type = request.POST.get('pet_type')
             if pet_type=='All':
-                items = ItemMaster.objects.filter(available_status = True)
+                items = StoreProduct.objects.filter(available_status = True)
             else:
-                items = ItemMaster.objects.filter(pet_type = pet_type,available_status = True).order_by('-id')
+                items = StoreProduct.objects.filter(pet_type = pet_type,available_status = True).order_by('-id')
             for i in items:
                 rating_lst = list(map(lambda a: a.rating, UserRatingReview.objects.filter(fk_user_receiver__id=i.fk_vendor.id)))
                 count = UserRatingReview.objects.filter(fk_user_receiver__id=i.fk_vendor.id).count()
@@ -448,7 +448,7 @@ def Search_by_PetType_Item(request):
 #### product items page
 @cache_control(no_cache=True, must_revalidate=True, no_store=True) 
 def items(request):
-    items = ItemMaster.objects.filter(available_status = True).order_by('-id')
+    items = StoreProduct.objects.filter(available_status = True).order_by('-id')
     total_count = items.count()
     category = ItemCategoryMaster.objects.all()
     
@@ -465,17 +465,17 @@ def items(request):
     rendered = render_to_string('render_to_string/r_t_s_product_category.html',{'item':(sorted(items, key=lambda x: x.rating ,reverse = True))})
     category_count=0
     for i in category:
-        i.item_count = ItemMaster.objects.filter(fk_category__id = i.id).count()
-        category_count += ItemMaster.objects.filter(fk_category__id = i.id).count()
+        i.item_count = StoreProduct.objects.filter(fk_category__id = i.id).count()
+        category_count += StoreProduct.objects.filter(fk_category__id = i.id).count()
     print(category_count,"...............................count cate")
     for i in pet_type:
-        i.item_count = ItemMaster.objects.filter(pet_type = i.name).count()
+        i.item_count = StoreProduct.objects.filter(pet_type = i.name).count()
     return render(request, 'customer/product_category.html',{'item':rendered,'category':category,'pets':pet_type,'Item_count':Cart_Count(request),'total_count':total_count,'category_count':category_count})
    
 #### product details page
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def product_details(request,id):
-    item_obj = ItemMaster.objects.filter(id = id)[0]
+    item_obj = StoreProduct.objects.filter(id = id)[0]
     user_obj = None
     item_count = None
     distance = None
@@ -502,7 +502,7 @@ def Item_AddtoCart(request):
             item_id = request.POST.get('item_id')
             quantity = request.POST.get('quantity')
             customer_id = request.POST.get('customer_id')
-            item_obj = ItemMaster.objects.filter(id = item_id)[0]
+            item_obj = StoreProduct.objects.filter(id = item_id)[0]
             user_obj = User_Details.objects.filter(id =customer_id)[0]
             vendor_obj = User_Details.objects.filter(id = item_obj.fk_vendor.id)[0]
             delivery_charges = 100
@@ -655,9 +655,9 @@ def Place_Order(request):
             quantity = 0 
             total_amount = 0 
             for i in cart : 
-                # item_obj = ItemMaster.objects.filter(id = i.fk_item.id)[0]
-                # vend_id = ItemMaster.objects.get(id = i.fk_item.id).id   
-                item_obj = ItemMaster.objects.get(id=i.fk_item.id)
+                # item_obj = StoreProduct.objects.filter(id = i.fk_item.id)[0]
+                # vend_id = StoreProduct.objects.get(id = i.fk_item.id).id   
+                item_obj = StoreProduct.objects.get(id=i.fk_item.id)
                 vend_id = item_obj.fk_vendor.id  # Get the vendor's user ID
                 item_total_price = i.quantity * i.item_price
                 OrderItemTable.objects.create(fk_orders = order_obj , fk_item = item_obj , fk_vendors_id = vend_id , item_quantity = i.quantity , item_price = i.item_price,item_total_price = item_total_price)

@@ -1855,7 +1855,7 @@ def order_history_api(request):
         for i in order_obj :  
             item_obj = OrderItemTable.objects.filter(fk_orders_id = i['id']).values()
             for j in item_obj :
-                obj = ItemMaster.objects.get(id = j['fk_item_id'])
+                obj = StoreProduct.objects.get(id = j['fk_item_id'])
                 j["item_name"] =  f"{obj.item_name}" 
                 j["item_image"] =  f"{obj.item_image}" 
             i["item_list"] = list(item_obj)
@@ -1870,7 +1870,7 @@ def order_history_api(request):
 @csrf_exempt  
 def get_item_list_api(request):
     try :
-        items = ItemMaster.objects.filter(available_status = True).values().order_by('-id')   
+        items = StoreProduct.objects.filter(available_status = True).values().order_by('-id')   
         for i in items:
             rating_lst = list(map(lambda a: a.rating, UserRatingReview.objects.filter(fk_user_receiver__id=i['fk_vendor_id'])))
             count = UserRatingReview.objects.filter(fk_user_receiver__id=i['fk_vendor_id']).count()
@@ -1900,7 +1900,7 @@ def show_cart_items_api(request):
         user_obj = User_Details.objects.get(id = user_id)  
         items = AddtoCart.objects.filter(fk_user = user_obj).values()
         for j in items :
-            obj = ItemMaster.objects.get(id = j['fk_item_id'])
+            obj = StoreProduct.objects.get(id = j['fk_item_id'])
             j["item_name"] =  obj.item_name
             j["item_image"] =  f"{obj.item_image}"
             j["item_price"] =  obj.item_price
@@ -1982,7 +1982,7 @@ def place_order_api(request):
             vendor = None
 
             for i in items:
-                item_obj = ItemMaster.objects.select_related('fk_vendor').get(
+                item_obj = StoreProduct.objects.select_related('fk_vendor').get(
                     id=i['item_id']
                 )
 
@@ -2020,7 +2020,7 @@ def place_order_api(request):
 
     except User_Details.DoesNotExist:
         return JsonResponse({'status': '0', 'msg': 'Invalid customer'})
-    except ItemMaster.DoesNotExist:
+    except StoreProduct.DoesNotExist:
         return JsonResponse({'status': '0', 'msg': 'Invalid item in cart'})
     except Exception:
         traceback.print_exc()
@@ -2209,7 +2209,7 @@ def store_orders_list_api(request):
         for i in accepted_orders_qs :  
             item_obj = OrderItemTable.objects.filter(fk_orders_id = i['id']).values()
             for j in item_obj :
-                obj = ItemMaster.objects.get(id = j['fk_item_id'])
+                obj = StoreProduct.objects.get(id = j['fk_item_id'])
                 j["item_name"] =  f"{obj.item_name}" 
                 j["item_image"] =  f"{obj.item_image}" 
             i["item_list"] = list(item_obj)
@@ -2219,7 +2219,7 @@ def store_orders_list_api(request):
         for i in received_orders_qs :  
             item_obj = OrderItemTable.objects.filter(fk_orders_id = i['id']).values()
             for j in item_obj :
-                obj = ItemMaster.objects.get(id = j['fk_item_id'])
+                obj = StoreProduct.objects.get(id = j['fk_item_id'])
                 j["item_name"] =  f"{obj.item_name}" 
                 j["item_image"] =  f"{obj.item_image}" 
             i["item_list"] = list(item_obj)
@@ -2266,7 +2266,7 @@ def store_past_orders_api(request):
         for i in orders_qs :  
             item_obj = OrderItemTable.objects.filter(fk_orders_id = i['id']).values()
             for j in item_obj :
-                obj = ItemMaster.objects.get(id = j['fk_item_id'])
+                obj = StoreProduct.objects.get(id = j['fk_item_id'])
                 j["item_name"] =  f"{obj.item_name}" 
                 j["item_image"] =  f"{obj.item_image}" 
             i["item_list"] = list(item_obj)
@@ -2314,7 +2314,7 @@ def store_add_item_api(request):
             available = False
 
         # ---------- CREATE ITEM ----------
-        obj = ItemMaster.objects.create(
+        obj = StoreProduct.objects.create(
             fk_vendor=vendor_obj,
             fk_category=category_obj,
             item_name=title,
@@ -2356,7 +2356,7 @@ def get_all_items_api(request):
         pet_type = data.get('pet_type')          # optional
         available = data.get('available')        # optional (true/false)
 
-        qs = ItemMaster.objects.all().order_by('-id')
+        qs = StoreProduct.objects.all().order_by('-id')
 
         # ---------- FILTERS ----------
         if vendor_id:
@@ -2422,7 +2422,7 @@ def store_update_item_api(request):
         available = data.get('available')
         item_image = data.get('item_image')   # base64 or empty
 
-        item_obj = ItemMaster.objects.get(id=item_id)
+        item_obj = StoreProduct.objects.get(id=item_id)
 
         # ---------- UPDATE FIELDS ----------
         if title:
@@ -2460,7 +2460,7 @@ def store_update_item_api(request):
             "item_id": item_obj.id
         })
 
-    except ItemMaster.DoesNotExist:
+    except StoreProduct.DoesNotExist:
         return Response({"status": '0', "msg": "Invalid item"})
     except ItemCategoryMaster.DoesNotExist:
         return Response({"status": '0', "msg": "Invalid category"})
@@ -2481,7 +2481,7 @@ def store_delete_item_api(request):
         data = request.data
         item_id = data['item_id']
 
-        item_obj = ItemMaster.objects.get(id=item_id)
+        item_obj = StoreProduct.objects.get(id=item_id)
         item_obj.delete()
 
         return Response({
@@ -2489,7 +2489,7 @@ def store_delete_item_api(request):
             "msg": "Item Deleted Successfully"
         })
 
-    except ItemMaster.DoesNotExist:
+    except StoreProduct.DoesNotExist:
         return Response({"status": '0', "msg": "Invalid item"})
     except:
         print(str(traceback.format_exc()))

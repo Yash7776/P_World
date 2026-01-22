@@ -544,9 +544,29 @@ def product_details(request, id):
         available_status=True
     )
 
+    # Get all StoreItem entries for this master item
+    store_items = StoreItem.objects.filter(
+        fk_master=item
+    ).select_related('fk_store')
+
+    # Optional: only active stores
+    # store_items = store_items.filter(fk_store__status=True)
+
+    stores_with_price = []
+    for si in store_items:
+        store = si.fk_store
+        if store and store.user_type == "Store":  # ← adjust this condition to match your actual value
+            stores_with_price.append({
+                'store': store,
+                'price': si.item_price,
+                'description': si.item_description or item.item_name,  # fallback
+                # 'distance': None,  # ← you can calculate later
+            })
+
     context = {
         'item_obj': item,
-        'distance': None,
+        'distance': None,               # placeholder for future
+        'store_list': stores_with_price,
     }
 
     return render(request, 'customer/product_details.html', context)

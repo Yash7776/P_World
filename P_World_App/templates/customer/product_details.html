@@ -79,6 +79,21 @@
         -webkit-appearance: none;
         margin: 0;
     }
+
+    .store-mini-card:hover {
+        border-color: #EE163B;
+        box-shadow: 0 4px 12px rgba(238, 22, 59, 0.12);
+        transform: translateY(-2px);
+        transition: all 0.18s ease;
+    }
+
+    .store-mini-card .card-body {
+        transition: background 0.2s;
+    }
+
+    .store-mini-card:hover .card-body {
+        background: #fffafbfc;
+    }
 </style>
 
 <!-- Start main-content -->
@@ -141,6 +156,79 @@
                 <div class="row">
                     <h3 class="text-center">Select Stores</h3>
                 </div>
+                            {% if store_list %}
+                <div class="row justify-content-center mt-4">
+                    <div class="col-md-8 col-lg-7">
+
+                        {% for entry in store_list %}
+                        <div class="card mb-3 shadow-sm store-mini-card"
+                            style="border-radius: 12px; overflow: hidden; border: 1px solid #e0e0e0;">
+
+                            <div class="card-body d-flex align-items-center p-3">
+
+                                <!-- Store image (optional) -->
+                                {% if entry.store.profile_image %}
+                                <div class="me-3 flex-shrink-0">
+                                    <img src="{{ entry.store.profile_image.url }}"
+                                        alt="{{ entry.store.bussiness_name|default:entry.store.name }}"
+                                        class="rounded-circle"
+                                        style="width: 60px; height: 60px; object-fit: cover; border: 2px solid #f0f0f0;">
+                                </div>
+                                {% else %}
+                                <div class="me-3 flex-shrink-0">
+                                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center"
+                                        style="width: 60px; height: 60px; font-size: 1.4rem; color: #aaa;">
+                                        🏪
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <!-- Main content -->
+                                <div class="flex-grow-1">
+                                    <h5 class="card-title mb-1" style="font-size: 1.15rem;">
+                                        {{ entry.store.bussiness_name|default:entry.store.name|default:"Unnamed Store" }}
+                                    </h5>
+
+                                    <div class="d-flex align-items-center mb-1" style="font-size: 0.95rem; color: #555;">
+                                        <small>
+                                            {{ entry.store.bussiness_address|truncatewords:8|default:entry.store.address|truncatewords:8|default:"—" }}
+                                        </small>
+                                    </div>
+
+                                    <!-- Price + Action -->
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <div>
+                                            <strong style="color: #EE163B; font-size: 1.3rem;">
+                                                ₹{{ entry.price|floatformat:2 }}
+                                            </strong>
+                                            {% if entry.price == 0 or not entry.price %}
+                                            <small class="text-muted">(Contact store)</small>
+                                            {% endif %}
+                                        </div>
+
+                                        <a href="#" class="btn btn-sm btn-danger px-3 py-1"
+                                        onclick="addToCart({{ item_obj.id }}, {{ entry.store.id }}); return false;">
+                                            Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-5 text-muted">
+                            <p>No stores are currently selling this product.</p>
+                            <small>Check back later or explore similar items.</small>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center py-5 text-muted">
+                    <p>No stores found for this item yet.</p>
+                </div>
+            {% endif %}
             </div>
         </div>
     </section>

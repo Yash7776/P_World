@@ -3261,8 +3261,6 @@ textarea {
 .product {
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
   position: relative;
   overflow: hidden;
 }

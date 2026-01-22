@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, Http404, JsonResponse, HttpResponse
@@ -538,48 +538,18 @@ def items(request):
 #### product details page
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def product_details(request, id):
-
-    item_obj = StoreItem.objects.get(id=id)
-
-    user_obj = None
-    item_count = None
-    distance = 0
-
-    customer_id = request.session.get('customer_id')
-
-    if customer_id and User_Details.objects.filter(id=customer_id).exists():
-        user_obj = User_Details.objects.get(id=customer_id)
-
-        item_count = AddtoCart.objects.filter(
-            fk_user=user_obj,
-            fk_item=item_obj
-        ).first()
-
-    ratings_obj = UserRatingReview.objects.filter(
-        fk_order__fk_vendors__id=item_obj.fk_vendor.id
+    item = get_object_or_404(
+        MasterItem.objects.select_related('fk_category'),
+        id=id,
+        available_status=True
     )
 
-    if (
-        user_obj and
-        user_obj.latitude and user_obj.longitude and
-        item_obj.fk_vendor.latitude and item_obj.fk_vendor.longitude
-    ):
-        coords_1 = (float(user_obj.latitude), float(user_obj.longitude))
-        coords_2 = (float(item_obj.fk_vendor.latitude), float(item_obj.fk_vendor.longitude))
+    context = {
+        'item_obj': item,
+        'distance': None,
+    }
 
-        distance = round(haversine(coords_1, coords_2), 1)  # KM
-
-    return render(
-        request,
-        'customer/product_details.html',
-        {
-            "item_obj": item_obj,
-            "ratings_obj": ratings_obj,
-            "distance": distance,
-            "item_count": item_count,
-            "Item_count": Cart_Count(request),
-        }
-    )
+    return render(request, 'customer/product_details.html', context)
 
 @csrf_exempt
 def Item_AddtoCart(request):

@@ -1,0 +1,121 @@
+{% load static %}
+{% include 'customer/header.html' %}
+<style>
+	.caption , .clear-rating {
+		display:none!important;
+	}
+	.rating-stars{
+		 font-size:20px;
+		 margin-top: -3rem;
+	}
+	.rating-disabled .rating-input, .rating-disabled .rating-stars{
+		cursor:pointer!important;
+	}
+	p{
+		color: #d5d5d5;
+		font-weight: bold;
+	}
+	.rating-container .filled-stars { 
+		color: #EE163B !important;
+		text-shadow:none;
+	}
+	 
+	.radio_background1 {
+		background-color: #d98888;
+	}
+
+	.btn-group>.btn1.active {
+		background-color: #f34444;
+	}
+
+	.btn-group-toggle {
+		min-width: 100%;
+	}
+	 
+	input[type="radio"]{
+		display: none;
+	}
+       section.h9-choose-area {
+    min-height: calc(100vh - 250px);
+}
+
+</style>
+	<section class="h9-choose-area">
+		<div class="container" style='width:85%;'>
+		    {% if data_list %}
+			<div class ="row" style="display:flex;">
+			    <div class="col-md-10 text-right">
+					<h4 style='margin-top: 2px;'>Filter By :</h4>  
+                </div>	
+                <div class="col-md-2" style='margin-left: -1rem;'>				
+					<div role="group" class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn1 radio_background1 active" id="rating" style="font-size: 15px;color:#424141;font-weight: 600;padding: 3px 10px;" onclick="filterData('rating')"> 
+						<input type="radio" name="filter_by"  autocomplete="off" value="rating" checked>Rating</label>
+						<label class="btn btn1 radio_background1" id="distance" style="font-size: 15px;color:#424141;font-weight: 600;padding: 3px 7px;" onclick="filterData('distance')">
+						<input type="radio" name="filter_by"  autocomplete="off" value="distance" > Distance</label>
+					</div>
+				</div>
+			</div>	  
+				<div class="row ">
+					<div class="col-xl-10 col-md-9"> 
+							<h2 class="title">{{vender_type}}s</h2> 
+					</div> 
+				</div> 
+				<div class="row" id="vendors_data">
+				 {{string}}
+				</div>
+			{% else %}
+			    <div class="row ">
+					<div class="col-xl-10 col-md-9"> 
+							<h2 class="title" style="margin-left:31rem;">{{vender_type}} Not Available</h2> 
+					</div> 
+				</div> 
+			{% endif %}
+		</div>
+	</section>
+	
+<script>
+	function filterData(type){
+	vendor_type = "{{vender_type}}"
+	is_login = '{{request.session.user_type}}'
+	if (is_login){
+	  $.ajax({
+	  method: "POST",
+	  url: "/filter_vendor_by/",
+	  data : {
+	  'filter_by' : type,
+	  "vendor_type": vendor_type,
+	  },
+	  success: function(response){
+	    if (response.status == 1){
+		$("#vendors_data").html(response.string);  
+		}
+	  }
+	 }); 
+	}
+	else {
+	 if(type=="distance"){
+	   swal({
+		 text : "Please Login First For this Filter.",
+		 icon : 'info',
+		 title: 'Information',
+		 buttons: ['Cancel','Ok'],
+		 closeOnClickOutside: false,
+	   }).then((addcat)=>{
+	        console.log( addcat) 
+			if(addcat){ 
+			  window.location.href = '/login/';  
+			}
+			else{
+			$("#rating").addClass("active");
+			$("#distance").removeClass("active")
+			}
+			
+		});
+	 }
+	}
+    
+	}
+</script> 
+	
+{% include 'customer/footer.html' %}

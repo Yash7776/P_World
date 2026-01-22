@@ -1,0 +1,162 @@
+ <html class="no-js " lang="en">
+{% load static %}
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
+
+    <title>P World</title>
+    <!-- Favicon-->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Custom Css -->
+    <link rel="stylesheet" href="{% static 'login_assets/assets/plugins/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'login_assets/assets/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'login_assets/assets/css/authentication.css' %}">
+    <link rel="stylesheet" href="{% static 'login_assets/assets/css/color_skins.css' %}">
+</head>
+
+<body class="theme-purple authentication sidebar-collapse">
+<!-- Navbar -->
+<!-- End Navbar -->
+<div class="page-header">
+    <div class="page-header-image" style="background-image:url({% static 'login_assets/assets/images/login.jpg'%})"></div>
+    <div class="container">
+        <div class="col-md-12 content-center">
+            <div class="card-plain">
+                <form class="form" method="" action="#">
+                    <div class="header">
+                        <h5>Log in</h5>
+                    </div>
+                    <div class="content">                                                
+                        <div class="input-group input-lg">
+                            <input type="text" id="username" class="form-control" placeholder="Enter User Name" style = "padding: 23px 18px;">
+                            <span class="input-group-addon">
+                                <i class="zmdi zmdi-account-circle"></i>
+                            </span>
+						
+						</div>
+						
+						<center><span style="display:none;color:red;font-size: 14px;" id ="username_error">Please Enter Username</span></center>
+						
+						
+                        <div class="input-group input-lg">
+                            <input type="password" id="password" placeholder="Password" class="form-control" style = "padding: 23px 18px;" />
+                            <span class="input-group-addon">
+                                <i class="zmdi zmdi-lock"></i>
+                            </span>
+                        
+						</div>
+						
+						<center><span style="display:none;color:red;font-size: 14px;" id ="pwd_error">Please Enter Password</span></center>
+						<center><span style="display:none;color:red;font-size: 14px;" id ="error">Invalid Credentials!</span></center>
+						
+						
+						
+						
+						
+                    </div>
+                    <div class=" text-center" style="padding:24px 0px;">
+                        <a onclick="login()" id = "save_button" type="button" class="btn btn-primary btn-round btn-lg btn-block ">Login</a>
+                        <!-- <h5><a href="forgot-password.html" class="link">Forgot Password?</a></h5> -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Jquery Core Js -->
+<script src="{% static 'login_assets/assets/bundles/libscripts.bundle.js' %}"></script>
+<script src="{% static 'login_assets/assets/bundles/vendorscripts.bundle.js' %}"></script> <!-- Lib Scripts Plugin Js -->
+
+<script>
+   $(".navbar-toggler").on('click',function() {
+    $("html").toggleClass("nav-open");
+});
+//=============================================================================
+$('.form-control').on("focus", function() {
+    $(this).parent('.input-group').addClass("input-group-focus");
+}).on("blur", function() {
+    $(this).parent(".input-group").removeClass("input-group-focus");
+});
+
+
+$(document).ready(function(){
+$(document).bind('keypress', function(e) {
+if(e.keyCode==13){
+	 $('#save_button').trigger('click');
+ }
+});
+})
+
+function login(){
+var username=$('#username').val()
+var password=$('#password').val()
+
+console.log(username)
+console.log(password)
+
+
+if (username==""){
+$('#username_error').show()
+$('#username').focus()
+}
+else if(password==""){
+$('#pwd_error').show()
+$('#password').focus()
+}
+else{
+$.ajax({
+			method : "POST",
+			url : "/login_check/",
+			data : {
+				'username':username,
+				'password':password,
+			
+			},
+			success : function(response){
+				console.log(response)
+				if (response == "success"){
+			
+					location.href = '/user_list/Doctor'
+					<!-- alert("success") -->
+				}
+				
+				else{
+				
+				$('#error').show();
+				
+				}
+				
+				
+			}
+		});
+}
+ 
+}
+
+$('#username').keyup(function(){
+	$('#username_error').hide();
+	$('#invalid_error').hide();
+	$('#error').hide();
+})
+
+$('#password').keyup(function(){
+	$('#pwd_error').hide();
+	$('#invalid_error').hide();
+	
+})
+
+$('#password').keyup(function(){
+	$('#pwd_error').hide();
+	$('#user_inactive_error').hide();
+	$('#error').hide();
+})
+
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+{% include "admin_panel/header.html" %}
+{% load static %}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card-box table-responsive">
+
+                <!-- Dynamic Title -->
+                <h4 class="header-title">{{ page_title }}</h4>
+
+                <table id="datatable"
+                       class="table table-striped table-bordered dt-responsive nowrap"
+                       style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for i in obj %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ i.name }}</td>
+                            <td>{{ i.email }}</td>
+                            <td>{{ i.mobile_no }}</td>
+                            <td>
+                                <a href="/user_detail/{{ i.id }}/"
+                                   class="btn btn-info btn-sm"
+                                   style="padding: 2px 6px;">
+                                    View
+                                </a>
+
+                                <button class="btn btn-danger btn-sm"
+                                        style="padding: 2px 6px;"
+                                        onclick="Del('{{ i.id }}')">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                No {{ user_type }} Found
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% include "admin_panel/footer.html" %}

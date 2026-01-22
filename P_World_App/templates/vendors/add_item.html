@@ -1,0 +1,418 @@
+{% load static %}
+{% include 'customer/header.html' %}
+<style>
+	/* Force dark background immediately */
+	body, html {
+		background-color: #1a1a1a !important;
+		color: #f7f7f7 !important;
+	}
+
+	.main-content {
+		background-color: #1a1a1a;
+		min-height: 100vh;
+		padding-bottom: 80px;
+	}
+
+	.card {
+		background-color: #2c2c2c !important;
+		border: 1px solid #5e5e5e;
+		color: #f7f7f7;
+		padding: 30px;
+		border-radius: 8px;
+		position: relative;
+	}
+
+	/* Headings */
+	h3 {
+		color: #f7f7f7 !important;
+		margin-bottom: 30px;
+		text-align: left;
+	}
+
+	/* Form inputs dark theme */
+	.form-control {
+		background-color: #3a3a3a !important;
+		border: 1px solid #5e5e5e !important;
+		color: #f7f7f7 !important;
+		padding: 12px;
+		font-size: 16px;
+		border-radius: 5px;
+	}
+
+	.form-control:focus {
+		background-color: #444444 !important;
+		border-color: #d9534f !important;
+		color: #f7f7f7 !important;
+		box-shadow: 0 0 0 0.2rem rgba(217, 83, 79, 0.25);
+		outline: none;
+	}
+
+	.form-control::placeholder {
+		color: #bbb6b6 !important;
+	}
+
+	/* Select dropdown options */
+	select.form-control option {
+		background: rgb(50 48 48);
+		color: #bbb6b6;
+	}
+
+	/* Error messages */
+	span[id^="errmsg"] {
+		color: #ff6b6b;
+		font-size: 14px;
+		display: block;
+		margin-top: 5px;
+		text-align: left;
+		position: relative;
+		margin-left: 0 !important;
+	}
+
+	/* Buttons */
+	.login-btn {
+		background-color: #d9534f;
+		border: none;
+		color: white;
+		padding: 12px 30px;
+		font-size: 16px;
+		font-weight: bold;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: background-color 0.3s;
+		width: 100%;
+	}
+
+	.login-btn:hover {
+		background-color: #c9302c;
+	}
+
+	/* Back button styling - circular */
+	.back-btn {
+		position: absolute;
+		top: 13px;
+		right: 0;
+		background-color: #d9534f;
+		border: none;
+		color: white;
+		width: 45px;
+		height: 45px;
+		border-radius: 50%;
+		cursor: pointer;
+		transition: background-color 0.3s;
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.back-btn:hover {
+		background-color: #c9302c;
+	}
+
+	.back-btn i {
+		font-size: 18px;
+	}
+
+	/* Form spacing */
+	.form-section {
+		margin-bottom: 20px;
+	}
+
+	/* Image upload area */
+	.attachment {
+		height: 12rem;
+		border: 2px dashed #5e5e5e;
+		width: 100%;
+		max-width: 14rem;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 187px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		margin: 0 auto 20px;
+		border-radius: 8px;
+		transition: border-color 0.3s;
+	}
+
+	.attachment:hover {
+		border-color: #d9534f;
+	}
+
+	.btn-file__actions__item--shadow {
+		text-align: center;
+		color: #bbb6b6;
+	}
+
+	.btn-file__actions__item--shadow i {
+		display: block;
+		margin-bottom: 10px;
+	}
+
+	/* Toggle styling */
+	.toggle.ios, .toggle-on.ios, .toggle-off.ios { 
+		border-radius: 20px; 
+	}
+	.toggle.ios .toggle-handle { 
+		border-radius: 20px; 
+	}
+
+	/* Sweet alert styling */
+	.swal-icon--success:after, .swal-icon--success:before {
+		background: #262626 !important;
+	}
+	.swal-icon--success__hide-corners {
+		background: #262626;
+	}
+
+	/* Availability section */
+	.availability-section {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 15px;
+		margin: 20px 0;
+	}
+
+	.availability-section h4 {
+		margin: 0;
+		font-size: 16px;
+		color: #f7f7f7;
+	}
+	select.form-control {
+		line-height: 1.2 !important;
+		padding-top: 10px !important;
+		padding-bottom: 10px !important;
+	}
+
+	select.form-control option {
+		background: rgb(50 48 48);
+		color: #bbb6b6;
+		padding: 8px 12px !important;
+		line-height: 1.5 !important;
+}
+
+	/* Responsive adjustments */
+	@media (max-width: 768px) {
+		.card {
+			padding: 25px 20px;
+		}
+		
+		.back-btn {
+			top: 0;
+			right: 0;
+			width: 40px;
+			height: 40px;
+		}
+		
+		.back-btn i {
+			font-size: 16px;
+		}
+
+		.attachment {
+			max-width: 100%;
+		}
+	}
+</style>
+
+<!-- Start main-content -->
+<div class="main-content">
+	<div class='container' style='margin-top: 1.5rem;'>
+		<div class='row'>
+			<div class='col-md-3'></div>
+			<div class='col-md-6' style="position: relative;"> 
+				<h3>Add Items</h3>
+				
+				<!-- Back Button - Circular -->
+				<button class="back-btn" onclick="window.history.back();" title="Go Back">
+					<i class="fa fa-arrow-left" aria-hidden="true"></i>
+				</button>
+				
+				<div class='card shadow'>
+					
+					<!-- Item Image Upload -->
+					<div class="form-section">
+						<label for="item_image" class="attachment" id='show_img'> 
+							<div class="btn-file__actions__item--shadow" id="lbl">
+								<i class="fa fa-plus fa-lg fa-fw" aria-hidden="true"></i>
+								<div class="visible-xs-block"></div>
+								Select Item Image
+							</div> 
+							<input name="file" type="file" id="item_image" onchange="onFileSelected(event)" style='display:none' accept="image/jpg, image/jpeg, image/png">
+						</label>
+						<span id="errmsg1"></span>
+					</div>
+					
+					<!-- Title -->
+					<div class="form-section">
+						<input type="text" class="form-control" id="title" maxlength="50" name="title" placeholder="Enter Title*">
+						<span id="errmsg2"></span>
+					</div>
+					
+					<!-- Item Category -->
+					<div class="form-section">
+						<select class="form-control" placeholder="Item Type*" id="item_type" name="item_type">
+							<option selected style='background:rgb(50 48 48);color:#bbb6b6;' value=''>Select Item Category*</option>
+							{% for obj in item_category %}
+							<option value="{{obj.id}}" style='background:rgb(50 48 48);color:#bbb6b6;'>{{obj.category_name}}</option>  
+							{% endfor %}
+						</select>
+						<span id="errmsg3"></span>
+					</div>
+					
+					<!-- Pet Type -->
+					<div class="form-section">
+						<select class="form-control" placeholder="Pet Type*" id="pet_type" name="pet_type">
+							<option selected style='background:rgb(50 48 48);color:#bbb6b6;' value=''>Pet Type*</option>
+							{% for obj in pet_obj %}
+							<option value="{{obj.name}}" style='background:rgb(50 48 48);color:#bbb6b6;'>{{obj.name}}</option>  
+							{% endfor %}
+						</select>
+						<span id="errmsg4"></span>
+					</div>
+					
+					<!-- Description -->
+					<div class="form-section">
+						<textarea class="form-control" id="description" rows="3" cols="10" maxlength="200" name="Description" placeholder="Enter Description*"></textarea>
+						<span id="errmsg5"></span>
+					</div>
+					
+					<!-- Charges -->
+					<div class="form-section">
+						<input type="text" class="form-control" id="charges" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="charges" placeholder="Enter Charges*" maxlength='7'>
+						<span id="errmsg6"></span>
+					</div>
+					
+					<!-- Availability Toggle -->
+					<div class="availability-section">
+						<h4 for='available'>Is Available</h4>
+						<input type="checkbox" checked data-toggle="toggle" name="available" data-size="mini" data-style="ios" id="available" data-onstyle="success" data-offstyle="danger">
+					</div>
+					
+					<!-- Add Button -->
+					<button class="login-btn nextBtn btn-danger btn-lg" onclick="save()">Add</button>
+				</div> 
+			</div>
+			<div class='col-md-3'></div>
+		</div> 
+	</div>
+</div>
+<!-- end main-content -->
+
+<script>
+	$('#title').keyup(function(){
+		$('#errmsg2').html(""); 
+	});
+	
+	$('#description').keyup(function(){
+		$('#errmsg5').html(""); 
+	});
+	
+	$('#pet_type').mouseup(function(){
+		$('#errmsg4').html(""); 
+	});
+	
+	$('#item_type').mouseup(function(){
+		$('#errmsg3').html(""); 
+	});
+	
+	$('#charges').keyup(function(){
+		$('#errmsg6').html(""); 
+	});
+	
+	function save(){
+		var item_image = $("#item_image").val();
+		var title = $("#title").val();
+		var item_type = $("#item_type").val();
+		var pet_type = $("#pet_type").val();  
+		var description = $("#description").val();
+		var charges = $("#charges").val();    
+		var available = $('#available').is(":checked");
+		
+		var form = $("#form_data")[0];
+		var data_item = new FormData(form);
+		
+		if (item_image == ''){
+			$('#errmsg1').html('Select Item Image');
+			$('#errmsg1').show();
+		}
+		else if (title == ''){
+			$('#errmsg2').html('Enter Item Title');
+			$('#errmsg2').show();
+		}
+		else if (item_type == ''){
+			$('#errmsg3').html('Select Item Category');
+			$('#errmsg3').show();
+		}
+		else if (pet_type == ''){
+			$('#errmsg4').html('Select Pet Type');
+			$('#errmsg4').show();
+		}
+		else if (description == ''){
+			$('#errmsg5').html('Enter Description of item');
+			$('#errmsg5').show();
+		}
+		else if (charges == ''){
+			$('#errmsg6').html('Enter item charges');
+			$('#errmsg6').show();
+		}
+		else { 
+			data_item.append("item_image", document.getElementById("item_image").files[0]);
+			data_item.append("title", title);
+			data_item.append("item_type", item_type);
+			data_item.append("pet_type", pet_type);
+			data_item.append("description", description);
+			data_item.append("charges", charges); 
+			data_item.append("available", available); 
+			data_item.append("fk_vendor", '{{request.session.customer_id}}');
+			
+			$.ajax({
+				method: "POST",
+				url: "/add_new_item/",
+				enctype: "mutipart/form_data",
+				processData: false,
+				contentType: false,
+				cache: false,
+				data: data_item,
+				success: function(response){
+					if(response.status == 1){
+						swal({
+							text: response.msg,
+							icon: 'success',
+							title: 'Success',
+							button: "OK",
+							closeOnClickOutside: false,
+						}).then((addcat) => {
+							window.location.href = "/show_vendors_item/";  
+						});
+					}
+					else {
+						swal({
+							title: "Error",
+							text: response.msg,
+							icon: 'error',
+							button: 'OK',
+							closeOnClickOutside: false,
+						});
+					}
+				}  
+			});
+		}
+	} 
+	
+	function onFileSelected(event) {
+		$('#errmsg1').hide();
+		var selectedFile = event.target.files[0];
+		var reader = new FileReader(); 
+		var imgtag = document.getElementById("show_img");
+		imgtag.title = selectedFile.name; 
+		reader.onload = function(event) { 
+			$('#show_img').css('background-image', 'url(' + event.target.result + ')');
+			$("#lbl").html("");
+		}; 
+		reader.readAsDataURL(selectedFile); 
+	}
+</script>
+
+{% include 'customer/footer.html' %}

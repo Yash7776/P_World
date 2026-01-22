@@ -1,0 +1,622 @@
+{% load static %}
+{% include 'customer/header.html' %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.2/css/star-rating.min.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.2/js/star-rating.min.js"></script>
+	
+
+  <style>
+.caption , .clear-rating {
+  display:none!important;
+}
+.rating-stars{
+ font-size:20px;
+ margin-top: -3rem;
+}
+.rating-disabled .rating-input, .rating-disabled .rating-stars{
+  cursor:pointer!important; 
+}
+p{
+color: #d5d5d5; 
+}
+.rating-container .filled-stars { 
+    color: #EE163B !important;
+    text-shadow:none;
+	}
+.rating-container {
+	height: 2rem;
+	width: 8rem;
+	}
+ .set_services{
+    margin-bottom: 0;
+    margin-top: 7px;
+ }
+ 
+  #show_img{
+    background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+  }
+	div.mm-dropdown {
+  border: 1px solid #ddd;
+  width: 100%;
+  border-radius: 3px;
+}
+
+div.mm-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+div.mm-dropdown ul li,
+div.mm-dropdown div.textfirst {
+  padding: 0;
+  color: #c1c1c1;
+  border-bottom: 1px solid #ddd;
+  padding: 5px 15px;
+}
+
+div.mm-dropdown div.textfirst img.down {
+  float: right;
+  margin-top: 5px
+}
+
+div.mm-dropdown ul li:last-child {
+  border-bottom: 0;
+}
+
+div.mm-dropdown ul li {
+  display: none;
+  padding-left: 25px;
+}
+
+div.mm-dropdown ul li.main {
+  display: block;
+}
+
+div.mm-dropdown ul li img {
+  width: 20px;
+  height: 20px;
+}
+::-webkit-calendar-picker-indicator {
+    filter: invert(6);
+	
+}
+.short-description .desc-row {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.short-description .desc-label {
+    font-weight: bold;
+    min-width: 80px; /* adjust as needed */
+}
+
+.short-description .desc-value {
+    flex: 1;
+}
+
+</style>
+  <!-- Start main-content -->
+  <div class="main-content">
+    <!-- Section: inner-header -->
+    <section class="inner-header  layer-overlay overlay-dark-5" style='height:6.5rem;' >
+      <div class="container">
+        <!-- Section Content -->
+        <!-- <div class="section-content"> -->
+        <div class="row"> 
+  <div class="col-md-12" style="display: flex; justify-content: space-between; align-items: center;">
+    <h4 class="title text-white" style='margin-top:-2rem; font-size: 1.3rem;'>Services Details</h4>
+    <button class="login-btn nextBtn btn-danger btn-sm" onclick="window.history.back()" data-toggle="tooltip" data-placement="top" title="Back"><i class="fa fa-arrow-left" aria-hidden="true" style="cursor:pointer;"></i></button>
+  </div>
+</div>
+        <!-- </div> -->
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-content">
+          <div class="row">
+            <div class="product">
+              <div class="col-md-5">
+               <div class="class-item1">
+                  <div class="thumb">  
+                    <img class="img-responsive img-fullwidth mb-20" {% if user_obj.profile_image %} src="{{user_obj.profile_image.url}}" {% else %} src="/media/profile_image/no_image.jpg " {% endif %} alt="..." style='height:20rem;'> 
+                  </div>
+              </div>
+              </div>
+              <div class="col-md-7">
+                <div class="product-summary">
+                  <h2 class="product-title"style='margin-bottom:0;'>{{user_obj.name}}</h2>
+				  <h4 style='margin-top:0;margin-bottom:3px;'>{{user_obj.bussiness_name|default:""}}</h4>
+                  <div class="product_review" style='margin-left: -4px;'> 
+                    <input id="input-1" name="input-1" class="rating rating-loading " data-min="0" data-max="5" data-step="0.1" value="{{rating}}" disabled style="display: none;">  
+                  </div>
+				  </br>
+				  <p><i class="fa fa-map-marker" style='color: #df314f !important;' aria-hidden="true"></i> 2.5 Km away</p>
+						<div class="availability-row" style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.5rem;">
+					<span class="availability-label" style="font-weight:bold; margin-right: 0.5rem;">Today's Availability :</span>
+
+					{% if available_obj %}
+						{% for i in available_obj %}
+							<p style="margin:0; display:inline-flex; align-items:center; margin-right:1rem;">
+								<i class="fa fa-clock-o" style="color: #df314f !important; margin-right:0.25rem;" aria-hidden="true"></i>
+								Shift - {{ forloop.counter }}
+								<i class="fa fa-arrow-right" style="color: #df314f !important; margin:0 0.25rem;" aria-hidden="true"></i>
+								{{ i.from_shift|time:" g:i A"|upper }} - {{ i.to_shift|time:" g:i A"|upper }}
+							</p>
+						{% endfor %}
+					{% else %}
+						<p style="font-weight:bold; margin:0; color:#f71818;">Not Available</p>
+					{% endif %}
+				</div>
+				  </br>
+                  <!-- <div class="price"> <del><span class="amount">$40.00</span></del> <ins><span class="amount">$30.00</span></ins> </div> -->
+                  <!-- <div class="short-description">
+                    <h4 style='font-weight:bold;'>About </h4>
+					 <p>{% if user_obj.about_me %} {{user_obj.about_me}} {% endif %}</p>
+					 <h4 style='font-weight:bold;'>Location </h4> 
+					 <p>{% if user_obj.map_location %} {{user_obj.map_location}} {% else %} {{user_obj.address}} {% endif %}</p>
+                  </div> -->
+                   <div class="short-description">
+						<div class="desc-row">
+							<span class="desc-label">About:</span>
+							<span class="desc-value">
+								{% if user_obj.about_me %}
+									{{ user_obj.about_me }}
+								{% else %}
+									Not specified
+								{% endif %}
+							</span>
+						</div>
+
+						<div class="desc-row">
+							<span class="desc-label">Location:</span>
+							<span class="desc-value">
+								{% if user_obj.map_location %}
+									{{ user_obj.map_location }}
+								{% elif user_obj.address %}
+									{{ user_obj.address }}
+								{% else %}
+									--
+								{% endif %}
+							</span>
+						</div>
+
+					</div>
+                  <div class="cart-form-wrapper mt-30">
+					{% if available_obj %}
+                      <button class=" btn btn-danger" onclick='booking()' {% if not service_obj %} disabled {% endif %} >Book Service</button>
+					{% else %}
+						<button class=" btn btn-danger" onclick='booking()' {% if not service_obj %} disabled {% endif %} disabled>Book Service</button>
+					{% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="horizontal-tab product-tab">
+                  <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab1" data-toggle="tab">Services</a></li> 
+                    <li><a href="#tab2" data-toggle="tab">Reviews</a></li>
+                  </ul>
+                  <div class="tab-content" style='height: auto;'>
+                    <div class="tab-pane fade in active" id="tab1">
+					{% if service_obj %}
+                      <h3 style='margin-top: 0;'>All Services</h3>
+					  <div style='width:97%;margin-left:1rem;'>
+						  {% for i in service_obj %}
+							 <div class='row' style='border-bottom: 1px solid #4a4a4a;' >
+								<div class='col-sm-3'>
+								 <p class='set_services' style='font-weight:bold;'>{{i.title|title}}</p>
+								</div>
+								 <div class='col-sm-1'    >  
+									<p class='set_services'>{{i.pet_type}}</p> 
+								 </div>
+								 <div class='col-sm-6'  > 
+									<p class='set_services'>{{i.description}}</p>  
+								 </div>
+								 <div class='col-sm-1'  > 
+									<h5 style='margin-bottom:0;' >$ {{i.charges|floatformat:2}}</h5>  
+								 </div>
+								 <div class='col-sm-1' style='margin-top: 7px;'> 
+									<input type='checkbox' name='services' value='{{i.id}},{{i.title}},{{i.charges}}' style='width:15px;height:15px;'>  
+								 </div> 
+							  </div>    
+						  {% endfor %} 
+					  </div>
+					{% else %}
+					<h3 style='margin-top: 0;'>Not Available</h3>
+                    {% endif %}					  
+                    </div>
+                    
+                    <div class="tab-pane fade" id="tab2">
+					{% if ratings_obj %}
+                      <div class="reviews" style='width:90%;margin-left:5rem;max-height:23rem; overflow-y: auto;'> 
+                        <ol class="commentlist">
+						{% for i in ratings_obj %}
+                          <li class="comment">
+                            <div class="media "> 
+								<div class='row'>
+									<div class='col-sm-1 ' style='padding-right: 0;width: 4rem;' >
+									 <img class="thumb img-circle media-object float-right" alt="" {% if i.fk_user_sender.profile_image %} src="{{i.fk_user_sender.profile_image.url}}" {% else %} src="/media/profile_image/no_image.jpg " {% endif %} width="35"> 
+									  
+									</div>
+									 <div class='col-sm-6' style='padding-left: 0;'  >  
+										<h5 class="media-heading meta mt-10" ><span class="author">{{i.fk_user_sender.name}}</span> – {{i.created_datetime }} :</h5> 
+									 </div>
+									 <div class='col-sm-2' style='margin-left:17rem;'> 
+										<input id="input-1" name="input-1" class="rating rating-loading rating-sm" data-min="0" data-max="5" data-step="0.1" value="{{i.rating}}" style='font-size:10px!important; display: none;' disabled  >  
+									 </div>
+									 
+								</div>    
+                                <p style='margin-left:3rem;'>{% if i.comment %} {{i.comment}} {% else %} No Reviews {% endif %}</p>
+							</div>
+                             
+                          </li>
+						{% endfor %} 
+                        </ol>
+					 </div>
+						{% else %}
+					  <h3 style='margin-top: 0;'>Not Available</h3>
+                    {% endif %}	 
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+		  
+		  
+		  <div class="modal  fade mt-3" id="bookingModal" role="dialog" data-keyboard="false" data-backdrop="static" style="margin-top:5%;">
+				<div class="modal-dialog">
+					  
+					<div class="modal-content">
+						<div class="modal-header"  >
+						   <h4 class="modal-title" >BOOK SERVICE</h4>
+						  <!-- <button type="button" class="close"  style="color: #fff;" data-dismiss="modal" onclick="clear_data1()">&times;</button> -->
+
+						</div>
+						<div class="modal-body">
+						    <div class="mm-dropdown" >
+								<div class="textfirst" style="background: rgba(0, 0, 0, 0.2); color: #afacac;">
+								<!-- <img src="" width="10" height="10" class="down" /> -->
+								    Select Pet*<img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-arrow-down-b-128.png" width="10" height="10" class="down" />
+									<!-- <span><li class="input-option" data-value="{{first_value.id}}" onclick="myFunction('{{first_value.id}}')">  -->
+										<!-- <div class="row"> -->
+											<!-- <div class="col-sm-2"> -->
+											  <!-- <img src="{{first_value.pet_image.url}}" alt="" width="60" height="40" style="height:50px; width:60px;"/>  -->
+											<!-- </div> -->
+											<!-- <div class="col-sm-2"> -->
+												<!-- <h5 style="text-align:left; color:red;margin-bottom:0;margin-top:0">{{first_value.pet_name}}</h5> -->
+												<!-- <h5 style="text-align:left;margin-bottom:0;margin-top:5px;">{{first_value.type_of_pet}}</h5> -->
+											<!-- </div> -->
+												<!-- <div class="col-sm-8"> -->
+													<!-- <div class="row"> -->
+														<!-- <div class="col-sm-5"> -->
+															<!-- <div class="badge badge-secondary mr-5" style='width: 100%;'> -->
+																<!-- <p style='color:#fff;margin-top:5px;margin-bottom: 5px;'>Age</p>  -->
+																<!-- <p style="margin-bottom:5px">{{new_age}}</p> -->
+															<!-- </div> -->
+														<!-- </div> -->
+														<!-- <div class="col-sm-3 badge badge-secondary mr-10">  -->
+																<!-- <p style='color:#fff;margin-top:5px;margin-bottom: 5px;'>Gender</p>  -->
+																<!-- <p style="margin-bottom:5px">{{first_value.gender}}</p>  -->
+														<!-- </div> -->
+														<!-- <div class="col-sm-3 badge badge-secondary mr-5 ml-5">  -->
+																<!-- <p style='color:#fff;margin-top:5px;margin-bottom: 5px;'>Weight</p>  -->
+																<!-- <p style="margin-bottom:5px">{{first_value.weight}}Kg</p>  -->
+														<!-- </div>  -->
+													<!-- </div>   -->
+												<!-- </div>   -->
+										<!-- </div>  -->
+									<!-- </li></span> -->
+									</div>
+									<ul style="max-height:212px;overflow-y: scroll;" >
+										{% for i in pet_obj %}
+										
+										<li class="input-option" data-value="{{i.id}}" onclick="myFunction('{{i.id}}')"> 
+											<div class="row">
+												<div class="col-sm-2">
+												  <img src="{{i.pet_image.url}}" alt="" width="60" height="40" style="height:50px; width:60px;"/> 
+												</div>
+												<div class="col-sm-2">
+													<h5 style="text-align:left; color:red;margin-bottom:0;margin-top:0">{{i.pet_name}}</h5>
+													<h5 style="text-align:left;margin-bottom:0;margin-top:5px;">{{i.type_of_pet}}</h5>
+											    </div>
+													<div class="col-sm-8">
+														<div class="row">
+														    <div class="col-sm-5">
+																<div class="badge badge-secondary mr-5" style='width: 100%;'>
+																	<p style='color:#fff;margin-top:5px;margin-bottom: 5px;'>Age</p> 
+																	<p style="margin-bottom:5px">{{i.age}}</p>
+																</div>
+															</div>
+														    <div class="col-sm-3 badge badge-secondary mr-10"> 
+																	<p style='color:#fff;margin-top:5px;margin-bottom: 5px;'>Gender</p> 
+																	<p style="margin-bottom:5px">{{i.gender}}</p> 
+															</div>
+															<div class="col-sm-3 badge badge-secondary mr-5 ml-5"> 
+																	<p style='color:#fff;margin-top:5px;margin-bottom: 5px;'>Weight</p> 
+																	<p style="margin-bottom:5px">{{i.weight}}Kg</p> 
+															</div> 
+														</div>  
+													</div>  
+											</div> 
+										</li>
+										{% endfor %}
+									</ul>
+									<input type="hidden" class="option" name="namesubmit" value="" />
+									<input type="hidden" class="option" id="pet_id" value="" />
+								</div> 
+								
+						    <span id="errmsg1" style="color:#ff4747ad; font-weight: bold; "></span><br> 
+						    <div class='row'>
+							 <div class='col-sm-6'>
+							  <h4>Select Date <span style='color:#e11f1f'>*</span> :</h4><br> 
+							  <h4>Select Time <span style='color:#e11f1f'>*</span> :</h4>
+							 </div>
+							  <div class='col-sm-6'>
+								<input type="date" class="form-control" id="date" name="date" maxlength='50' placeholder="Select Date*" min="{% now 'Y-m-d' %}" >
+								<span id="errmsg2" style="color:#ff4747ad; font-weight: bold; "></span><br> 
+								
+								<input type="time" class="form-control" id="time" name="time" maxlength='50' placeholder="Select Time*" min="12:00">
+								<span id="errmsg3" style="color:#ff4747ad; font-weight: bold; "></span><br> 
+						    </div>
+						    </div>
+							<div class='mr-10'>
+								<div class='row'>
+									<div class='col-sm-6'>
+									<h4 style='margin-top: 0;'>Services </h4> 
+									</div>
+									<div class='col-sm-6'>
+									<h4 class='text-right' style='margin-top: 0;'>Amount </h4> 
+									</div> 
+								</div> 
+								<div id = 'service_data'></div>
+								<div style='border:1px solid #3c3c3c;' ></div>
+								<div class='row'>
+									<div class='col-sm-6'>
+									<h4 style='margin-top: 0;'>Total Amount   </h4> 	
+									</div>
+									<div class='col-sm-6'>
+									<h4 class='text-right' style='margin-top: 0;' > $ <span id= 'total_amount'></span>   </h4> 
+									</div> 
+								</div> 
+							</div>
+							<input type='hidden' id='services_id'>
+							<input type='hidden' id='services_title'>
+						</div>
+						<div class="modal-footer" >
+						  <button type="button" class="btn view-btn-style btn-danger"   onclick="book_service()" >Submit</button>
+						  <button type="button" class="btn view-btn-style btn-default"  data-dismiss="modal" onclick="close_modal()">Close</button>
+						</div>
+					</div>
+			 
+				</div>
+			</div>
+		  
+		  
+		  
+        </div>
+      </div>
+    </section>
+  </div>
+  <!-- end main-content -->
+ <script>
+ 
+    function booking(){
+	   var email = '{{request.session.customer_email}}'
+	   var c_id = '{{request.session.customer_id}}'
+	   var user_type = '{{request.session.user_type}}'
+	   
+		    if(email && c_id && user_type == 'Customer'){
+				var services_data = [];
+				let services_id = [];
+				let services_title = [];
+				$("input[name='services']:checked").each(function () 
+				{
+					var temp_data = $(this).val();
+					var data = {}
+					s_id = parseInt(temp_data.split(",")[0]) 
+					service = temp_data.split(",")[1] 
+					amount = parseFloat(temp_data.split(",")[2]).toFixed(2) 
+					data = {
+					's_id':s_id,
+					'service':service,
+					'amount':amount,
+					} 
+					services_data.push(data);
+					services_id.push(s_id);
+					services_title.push(service);
+				});
+				if(services_data == ''){
+				  swal({
+					 text : "You Have To Add services First.",
+					 icon : 'info',
+					 title: 'Information',
+					 button: "OK",
+					 closeOnClickOutside: false,
+				   });
+			    }
+			    else{ 
+					console.log(services_data)
+					console.log(services_data.length)
+					var string = ''; 
+					var total_amount = 0;
+					for (let i = 0; i < services_data.length; i++) {
+					total_amount = parseFloat(services_data[i].amount) + total_amount
+					 
+					  string += `<div class='row' style='height: 24px;'>
+						<div class='col-sm-6'>
+							<h5 style='margin-top: 0;margin-bottom: 0;'>${services_data[i].service}</h5> 
+							</div>
+							<div class='col-sm-6'>
+							<h5 class='text-right' style='margin-top: 0;margin-bottom: 0;'>$ ${services_data[i].amount}</h5> 
+							</div> 
+						 </div>`;
+					}
+					$('#service_data').html(string);
+					$('#services_id').val(services_id);
+					$('#services_title').val(services_title);
+					$('#total_amount').html(total_amount.toFixed(2));
+				   
+					$("#bookingModal").modal("toggle");
+				}
+		    }
+		    else{
+				swal({
+				 text : "Please login as a Customer First.",
+				 icon : 'info',
+				 title: 'Information',
+				 buttons:["Cancel", "OK"],
+				 closeOnClickOutside: false,
+			    }).then((addcat)=>{
+					if(addcat){ 
+					  window.location.href = '/login/';  
+					}
+				});
+		    }
+	     
+	}
+ </script>
+ <script>
+	$(function() 
+	{
+	  // Set
+	  var main = $('div.mm-dropdown .textfirst')
+	  var li = $('div.mm-dropdown > ul > li.input-option')
+	  var inputoption = $("div.mm-dropdown .option")
+	  var default_text = 'Select Pet*<img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-arrow-down-b-128.png" width="10" height="10" class="down" />';
+
+	  // Animation
+	  main.click(function() {
+		main.html(default_text);
+		li.toggle('fast');
+	  });
+
+	  // Insert Data
+	  li.click(function() {
+		// hide
+		li.toggle('fast');
+		var livalue = $(this).data('value');
+		
+		var lihtml = $(this).html();
+		
+		
+		main.html(lihtml);
+		inputoption.val(livalue);
+	  });
+	});
+	
+	function myFunction(id)
+	{	
+		$("#pet_id").val(id);
+		$("#errmsg1").hide(); 
+	}
+	
+	function close_modal(){
+	$("#errmsg1").hide();
+	$("#errmsg2").hide();
+	$("#errmsg3").hide();
+	$("#date").val('');
+	$("#time").val(''); 
+	}
+	function book_service(){
+	   var total_amount = $("#total_amount").html();
+	   var services_id = $("#services_id").val();
+	   var services_title = $("#services_title").val();
+	   var pet_id = $("#pet_id").val();
+	   var date = $("#date").val();
+	   var time = $("#time").val();
+       var user_type = '{{request.session.user_type}}' ;	   
+	   var current_time = new Date().toLocaleTimeString('en-US',{ hour12: false });
+	   var current_date = new Date().toLocaleDateString( );
+	   var  [m, d, Y] = current_date.split("/") 
+	   current_date = Y+"-"+m+"-"+d 
+	    
+	   if(pet_id == ''){
+	    $("#errmsg1").html('Select Your Pet');
+	    $("#errmsg1").show();
+	   }
+	   else if(date == '' ){
+	    $("#errmsg2").html('Select Date ');
+	    $("#errmsg2").show();
+	   }
+	   else if(time == '' ){
+	    $("#errmsg3").html('Select Time');
+	    $("#errmsg3").show();
+	   }
+	   else if(date == current_date && current_time > time){
+	    $("#errmsg3").html('Select valid Time');
+	    $("#errmsg3").show();
+	   } 
+	   else{
+	     $.ajax({
+		    method : "POST",
+			url : '/book_doctors_appointment_api/',
+			headers : {'X-CSRFToken' : getCookie('csrftoken')},
+			data : {
+			'doctor' :  '{{user_obj.id}}',
+			'client' : '{{request.session.customer_id}}',
+			'fk_pet' : pet_id, 
+			"booking_time": time,
+			"booking_date": date,
+			"txn_id": "",
+			"amount": total_amount,
+			"txn_date": date,
+			"txn_time": time,
+			"txn_status": "",
+			"payment_method_type": "",
+			"book_status": "Booked", 
+			"services": services_id,
+			"services_title": services_title,
+			"vendor_type": "{{user_obj.user_type}}",
+			},
+			success: function(response){
+			 console.log(response)
+			 if(response.status == 200){
+			    swal({
+				 text : response.msg,
+				 icon : 'success',
+				 title: 'Success',
+				 button: "OK",
+				 closeOnClickOutside: false,
+			   }).then((addcat)=>{
+			        if(user_type == "Doctor"){
+					window.location.href = '/Show_appointments/';
+					}
+					else{
+					window.location.href = '/Show_Mybookings/';
+					}
+			        
+				});
+			 }
+			 else {
+			    swal({
+					 text : response.msg,
+					 icon : 'info',
+					 title: 'Information',
+					 button: "OK",
+					 closeOnClickOutside: false,
+				   });
+			 }
+			}
+		 });
+	   }
+	}
+	$("#date").mouseup(function(){
+	 $("#errmsg2").hide();
+	});
+	
+	$("#time").mouseup(function(){
+	 $("#errmsg3").hide();
+	});
+	
+ </script>
+  {% include 'customer/footer.html' %}

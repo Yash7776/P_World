@@ -1,0 +1,478 @@
+{% load static %}
+{% include 'customer/header.html' %}
+<style>
+	/* Force dark background immediately */
+	body, html {
+		background-color: #1a1a1a !important;
+		color: #f7f7f7 !important;
+	}
+
+	.main-content {
+		background-color: #1a1a1a;
+		min-height: 100vh;
+		padding-bottom: 80px;
+	}
+
+	.card {
+		background-color: #2c2c2c !important;
+		border: 1px solid #5e5e5e;
+		color: #f7f7f7;
+		padding: 30px;
+		border-radius: 8px;
+		position: relative;
+	}
+
+	/* Headings */
+	h3 {
+		color: #f7f7f7 !important;
+		margin-bottom: 30px;
+		text-align: left;
+	}
+
+	/* Form inputs dark theme */
+	.form-control {
+		background-color: #3a3a3a !important;
+		border: 1px solid #5e5e5e !important;
+		color: #f7f7f7 !important;
+		padding: 12px;
+		font-size: 16px;
+		border-radius: 5px;
+	}
+
+	.form-control:focus {
+		background-color: #444444 !important;
+		border-color: #d9534f !important;
+		color: #f7f7f7 !important;
+		box-shadow: 0 0 0 0.2rem rgba(217, 83, 79, 0.25);
+		outline: none;
+	}
+
+	.form-control::placeholder {
+		color: #bbb6b6 !important;
+	}
+
+	/* Error messages */
+	span[id^="errmsg"] {
+		color: #ff6b6b;
+		font-size: 14px;
+		display: block;
+		margin-top: 5px;
+		text-align: left;
+		position: relative;
+		margin-left: 0 !important;
+	}
+
+	/* Buttons */
+	.login-btn {
+		background-color: #d9534f;
+		border: none;
+		color: white;
+		padding: 12px 30px;
+		font-size: 16px;
+		font-weight: bold;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: background-color 0.3s;
+		width: 100%;
+	}
+
+	.login-btn:hover {
+		background-color: #c9302c;
+	}
+
+	/* Back button styling - circular */
+	.back-btn {
+		position: absolute;
+		top: 13px;
+		right: 0;
+		background-color: #d9534f;
+		border: none;
+		color: white;
+		width: 45px;
+		height: 45px;
+		border-radius: 50%;
+		cursor: pointer;
+		transition: background-color 0.3s;
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.back-btn:hover {
+		background-color: #c9302c;
+	}
+
+	.back-btn i {
+		font-size: 18px;
+	}
+
+	/* Form spacing */
+	.form-section {
+		margin-bottom: 25px;
+	}
+
+	#show_img {
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+
+	div.mm-dropdown {
+		border: 1px solid #5e5e5e;
+		width: 100%;
+		border-radius: 5px;
+		background-color: #3a3a3a;
+	}
+
+	div.mm-dropdown ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		border: 0;
+	}
+
+	div.mm-dropdown ul li,
+	div.mm-dropdown div.textfirst {
+		padding: 0;
+		color: #c1c1c1;
+		border-bottom: 1px solid #5e5e5e;
+		padding: 5px 15px;
+		text-align: left !important;
+	}
+
+	div.mm-dropdown div.textfirst {
+		background: #3a3a3a;
+		color: #afacac;
+	}
+
+	div.mm-dropdown div.textfirst img.down {
+		float: right;
+		margin-top: 5px;
+	}
+
+	div.mm-dropdown ul li:last-child {
+		border-bottom: 0;
+	}
+
+	div.mm-dropdown ul li {
+		display: none;
+		padding-left: 25px;
+		background-color: #3a3a3a;
+	}
+
+	div.mm-dropdown ul li.main {
+		display: block;
+	}
+
+	div.mm-dropdown ul li img {
+		width: 20px;
+		height: 20px;
+	}
+
+	::-webkit-calendar-picker-indicator {
+		filter: invert(6);
+	}
+
+	.swal-icon--success:after, .swal-icon--success:before {
+		background: #262626 !important;
+	}
+
+	.swal-icon--success__hide-corners {
+		background: #262626;
+	}
+
+	p {
+		color: #d5d5d5;
+	}
+
+	.badge {
+		background-color: #444444 !important;
+	}
+	/* Add this CSS to fix the picker positioning */
+
+/* Make the hidden inputs positioned relative to their container */
+#reminder_date,
+#reminder_time {
+	display: block !important;
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+}
+
+/* Make the form section position relative to contain the absolute inputs */
+.form-section {
+	position: relative;
+}
+
+/* Allow pointer events on the hidden inputs when opened */
+#reminder_date:focus,
+#reminder_time:focus {
+	pointer-events: auto;
+}
+
+	/* Responsive adjustments */
+	@media (max-width: 768px) {
+		.card {
+			padding: 25px 20px;
+		}
+		
+		.back-btn {
+			top: 0;
+			right: 0;
+			width: 40px;
+			height: 40px;
+		}
+		
+		.back-btn i {
+			font-size: 16px;
+		}
+	}
+</style>
+
+<!-- Start main-content -->
+<div class="main-content">
+	<div class='container' style='margin-top: 1.5rem;'>
+		<div class='row'>
+			<div class='col-md-3'></div>
+			<div class='col-md-6' style="position: relative;"> 
+				<h3>Add Reminder</h3>
+				
+				<!-- Back Button - Circular -->
+				<button class="back-btn" onclick="window.location.href='/Reminder/'" title="Go Back">
+					<i class="fa fa-arrow-left" aria-hidden="true"></i>
+				</button>
+				
+				<div class='card shadow'>
+					
+					<!-- Select Pet -->
+					<div class="form-section">
+						<div class="mm-dropdown">
+							<div class="textfirst"><img src="" width="10" height="10" class="down" /><span>Select Pet</span></div>
+							<ul style="max-height:400px;overflow-y: scroll;">
+								{% for i in pets %}
+								<li class="input-option" data-value="{{i.id}}" onclick="myFunction('{{i.id}}')">
+									<div class="row">
+										<div class="col-md-3">
+											<img src="{{i.pet_image.url}}" alt="" width="60" height="40" style="height:82px; width:100px;"/> 
+										</div>
+										<div class="col-md-9">
+											<div class="row" style="text-align:left; color:red;">{{i.pet_name}}</div>
+											<div class="row" style="text-align:left;">{{i.type_of_pet}}</div>
+											<div class="row">
+												<div class="col-md-5 badge badge-secondary">
+													<center><div class="col-md-4" style="margin-left:23%; color:#363434;"><p>Age</p></div></center>
+													<br><br>
+													<div class="col-md-8" style="color:d5d5d5;">{{i.age}}</div>
+												</div>
+												<div class=" badge badge-secondary">
+													<div class="col-md-4" style="color:#363434;"><p>Gender</p></div>
+													<br><br>
+													<div class="col-md-4" style="color:d5d5d5;">{{i.gender}}</div>
+												</div>
+												<div class="badge badge-secondary">
+													<div class="col-md-4" style="color:#363434;"><p>Weight</p></div>
+													<br><br>
+													<div class="col-md-4" style="color:d5d5d5;">{{i.weight}} Kg</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</li>
+								{% endfor %}
+							</ul>
+							<input type="hidden" class="option" name="namesubmit" value="" />
+							<input type="hidden" class="option" id="pet_id" value="" />
+						</div>
+						<span id="errmsg1"></span>
+					</div>
+					
+					<!-- Reminder -->
+					<div class="form-section">
+						<input type="text" class="form-control" id="reminder" name="reminder" placeholder="Reminder*">
+						<span id="errmsg2"></span>
+					</div>
+					
+					<!-- Reminder Date -->
+					<div class="form-section">
+						<!-- <input type="date" id="reminder_date" class="form-control" placeholder="Reminder Date*"> -->
+						 <div class="form-section">
+    <input type="text" id="date_display" class="form-control" placeholder="Date" readonly>
+    <input type="date" id="reminder_date" style="display:none;">
+    <span id="errmsg3"></span>
+</div>
+						<span id="errmsg3"></span>
+					</div>
+					
+					<!-- Reminder Time -->
+					<div class="form-section">
+						<!-- <input type="time" id="reminder_time" name="reminder_time" class="form-control" placeholder='Reminder Time*'> -->
+						 <div class="form-section">
+    <input type="text" id="time_display" class="form-control" placeholder="Time" readonly>
+    <input type="time" id="reminder_time" style="display:none;">
+    <span id="errmsg4"></span>
+</div>
+						<span id="errmsg4"></span>
+					</div>
+					
+					<!-- Save Button -->
+					<button class="login-btn nextBtn btn-danger btn-lg" onclick="Add_Reminder()">Save</button>
+				</div> 
+			</div>
+			<div class='col-md-3'></div>
+		</div> 
+	</div>
+</div>
+
+<script>
+	$(function() {
+		// Set
+		var main = $('div.mm-dropdown .textfirst')
+		var li = $('div.mm-dropdown > ul > li.input-option')
+		var inputoption = $("div.mm-dropdown .option")
+		var default_text = 'Select Pet<img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-arrow-down-b-128.png" width="10" height="10" class="down" />';
+
+		// Animation
+		main.click(function() {
+			main.html(default_text);
+			li.toggle('fast');
+		});
+
+		// Insert Data
+		li.click(function() {
+			// hide
+			li.toggle('fast');
+			var livalue = $(this).data('value');
+			var lihtml = $(this).html();
+			main.html(lihtml);
+			inputoption.val(livalue);
+		});
+	});
+</script>
+
+<script>
+	function myFunction(id) {	
+		$("#pet_id").val(id);
+		$("#errmsg1").hide();
+	}
+
+	$('#reminder').change(function(){
+		$('#errmsg2').hide();
+	});
+	
+	$('#reminder_date').change(function(){
+		$('#errmsg3').hide();
+	});
+
+	$('#reminder_time').change(function(){
+		$('#errmsg4').hide();
+	});
+	
+	function Add_Reminder() {
+		pet_id = $("#pet_id").val();
+		reminder = $("#reminder").val();
+		reminder_date = $("#reminder_date").val();
+		reminder_time = $("#reminder_time").val();
+		
+		if(pet_id == "") {
+			$("#errmsg1").html("Select Pet Name");
+			$("#errmsg1").show();
+		}
+		else if(reminder == "") {
+			$("#errmsg2").html("Enter Reminder For");
+			$("#errmsg2").show();
+		}
+		else if(reminder_date == "") {
+			$("#errmsg3").html("Select Reminder Date");
+			$("#errmsg3").show();
+		}
+		else if(reminder_time == "") {
+			$("#errmsg4").html("Select Reminder Time");
+			$("#errmsg4").show();
+		}
+		else {
+			$.ajax({
+				method:"POST",
+				url:"/add_reminder_pet_api/",
+				headers : {'X-CSRFToken' : getCookie('csrftoken')},
+				data:{
+					"fk_customer": '{{customer_id}}',
+					"pet_id": pet_id,
+					"reminder_name":reminder,
+					"select_date":reminder_date,
+					"select_time":reminder_time,
+					"token": '',
+				},
+				success: function(response){
+					if(response.status ==200){
+						swal(""+response.msg+"", {
+							icon: "success",
+							button: "Ok",
+							closeOnClickOutside: false,
+						})
+						.then((addcat)=>{
+							if(addcat){
+								window.location.href="/Reminder/";
+							}
+						});
+					}
+					else{
+						swal(""+response.msg+"", {
+							icon: "error",
+							button: "Ok",
+							closeOnClickOutside: false,
+						});
+					}
+				}  
+			});
+		}
+	}
+</script>
+<script>
+// Replace the existing date/time picker script with this:
+
+document.addEventListener("DOMContentLoaded", function() {
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("reminder_date").setAttribute("min", today);
+});
+
+document.getElementById("date_display").addEventListener("click", function() {
+    const dateInput = document.getElementById("reminder_date");
+    dateInput.focus(); // Focus first to position picker correctly
+    setTimeout(() => {
+        dateInput.showPicker();
+    }, 10);
+});
+
+document.getElementById("time_display").addEventListener("click", function() {
+    const timeInput = document.getElementById("reminder_time");
+    timeInput.focus(); // Focus first to position picker correctly
+    setTimeout(() => {
+        timeInput.showPicker();
+    }, 10);
+});
+
+document.getElementById("reminder_date").addEventListener("change", function() {
+    // Convert YYYY-MM-DD to DD-MMM-YYYY
+    if(this.value) {
+        const date = new Date(this.value);
+        const day = String(date.getDate()).padStart(2, '0');
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const month = monthNames[date.getMonth()];
+        const year = date.getFullYear();
+        document.getElementById("date_display").value = `${day}-${month}-${year}`;
+    }
+    this.blur(); // Remove focus after selection
+});
+
+document.getElementById("reminder_time").addEventListener("change", function() {
+    document.getElementById("time_display").value = this.value;
+    this.blur(); // Remove focus after selection
+});
+</script>
+
+{% include 'customer/footer.html' %}

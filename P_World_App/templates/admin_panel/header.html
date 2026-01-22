@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>P World</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+    <!-- App css -->
+    <link href="{% static 'assets/css/bootstrap.min.css'%}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/icons.min.css'%}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/app.min.css'%}" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link href="{% static 'assets/libs/datatables/dataTables.bootstrap4.css'%}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/libs/datatables/buttons.bootstrap4.css'%}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/libs/datatables/responsive.bootstrap4.css'%}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/libs/datatables/select.bootstrap4.css'%}" rel="stylesheet" type="text/css" />
+    <style>
+        .table td,
+        .table th {
+            vertical-align: baseline;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body class="left-side-menu-dark">
+    <!-- Begin page -->
+    <div id="wrapper">
+        <!-- ========== Left Sidebar Start ========== -->
+        <div class="left-side-menu">
+            <div class="slimscroll-menu">
+                <!-- User box -->
+                <div class="user-box" style="padding: 71px 25px 12px 25px; margin-top: -55px;">
+                    <img src="{% static 'assets/images/users/Group_27--preview.png'%}" alt="user-img" title="Mat Helme"
+                        height="75">
+                </div>
+                <!--- Sidemenu -->
+                <div id="sidebar-menu">
+                    <ul class="metismenu" id="side-menu">
+                        <li>
+                            <a href="/user_list/Doctor">
+                                <i class="fe-layers"></i>
+                                <span> Doctors </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/customer_list/">
+                                <i class="fe-layers"></i>
+                                <span> Customers </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/user_list/Sitter">
+                                <i class="fe-layers"></i>
+                                <span> Sitters </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/user_list/Trainer">
+                                <i class="fe-layers"></i>
+                                <span> Trainers </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/user_list/Walker">
+                                <i class="fe-layers"></i>
+                                <span> Walkers </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/user_list/Salon">
+                                <i class="fe-layers"></i>
+                                <span> Salon </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/user_list/Store">
+                                <i class="fe-layers"></i>
+                                <span> Store </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript: void(0);">
+                                <i class="fe-layers"></i>
+                                <span> Appointment </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <ul class="nav-second-level" aria-expanded="false">
+                                <li><a href="/vendor_appointment_list/Doctor">Doctor</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript: void(0);">
+                                <i class="fe-layers"></i>
+                                <span> Bookings </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <ul class="nav-second-level" aria-expanded="false">
+                                <li><a href="/vendor_appointment_list/Salon">Salon</a></li>
+                                <li><a href="/vendor_appointment_list/Sitter">Sitter</a></li>
+                                <li><a href="/vendor_appointment_list/Trainer">Trainer</a></li>
+                                <li><a href="/vendor_appointment_list/Walker">Walker</a></li>
+                            </ul>
+                        </li>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="content-page">
+            <!-- Topbar Start -->
+            <div class="navbar-custom">
+                <ul class="list-unstyled topnav-menu float-right mb-0">
+                    <li class="dropdown notification-list">
+                        <div class="dropdown-menu dropdown-menu-right dropdown-lg"> </div>
+                    </li>
+                    <li class="dropdown notification-list">
+                        <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect" data-toggle="dropdown" href="#"
+                            role="button" aria-haspopup="false" aria-expanded="false">
+                            <img src="{% static 'assets/images/users/download_q.png'%}" alt="user-image"
+                                class="rounded-circle" style="height: 24px;width: 24px;">
+                            <span class="pro-user-name ml-1">
+                                PWorld<i class="mdi mdi-chevron-down"></i>
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right profile-dropdown "> <a href="/logout/"
+                                class="dropdown-item notify-item">
+                                <i class="fe-log-out"></i> <span>Logout</span>
+                            </a>
+
+                        </div>
+                    </li>
+                </ul>
+                <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
+                    <li>
+                        <button class="button-menu-mobile disable-btn">
+                            <i class="fe-menu"></i>
+                        </button>
+                    </li>
+                    <li>
+                    </li>
+                </ul>
+            </div>
+</body>
+
+</html>

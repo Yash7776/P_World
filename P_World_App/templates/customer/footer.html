@@ -1,0 +1,144 @@
+{% load static %}
+<!-- Footer -->
+<div style="background: #444444;height: 1px;"></div>
+<footer id="footer" class="overlay-dark-8">
+    <div class="container pt-30 pb-10">
+      <div class="row border-bottom-black">
+	  {% if request.session.user_type == "Customer" or not request.session.user_type %}
+        <div class="col-sm-6 col-md-4">
+          <div class="widget dark">
+            <a class="menuzord-brand mb-10" style='margin-top: 7px; width:100%;' href="/index/"><img src="{% static 'assets/images/users/Group_27--preview.png'%}" alt="">  
+            <small style="margin: 26px 0;font-family: Rubik;font-size: 17px;color: #f55151;"><b>PWorld</b></small>  
+			</a> 
+            <!-- <p>Lorem ipsum dolor sit amet, consecte tur adipisi cing elit lestias eius illum libero dolor nobis deleniti.</p> -->
+            <!-- <p>203, Envato Labs, Behind Alis Steet, Melbourne, Australia.</p> -->
+            <ul class="list-inline mt-5">
+              <li class="m-0 pl-10 pr-10"> <i class="fa fa-phone text-theme-colored mr-5"></i> <a class="text-gray" href="#">123-456-789</a> </li>
+              <li class="m-0 pl-10 pr-10"> <i class="fa fa-envelope-o text-theme-colored mr-5"></i> <a class="text-gray" href="#">contact@yourdomain.com</a> </li>
+              <li class="m-0 pl-10 pr-10"> <i class="fa fa-globe text-theme-colored mr-5"></i> <a class="text-gray" href="#">www.yourdomain.com</a> </li>
+            </ul>
+          </div>
+        </div> 
+        <div class="col-sm-6 col-md-4">
+          <div class="widget dark">
+            <h5 class="widget-title line-bottom">Useful Links</h5>
+            <ul class="list angle-double-right list-border">
+              <li><a href="/all/Doctor/">Doctors</a></li>
+              <li><a href="/all/Sitter/">Pet sitter</a></li>
+              <li><a href="/all/Trainer/">Pet Trainer</a></li>
+              <!-- <li><a href="/all/Walker/">Pet walker</a></li> -->
+              <!-- <li><a href="/all/Saloon/">Pet Saloon</a></li> -->
+              <!-- <li><a href="/items/">Store</a></li> -->
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4" >
+          <div class="widget dark" style="margin-top: 14%;">
+			 <h5 class="widget-title"></h5>
+            <ul class="list angle-double-right list-border">
+              <li><a href="/all/Walker/">Pet walker</a></li>
+              <li><a href="/all/Salon/">Pet Salon</a></li>
+              <li><a href="/items/">Store</a></li>
+            </ul>
+          </div>
+        </div>
+		{% else %}
+		<div class="col-sm-12">
+          <div class="widget dark">
+            <a class="menuzord-brand mb-10" style='margin-top: 7px; width:100%;' href="/index/"><img src="{% static 'assets/images/users/Group_27--preview.png'%}" alt="">  
+            <small style="margin: 26px 0;font-family: Rubik;font-size: 17px;color: #f55151;"><b>PWorld</b></small>  
+			</a> 
+            <!-- <p>Lorem ipsum dolor sit amet, consecte tur adipisi cing elit lestias eius illum libero dolor nobis deleniti.</p> -->
+            <!-- <p>203, Envato Labs, Behind Alis Steet, Melbourne, Australia.</p> -->
+            <ul class="list-inline mt-5">
+              <li class="m-0 pl-10 pr-10"> <i class="fa fa-phone text-theme-colored mr-5"></i> <a class="text-gray" href="#">123-456-789</a> </li>
+              <li class="m-0 pl-10 pr-10"> <i class="fa fa-envelope-o text-theme-colored mr-5"></i> <a class="text-gray" href="#">contact@yourdomain.com</a> </li>
+              <li class="m-0 pl-10 pr-10"> <i class="fa fa-globe text-theme-colored mr-5"></i> <a class="text-gray" href="#">www.yourdomain.com</a> </li>
+            </ul>
+          </div>
+        </div> 
+        {% endif %} 
+		
+      </div>
+      
+    </div>
+    <div class="footer-bottom bg-black-333">
+      <div class="container pt-20 pb-20">
+        <div class="row">
+          <div class="col-md-6">
+           <p class="font-11 text-black-777 m-0">
+  Copyright &copy;<span id="currentYear"></span> 
+  <span class="text-theme-colored">PWorld.</span> All Rights Reserved
+</p>
+
+<script>
+  // Get current year
+  document.getElementById("currentYear").textContent = new Date().getFullYear();
+</script>
+
+          </div>
+          <div class="col-md-6 text-right">
+            <div class="widget no-border m-0">
+              <ul class="list-inline sm-text-center mt-5 font-12">
+                <li>
+                  <a href="#">FAQ</a>
+                </li>
+                <li>|</li>
+                <li>
+                  <a href="#">Help Desk</a>
+                </li>
+                <li>|</li>
+                <li>
+                  <a href="#">Support</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <a class="scrollToTop" href="#"><i class="fa fa-angle-up"></i></a>
+</div>
+<!-- end wrapper -->
+
+<!-- Footer Scripts -->
+<!-- JS | Custom script for all pages -->
+<script src="{% static 'js/custom.js' %}"></script>
+ 
+
+<!-- geolocation js  -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHqw7DHNMCfs4RFf6O8FYfxrQmhR66P0Y&libraries=places"></script>
+
+ <script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+ 
+  
+<!-- SLIDER REVOLUTION 5.0 EXTENSIONS  
+      (Load Extensions only on Local File Systems ! 
+       The following part can be removed on Server for On Demand Loading) --> 
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	 
+	<script type="text/javascript" src="{% static 'js/revolution-slider/js/extensions/revolution.extension.actions.min.js' %}"></script> 
+	<script type="text/javascript" src="{% static 'js/revolution-slider/js/extensions/revolution.extension.carousel.min.js' %}"></script> 
+	<script type="text/javascript" src="{% static 'js/revolution-slider/js/extensions/revolution.extension.kenburn.min.js' %}"></script> 
+	<script type="text/javascript" src="{% static 'js/revolution-slider/js/extensions/revolution.extension.layeranimation.min.js' %}"></script> 
+	<script type="text/javascript" src="{% static 'js/revolution-slider/js/extensions/revolution.extension.migration.min.js' %}"></script> 
+	<script type="text/javascript" src="{% static 'js/revolution-slider/js/extensions/revolution.extension.navigation.min.js' %}"></script> 
+	<script type="text/javascript" src="{% static 'js/revolution-slider/js/extensions/revolution.extension.parallax.min.js' %}"></script> 
+	<script type="text/javascript" src="{% static 'js/revolution-slider/js/extensions/revolution.extension.slideanims.min.js' %}"></script> 
+	<script type="text/javascript" src="{% static 'js/revolution-slider/js/extensions/revolution.extension.video.min.js' %}"></script>
+
+	<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+	    <script src="{% static 'assets/libs/datatables/jquery.dataTables.min.js'%}"></script>
+        <script src="{% static 'assets/libs/datatables/dataTables.bootstrap4.min.js'%}"></script>
+		
+		<!-- Responsive examples -->
+        <script src="{% static 'assets/libs/datatables/dataTables.responsive.min.js'%}"></script>
+        <script src="{% static 'assets/libs/datatables/responsive.bootstrap4.min.js'%}"></script>
+		
+		  <!-- Datatables init -->
+        <script src="{% static 'assets/js/pages/datatables.init.js'%}"></script>
+	
+</body>
+</html>

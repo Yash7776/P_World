@@ -1,0 +1,369 @@
+{% load static %}
+{% include 'customer/header.html' %}
+<style>
+	/* Force dark background immediately */
+	body, html {
+		background-color: #1a1a1a !important;
+		color: #f7f7f7 !important;
+	}
+
+	.main-content {
+		background-color: #1a1a1a;
+		min-height: 100vh;
+		padding-bottom: 80px;
+	}
+
+	.card {
+		background-color: #2c2c2c !important;
+		border: 1px solid #5e5e5e;
+		color: #f7f7f7;
+		padding: 30px;
+		border-radius: 8px;
+	}
+
+	/* Headings */
+	h3, h4 {
+		color: #f7f7f7 !important;
+		margin-bottom: 20px;
+	}
+
+	p {
+		color: #d5d5d5;
+		font-weight: bold;
+	}
+
+	/* Form inputs dark theme */
+	.form-control {
+		background-color: #3a3a3a !important;
+		border: 1px solid #5e5e5e !important;
+		color: #f7f7f7 !important;
+		padding: 12px;
+		font-size: 16px;
+		border-radius: 5px;
+	}
+
+	.form-control:focus {
+		background-color: #444444 !important;
+		border-color: #d9534f !important;
+		color: #f7f7f7 !important;
+		box-shadow: 0 0 0 0.2rem rgba(217, 83, 79, 0.25);
+		outline: none;
+	}
+
+	/* Time input specific styling */
+	input[type="time"] {
+		background-color: #3a3a3a !important;
+		color: #f7f7f7 !important;
+		border: 1px solid #5e5e5e !important;
+		cursor: pointer;
+	}
+
+	input[type="time"]::-webkit-calendar-picker-indicator {
+		filter: invert(1);
+		cursor: pointer;
+	}
+
+	/* Labels */
+	label {
+		color: #dcdbdb !important;
+		font-weight: 700 !important;
+		margin-bottom: 8px;
+		display: block;
+		text-align: left;
+	}
+
+	/* Day selection buttons */
+	.btn-group-toggle {
+		min-width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		justify-content: center;
+	}
+
+	.radio_background1 {
+		background-color: #2c2c2c;
+		border: 1px solid #5e5e5e;
+		color: #f7f7f7 !important;
+		font-size: 14px !important;
+		padding: 10px 20px;
+		border-radius: 5px;
+		transition: all 0.3s;
+		cursor: pointer;
+		margin: 0 !important;
+	}
+
+	.radio_background1:hover {
+		background-color: #3a3a3a;
+		border-color: #d9534f;
+	}
+
+	.btn-group > .btn1.active {
+		background-color: #d9534f !important;
+		border-color: #d9534f !important;
+		color: #ffffff !important;
+	}
+
+	/* Error messages */
+	span[id^="errmsg"] {
+		color: #ff6b6b;
+		font-size: 14px;
+		display: block;
+		margin-top: 5px;
+		text-align: left;
+	}
+
+	/* Buttons */
+	.login-btn {
+		background-color: #d9534f;
+		border: none;
+		color: white;
+		padding: 12px 30px;
+		font-size: 16px;
+		font-weight: bold;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: background-color 0.3s;
+		margin-top: 20px;
+	}
+
+	.login-btn:hover {
+		background-color: #c9302c;
+	}
+
+	.btn-sm {
+		padding: 8px 16px;
+		font-size: 14px;
+	}
+
+	/* Sweet Alert dark theme */
+	.swal-icon--success:after, 
+	.swal-icon--success:before {
+		background: #262626 !important;
+	}
+
+	.swal-icon--success__hide-corners {
+		background: #262626;
+	}
+
+	/* Back button styling */
+	.fa-arrow-left {
+		font-size: 16px;
+	}
+
+	/* Form sections spacing */
+	.form-section {
+		margin-bottom: 20px;
+	}
+
+	/* Responsive adjustments */
+	@media (max-width: 768px) {
+		.card {
+			padding: 20px;
+		}
+		
+		.btn-group-toggle {
+			gap: 8px;
+		}
+		
+		.radio_background1 {
+			padding: 8px 15px;
+			font-size: 13px !important;
+		}
+	}
+</style>
+
+<!-- Start main-content -->
+<div class="main-content">
+	<!-- Section: inner-header -->
+	<div class='container text-center'>
+		<div class='row' style="margin-top: 1rem; margin-bottom: 1rem;">
+			<div class="col-lg-4"></div>
+			<div class="col-lg-4">
+				<h3 style='margin:0; margin-left: -380px; margin-top: 17px;'> Add Availability</h3> 
+			</div>
+			<div class="col-lg-2">
+				<button class="login-btn nextBtn btn-danger btn-sm" onclick="window.location.href='/show_doctor_availability/'" style="margin-right: 86px;">
+					<i class="fa fa-arrow-left" aria-hidden="true" style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Back"></i>
+				</button>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">     
+				<div class='card shadow'>
+					<h4 style="text-align: left; margin-bottom: 25px;">Shift - {{count}}</h4>
+					
+					<!-- Time Selection -->
+					<div class="row form-section">
+						<div class="col-md-6">
+							<label for="from_time">From</label>
+							<input type="time" id="from_time" class="form-control" name="From" onChange="checkTime('from')">
+							<span id="errmsg1"></span>
+						</div>
+						
+						<div class="col-md-6">
+							<label for="to_time">To</label>
+							<input type="time" id="to_time" class="form-control" name="To" onChange="checkTime('to')">
+							<span id="errmsg2"></span>
+						</div>
+					</div>
+					
+					<!-- Days Selection -->
+					<div class="form-section">
+						<label>Select Days</label>
+						<div role="group" class="btn-group btn-group-toggle" data-toggle="buttons">
+							<label class="btn btn1 radio_background1">
+								<input autocomplete="off" type="checkbox" name="days" id="Sunday" value="Sunday"> 
+								Sunday
+							</label> 
+							<label class="btn btn1 radio_background1">
+								<input autocomplete="off" type="checkbox" name="days" id="Monday" value="Monday"> 
+								Monday
+							</label> 
+							<label class="btn btn1 radio_background1">
+								<input autocomplete="off" type="checkbox" name="days" id="Tuesday" value="Tuesday"> 
+								Tuesday
+							</label> 
+							<label class="btn btn1 radio_background1">
+								<input autocomplete="off" type="checkbox" name="days" id="Wednesday" value="Wednesday"> 
+								Wednesday
+							</label> 
+							<label class="btn btn1 radio_background1">
+								<input autocomplete="off" type="checkbox" name="days" id="Thursday" value="Thursday"> 
+								Thursday
+							</label> 
+							<label class="btn btn1 radio_background1">
+								<input autocomplete="off" type="checkbox" name="days" id="Friday" value="Friday"> 
+								Friday
+							</label> 
+							<label class="btn btn1 radio_background1">
+								<input autocomplete="off" type="checkbox" name="days" id="Saturday" value="Saturday"> 
+								Saturday
+							</label>  
+						</div>
+						<span id="errmsg3"></span>
+					</div>
+					
+					<!-- Save Button -->
+					<button class="login-btn nextBtn btn-danger btn-lg" style="width: 100%;" onclick="addAvail()">Save</button>
+				</div> 
+			</div>
+			<div class="col-md-3"></div>
+		</div> 
+	</div>
+</div>
+<!-- end main-content -->
+
+<script>
+	$('#from_time').keyup(function(){
+		$('#errmsg1').html(""); 
+	});
+	
+	$('#to_time').keyup(function(){
+		$('#errmsg2').html(""); 
+	});
+	
+	$('#from_time').mouseup(function(){
+		$('#errmsg1').html(""); 
+	});
+	
+	$('#to_time').mouseup(function(){
+		$('#errmsg2').html(""); 
+	});
+	
+	$(".radio_background1").mouseup(function(){
+		$('#errmsg3').html(""); 
+	});
+	
+	$('#from_time').change(function(){
+		$('#errmsg1').html(""); 
+	});
+	
+	$('#to_time').change(function(){
+		$('#errmsg2').html(""); 
+	});
+	
+	function addAvail(){ 
+		var from_time = $('#from_time').val();
+		var to_time = $('#to_time').val(); 
+		var doctor_email = '{{ request.session.customer_email }}'; 
+		var days = [];
+		
+		$("input[name='days']:checked").each(function() {
+			days.push($(this).val());
+		});
+		
+		if(from_time == ""){ 
+			$('#errmsg1').html("Enter From Shift."); 
+		} 
+		else if(to_time == ""){ 
+			$('#errmsg2').html("Enter To Shift."); 
+		}
+		else if(from_time == to_time){
+			$('#errmsg2').html("Please Enter valid shift time."); 
+		}
+		else if(days == '' || days == null){ 
+			$('#errmsg3').html("Select Days."); 
+		} 
+		else {
+			$.ajax({
+				method: "POST",
+				url: "/set_doctor_availability/", 
+				data: {
+					"from_shift": from_time,
+					"to_shift": to_time,
+					"doctor_email": doctor_email,
+					"days": JSON.stringify(days), 
+					"shift": {{count}},
+				},
+				success: function(response){
+					if(response.status == 200){
+						swal({
+							title: "Created",
+							text: "Shift Availability Created Successfully.",
+							icon: 'success',
+							button: 'OK',
+							closeOnClickOutside: false,
+						}).then((done) => {
+							if(done){
+								if(response.services) {
+									window.location.href = '/show_doctor_availability/';
+								}
+								else {
+									window.location.href = '/add_services/';
+								}
+							}
+						});
+					}
+					else {
+						swal({
+							title: "Error",
+							text: response.msg,
+							icon: 'error',
+							button: 'OK',
+							closeOnClickOutside: false,
+						}); 
+					}
+				}  
+			});
+		}
+	} 
+	
+	function checkTime(by) {
+		var from_time = $('#from_time').val();
+		var to_time = $('#to_time').val(); 
+		
+		if(from_time == to_time){
+			if(by == "from"){
+				$('#errmsg1').html("Please Enter valid shift time."); 
+			}
+			else {
+				$('#errmsg2').html("Please Enter valid shift time."); 
+			}
+		}
+	}
+</script>
+
+{% include 'customer/footer.html' %}

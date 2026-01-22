@@ -1,0 +1,260 @@
+{% load static %}
+{% include 'customer/header.html' %}
+ <style>
+   .main-content {
+    min-height: calc(100vh - 150px);
+}
+ 
+.swal-icon--success:after, .swal-icon--success:before {
+ background: #262626 !important;
+	 }
+.swal-icon--success__hide-corners {
+	background: #262626;
+}
+
+
+p{
+color: #d5d5d5;
+font-weight: bold;
+}  
+ .caption , .clear-rating {
+  display:none!important;
+}
+.rating-stars{
+ font-size:20px;
+ margin-top: -3rem;
+}
+.rating-disabled .rating-input, .rating-disabled .rating-stars{
+  cursor:pointer!important; 
+}
+ 
+ 
+.rating-container .filled-stars { 
+    color: #EE163B !important;
+    text-shadow:none;
+	}
+.rating-container {
+	height: 2rem;
+	width: 8rem;
+	}
+ 
+    .radio_background1 {
+		background-color: #d98888;
+	}
+
+	.btn-group>.btn1.active {
+		background-color: #f34444;
+	}
+
+	.btn-group-toggle {
+		min-width: 100%;
+	}
+	 
+	input[type="radio"]{
+		display: none;
+	}
+	.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+    color: #b5b5b5 !important;
+}
+ </style>
+  <!-- Start main-content -->
+  <div class="main-content">
+    <!-- Section: inner-header -->
+      <div class='container text-center'>
+			<div class="row">
+				<div class="col-lg-4"></div>
+				<div class="col-lg-4"  > 
+					<h3 style="color:#fff;"> <span id='c_title'>CURRENT</span> <span id='p_title'>PAST</span>  APPOINTMENTS</h3> 
+				</div>
+				<div class="col-lg-4" style="margin-top: 18px;"> 
+					<div role="group" class="btn-group btn-group-toggle" style="margin-left: 2rem;" data-toggle="buttons">
+						<label class="btn btn1 radio_background1 active" id="Current" style="font-size: 13px;color:#424141;font-weight: 600;padding: 5px 18px;" onclick="filterData('Current')"> 
+						<input type="radio" name="filter_by"  autocomplete="off"  checked>Current Appointments</label>
+						<label class="btn btn1 radio_background1" id="Past" style="font-size: 13px;color:#424141;font-weight: 600;padding: 5px 18px;" onclick="filterData('Past')">
+						<input type="radio" name="filter_by"  autocomplete="off" > Past Appointments</label> 
+				    </div>
+				</div> 
+			</div>
+			<div id='current_booking'>
+	          <div class='card shadow text-center'  style="display:flex; justify-content:center;"> 
+				{% if appointment %} 
+					<div class="reminder overflow-auto" id="reminder" style="width: 60%;margin-top: 20px; max-height:600px !important;  overflow-y: auto;">
+						{% for i in appointment %}
+								<div style='border: 3px solid #504e4e;box-shadow: 2px 2px 9px 0px grey; padding: 10px 0px 10px 0px;width: 98%;' > 
+									<div class="row ">
+										<div class="col-md-3">
+										  <img {% if i.fk_pet.pet_image.url %} src="{{i.fk_pet.pet_image.url}}" {% else %} src="/media/profile_image/no_image.jpg "  {% endif %} alt="" width="60" height="40" style="height:82px; width:100px;"/> 
+										</div>
+										<div class="col-md-6 text-left" style="padding-left: 2rem;">
+											 <p style='margin-bottom:0;'>{{i.fk_pet.pet_name}}</p> 
+											 <p style='margin-bottom:0;'>{{i.fk_pet.breed}}<p> 
+											 <p style='margin-bottom:0;'>{{i.booking_date}} , {{i.booking_time}} <p> 
+										</div>
+										<div class="col-md-3 text-right">   
+											<button class="login-btn nextBtn btn-danger mr-10 btn-sm" onclick="Cancel_Appointment('{{i.id}}')">Cancel</button>  
+										</div>
+									</div> 
+								</div>
+								<br>
+						{% endfor %}
+					</div>
+				{% else %}
+					<div class="row" style="margin-top: 2%;">
+						<h2>No Appointments Available.</h2> 
+					</div>
+				{% endif %}
+				
+		     </div>
+		    </div>
+			<div id='past_booking' style="display:none" >  
+				<div class='card shadow row'  style="justify-content:center;"> 
+				<div class="col-12" style='border: 3px solid #504e4e;box-shadow: 2px 2px 9px 0px grey;padding:2.5rem;' >
+				  <div class="card-box table-responsive"> 
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                           style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead>
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>Client Name</th>
+                            <th>Pet Name</th>
+                            <th>Pet Type</th>
+                            <th>Appointment Date</th>
+                            <th>Service</th>
+                            <th>Amount</th>
+                            <th>Book status</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for i in past_appointment %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{i.client.name}}</td>
+                            <td>{{i.fk_pet.pet_name}}</td>
+                            <td>{{i.fk_pet.type_of_pet}}</td>
+                            <td>{{i.booking_date}} {{i.booking_time}}</td>
+                            <td> {{i.services_title}} </td>
+                            <td> {{i.amount}} </td>
+                            <td> {{i.book_status}} </td>
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table> 
+				   </div>
+		    	  </div>
+               </div> 
+			 </div> 
+		 
+		   </div>
+	  </div>
+  </div>
+  
+	
+			  
+  <!-- end main-content -->
+ <script>
+	function Cancel_Appointment(appointment_id)
+	{
+		
+		swal({
+			title: "Cancel Appointment.",
+			text: "Do you want to cancel this appointment?",
+			icon: "warning",
+			buttons: ["No", "Yes"],
+			html:true,
+			className: "swal-back",
+			closeOnClickOutside: false,
+			dangerMode: true,			
+		})		
+		.then((willUpdate) => {
+			if (willUpdate) {
+				$.ajax({
+					type:"POST",
+					url: "/cancel_doctors_appointment_api/",
+					headers : {'X-CSRFToken' : getCookie('csrftoken')},
+					data: {
+						'id': appointment_id,
+						'book_status':'Cancelled',
+						"cancelled_by": "Doctor"
+					},
+					success: function (response) 
+					{
+						if (response.status == 200){
+							swal("Doctor Appointment Cancelled Successfully.", {
+								icon: "success",
+								button: "Ok",
+								closeOnClickOutside: false,
+								
+							})
+							.then((addcat)=>{
+						   if(addcat){
+						    window.location.reload();
+						   }
+						});
+							
+						}
+						else{
+							swal(""+response.msg+"", {
+							icon: "error",
+							button: "Ok",
+							closeOnClickOutside: false,
+							});
+						}
+					}
+					
+				})
+				
+			}	
+		});
+	}
+    
+	$(document).ready(function(){
+	var availability = "{{availability}}";
+	var services = "{{services}}" ; 
+	if (availability == 'False'){
+	 swal("Please add availability.", {
+			icon: "info",
+			button: "Ok",
+			title: "Information",
+			closeOnClickOutside: false, 
+		}).then((addcat)=>{ 
+		window.location.href='/doctor_availability/'; 
+		}); 
+	}
+	else if( services == 'False'){ 
+		swal("Please add service.", {
+			icon: "info",
+			button: "Ok",
+			title: "Information",
+			closeOnClickOutside: false, 
+			})
+			.then((addcat)=>{ 
+			  window.location.href='/add_services/';
+		   }); 
+	}
+	 
+	});
+	
+   $("#current_booking").show();
+   $("#past_booking").hide();
+   $("#c_title").show();
+   $("#p_title").hide();
+   
+   function filterData(data){
+    if(data == "Current"){
+	  $("#current_booking").show();
+      $("#past_booking").hide();
+	  $("#c_title").show();
+      $("#p_title").hide();
+	}
+	else{
+	  $("#current_booking").hide();
+      $("#past_booking").show();
+	  $("#p_title").show();
+      $("#c_title").hide();
+	}
+   }
+		 
+ </script>
+  {% include 'customer/footer.html' %}

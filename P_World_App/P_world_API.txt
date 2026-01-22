@@ -1,0 +1,28 @@
+add_new_pet_api
+{
+	"fk_customer":"9",
+	"pet_name":"dodo",
+	"type_of_pet":"dog",
+	"breed":"labra",
+	"birth_date":"2000-05-20",
+	"gender":"male",
+	"weight":"70",
+	"pet_description":"Good dog",
+	"pet_image": ""
+}
+
+create_account_customer
+{   
+    "user_type":"Customer",
+    "sign_up_status": true,
+    "name": "hasssssssrsh",
+    "email" : "harsh0sssss750@gmail.com",
+    "password" : "deepa321",
+    "mobile_no" : "9130407045",
+    "map_location" : "Delhi",
+    "latitude":"21.2536521",
+    "longitude":"79.36255222",
+    "address":"adsadsadsa",
+    "country_code": "+91",
+    "token": ""
+}

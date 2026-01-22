@@ -1,0 +1,289 @@
+{% load static %}
+{% include 'customer/header.html' %}
+<style>
+	/* Force dark background immediately */
+	body, html {
+		background-color: #1a1a1a !important;
+		color: #f7f7f7 !important;
+	}
+
+	.main-content {
+		background-color: #1a1a1a;
+		min-height: 100vh;
+		padding-bottom: 80px;
+	}
+
+	.card {
+		background-color: #2c2c2c !important;
+		border: 1px solid #5e5e5e;
+		color: #f7f7f7;
+		padding: 30px;
+		border-radius: 8px;
+		position: relative;
+	}
+
+	/* Headings */
+	h3 {
+		color: #f7f7f7 !important;
+		margin: 0;
+		text-align: left;
+	}
+
+	p {
+		color: #d5d5d5;
+		font-weight: bold;
+	}
+
+	/* Form inputs dark theme */
+	.form-control {
+		background-color: #3a3a3a !important;
+		border: 1px solid #5e5e5e !important;
+		color: #f7f7f7 !important;
+		padding: 12px;
+		font-size: 16px;
+		border-radius: 5px;
+	}
+
+	.form-control:focus {
+		background-color: #444444 !important;
+		border-color: #d9534f !important;
+		color: #f7f7f7 !important;
+		box-shadow: 0 0 0 0.2rem rgba(217, 83, 79, 0.25);
+		outline: none;
+	}
+
+	.form-control::placeholder {
+		color: #bbb6b6 !important;
+	}
+
+	/* Select dropdown styling */
+	select.form-control option {
+		background: rgb(50 48 48);
+		color: #bbb6b6;
+	}
+
+	/* Error messages */
+	span[id^="errmsg"] {
+		color: #ff6b6b;
+		font-size: 14px;
+		display: block;
+		margin-top: 5px;
+		text-align: left;
+		position: relative;
+		margin-left: 0 !important;
+	}
+
+	/* Buttons */
+	.login-btn {
+		background-color: #d9534f;
+		border: none;
+		color: white;
+		padding: 12px 30px;
+		font-size: 16px;
+		font-weight: bold;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: background-color 0.3s;
+	}
+
+	.login-btn:hover {
+		background-color: #c9302c;
+	}
+
+	/* Back button styling - circular */
+	.back-btn {
+		position: absolute;
+		top: 13px;
+		right: 0;
+		background-color: #d9534f;
+		border: none;
+		color: white;
+		width: 45px;
+		height: 45px;
+		border-radius: 50%;
+		cursor: pointer;
+		transition: background-color 0.3s;
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.back-btn:hover {
+		background-color: #c9302c;
+	}
+
+	.back-btn i {
+		font-size: 18px;
+	}
+
+	/* Form spacing */
+	.form-section {
+		margin-bottom: 25px;
+	}
+
+	.mb-3 > * {
+		margin-bottom: 15px;
+	}
+
+	/* SweetAlert styling */
+	.swal-icon--success:after, .swal-icon--success:before {
+		background: #262626 !important;
+	}
+	
+	.swal-icon--success__hide-corners {
+		background: #262626;
+	}
+	/* Fix select text clipping */
+	select.form-control {
+		height: 50px;
+		line-height: 1.6;
+		padding: 10px 12px;
+	}
+	.service-subtitle {
+		margin-left: -235px;
+		margin-top: revert;
+	}
+
+	/* Responsive adjustments */
+	@media (max-width: 768px) {
+		.card {
+			padding: 25px 20px;
+		}
+		
+		.back-btn {
+			top: 0;
+			right: 0;
+			width: 40px;
+			height: 40px;
+		}
+		
+		.back-btn i {
+			font-size: 16px;
+		}
+	}
+</style>
+
+<!-- Start main-content -->
+<div class="main-content">
+	<div class='container text-center'>
+		<div class="row" style='margin-top:1.5rem;margin-bottom:1rem;'>
+			<div class='col-md-3'></div>
+			<div class='col-md-6' style="position: relative;">
+				<h3>Create Services</h3> 
+				<p class="service-subtitle">Add a Services which you offered to customer</p>
+				<!-- Back Button - Circular -->
+				<button class="back-btn" onclick="window.location.href='/manage_services/'" title="Go Back">
+					<i class="fa fa-arrow-left" aria-hidden="true"></i>
+				</button>
+			</div>
+			<div class='col-md-3'></div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<div class='card shadow text-center'> 
+					<div class="mb-3">
+						<input type="text" class="form-control" id="title" name="title" placeholder="Enter Title*">
+						<span id="errmsg1" style="color:red;"></span>
+					   
+						<input class="form-control" id="description" rows="3" cols="10" name="Description" placeholder="Enter Description*"> 
+						<span id="errmsg2" style="color:red;"></span>
+						
+						<select class="form-control" placeholder="Pet Type*" id="pet_type" name="pet_type">
+							<option selected style='background:rgb(50 48 48);color:#bbb6b6;' value=''>Pet Type*</option>
+							{% for obj in pet_obj %}
+							<option value="{{obj.name}}" style='background:rgb(50 48 48);color:#bbb6b6;'>{{obj.name}}</option>  
+							{% endfor %}
+						</select>	
+						<span id="errmsg3" style="color:red;"></span>
+						
+						<input type="text" class="form-control" id="charges" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="mobile" placeholder="Enter Charges*" maxlength='7'>
+						<span id="errmsg4" style="color:red;"></span>
+						
+						<button class="login-btn nextBtn btn-danger btn-lg" style="width:10rem;" onclick="createServices()">Create</button>
+					</div> 
+				</div> 
+			</div>
+			<div class="col-md-3"></div>
+		</div> 
+	</div>
+</div>
+<!-- end main-content -->
+
+<script>
+	$('#title').keyup(function(){
+		$('#errmsg1').html(""); 
+	})
+	$('#description').keyup(function(){
+		$('#errmsg2').html(""); 
+	})
+	$('#pet_type').mouseup(function(){
+		$('#errmsg3').html(""); 
+	})
+	$('#charges').keyup(function(){
+		$('#errmsg4').html(""); 
+	})
+	
+	function createServices(){
+		var title = $('#title').val();
+		var description = $('#description').val();
+		var pet_type = $('#pet_type').val();
+		var charges = $('#charges').val(); 
+		var fk_doctor = {{request.session.customer_id}}; 
+		
+		if(title == ""){ 
+			$('#errmsg1').html("Enter title."); 
+		} 
+		else if(description == ""){ 
+			$('#errmsg2').html("Enter description."); 
+		}
+		else if(pet_type == "" || pet_type == null){ 
+			$('#errmsg3').html("Select Pet Type."); 
+		}
+		else if(charges == ""){ 
+			$('#errmsg4').html("Enter Charges."); 
+		}
+		else {
+			$.ajax({
+				method:"POST",
+				url:"/Doctor_service_api/",
+				headers : {'X-CSRFToken' : getCookie('csrftoken')},
+				data:{
+					"fk_doctor": fk_doctor,
+					"title": title,
+					"description": description,
+					"pet_type": pet_type,
+					"charges": charges,
+				},
+				success: function(response){
+					if(response.status ==200){
+						swal({
+							title:"Created",
+							text: "Service Created Successfully.",
+							icon : 'success',
+							button: 'OK',
+							closeOnClickOutside: false,
+						}).then((done)=>{
+							if(done){
+								window.location.href='/manage_services/';
+							}
+						});
+					}
+					else{
+						swal({
+							title:"Error",
+							text: response.msg,
+							icon : 'error',
+							button: 'OK',
+							closeOnClickOutside: false,
+						}); 
+					}
+				}  
+			});
+		}
+	} 
+</script>
+
+{% include 'customer/footer.html' %}

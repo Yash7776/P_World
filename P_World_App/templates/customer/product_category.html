@@ -1,0 +1,166 @@
+{% load static %}
+{% include 'customer/header.html' %}
+  
+	<style>
+		p{
+			color: #d5d5d5;
+			<!-- font-weight: bold; -->
+		}
+		.widget ul.list li, .widget .post {
+		margin-bottom: 0px;
+		padding-bottom: 0px;
+	}
+	.widget .list-border li {
+		margin-bottom: 0;
+		padding: 8px 0;
+	}
+	</style>
+  <!-- Start main-content -->
+<div class="main-content">
+    
+    <section class="">
+		<div class="container" style="width:90%;">
+			<div class="section-content">
+				<div class="row">
+					<button class="login-btn nextBtn btn-danger btn-sm" onclick="window.location.href='/index/'" style="float: right;margin-top: -3%; float:right;" data-toggle="tooltip" data-placement="top" title="Back" tabindex="0"><i class="fa fa-arrow-left" aria-hidden="true" style="cursor:pointer;"></i></button>
+					<div class="col-md-9" style="max-height:900px; overflow-y: auto;" id="show_item">
+							{{item}}
+					</div>
+					<div class="col-md-3">
+						<div class="sidebar sidebar-right mt-sm-30">
+							<div class="widget">
+								<!-- <h5 class="widget-title line-bottom">Filter by Pet Type</h5> -->
+							</div>
+							<div class="widget" style="margin-top:-8%;">
+								<h5 class="widget-title line-bottom">Pet type</h5>
+								<div class="categories">
+									<ul class="list list-border angle-double-right" style="max-height:200px; overflow-y: auto; margin-top:-6%;">
+										<li><a onclick="Search_by_Pet('All','{{total_count}}')" style="cursor:pointer">All<span id="count_total">({{total_count}})</span></a></li>
+										{% for i in pets %}
+											<li><a href="#" onclick="Search_by_Pet('{{i.name}}','{{i.item_count}}')">{{i.name}}<span id="count">({{i.item_count}})</span></a></li>
+										{% endfor %}
+									 
+									</ul>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-3">
+						<div class="sidebar sidebar-right mt-sm-30">
+							<div class="widget">
+								<h5 class="widget-title line-bottom">Filter by Category</h5>
+								<!-- <div class="search-form"> -->
+									<!-- <form> -->
+										<!-- <div class="input-group"> -->
+											<!-- <input type="text" placeholder="Click to Search" class="form-control search-input"> -->
+											<!-- <span class="input-group-btn"> -->
+											<!-- <button type="submit" class="btn search-button"><i class="fa fa-search"></i></button> -->
+											<!-- </span> -->
+										<!-- </div> -->
+									<!-- </form> -->
+								<!-- </div> -->
+							</div>
+							<div class="widget" style="margin-top:-8%;">
+								<h5 class="widget-title line-bottom">Categories</h5>
+								<div class="categories">
+									<ul class="list list-border angle-double-right" style="max-height:200px; overflow-y: auto; margin-top:-6%;">
+										<li><a onclick="Search_by_Category('All','{{category_count}}')" style="cursor:pointer">All<span id="count">({{category_count}})</span></a></li>
+										{% for i in category %}
+											<li><a href="#" onclick="Search_by_Category('{{i.id}}','{{i.item_count}}')">{{i.category_name}}<span id="count">({{i.item_count}})</span></a></li>
+										{% endfor %}
+									 
+									</ul>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+    </section>
+</div>
+  <!-- end main-content -->
+  
+  <script>
+	function Search_by_Pet(pet_type , count)
+	{
+		if (count == 0)
+		{
+			swal("Items Not Available.", {
+			icon: "warning",
+			button: "Ok",
+			closeOnClickOutside: false,
+			});
+		}
+		else
+		{
+			$.ajax({
+					type:"POST",
+					url: "/Search_by_PetType_Item/",
+					data: {
+						'pet_type': pet_type,	
+					},
+					success: function (response) 
+					{
+						if (response.status == '1'){
+							$("#show_item").html("");
+							$("#show_item").html(response.response);
+						}
+						else{
+							swal(""+response.msg+"", {
+							icon: "error",
+							button: "Ok",
+							closeOnClickOutside: false,
+							});
+						}
+					}
+					
+				})
+		}
+	}
+	
+
+	function Search_by_Category(category_id,count)
+	{
+		
+		if (count == 0)
+		{
+			swal("Items Not Available.", {
+			icon: "warning",
+			button: "Ok",
+			closeOnClickOutside: false,
+			});
+		}
+		else
+		{
+			$.ajax({
+					type:"POST",
+					url: "/Search_by_Category_Item/",
+					data: {
+						'category_id': category_id,	
+					},
+					success: function (response) 
+					{
+						if (response.status == '1'){
+							$("#show_item").html("");
+							$("#show_item").html(response.response);
+						}
+						else{
+							swal(""+response.msg+"", {
+							icon: "error",
+							button: "Ok",
+							closeOnClickOutside: false,
+							});
+						}
+					}
+					
+				})
+		}
+	}
+  </script>
+  {% include 'customer/footer.html' %}

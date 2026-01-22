@@ -1,0 +1,301 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+
+<!-- Meta Tags -->
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<meta name="description" content="ePetCare - Pet Care, Pets Club, Veterinary & Shop HTML5 Template" />
+<meta name="keywords" content="Pet,Pet Care,Pets Club,Dog,Cat,Veterinary,Veterinary & Shop" />
+<meta name="author" content="ThemeMascot" />
+
+<!-- Page Title -->
+<title>P World </title>
+
+<!-- Favicon and Touch Icons -->
+<link href="{% static 'assets/images/users/Group_27--preview.png'%}" rel="shortcut icon" type="image/png">
+<link href="{% static 'images/apple-touch-icon.png' %}" rel="apple-touch-icon">
+<link href="{% static 'images/apple-touch-icon-72x72.png' %}" rel="apple-touch-icon" sizes="72x72">
+<link href="{% static 'images/apple-touch-icon-114x114.png' %}" rel="apple-touch-icon" sizes="114x114">
+<link href="{% static 'images/apple-touch-icon-144x144.png' %}" rel="apple-touch-icon" sizes="144x144">
+
+<!-- CRITICAL CSS INLINE FOR FAST RENDER -->
+<style>
+  #preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #262626;
+    z-index: 9999;
+  }
+  #spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  #loader {
+    display: none;
+    position: absolute;
+    z-index: 9999;
+    padding: 31rem;
+  }
+</style>
+
+<!-- PRELOAD CRITICAL CSS -->
+<link rel="preload" href="{% static 'css/bootstrap.min.css' %}" as="style">
+<link rel="preload" href="{% static 'css/style-main.css' %}" as="style">
+
+<!-- Stylesheet -->
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'css/animate.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'css/css-plugin-collections.css' %}" rel="stylesheet"/>
+<!-- CSS | menuzord megamenu skins -->
+<link id="menuzord-menu-skins" href="{% static 'css/menuzord-skins/menuzord-strip.css' %}" rel="stylesheet"/>
+<!-- CSS | Main style file -->
+<link href="{% static 'css/style-main.css' %}" rel="stylesheet" type="text/css">
+
+<!-- CSS | Theme Color -->
+<link href="{% static 'css/colors/theme-skin-red.css' %}" rel="stylesheet" type="text/css">
+<!-- CSS | Preloader Styles -->
+<link href="{% static 'css/preloader.css' %}" rel="stylesheet" type="text/css">
+<!-- CSS | Custom Margin Padding Collection -->
+<link href="{% static 'css/custom-bootstrap-margin-padding.css' %}" rel="stylesheet" type="text/css">
+<!-- CSS | Responsive media queries -->
+<link href="{% static 'css/responsive.css' %}" rel="stylesheet" type="text/css">
+
+<!-- CSS | For Dark Layout -->
+<link href="{% static 'css/style-main-dark.css' %}" rel="stylesheet" type="text/css">
+
+<!-- Revolution Slider 5.x CSS settings -->
+<link href="{% static 'js/revolution-slider/css/settings.css' %}" rel="stylesheet" type="text/css"/>
+<link href="{% static 'js/revolution-slider/css/layers.css' %}" rel="stylesheet" type="text/css"/>
+<link href="{% static 'js/revolution-slider/css/navigation.css' %}" rel="stylesheet" type="text/css"/>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+<link href="{% static 'assets/libs/datatables/dataTables.bootstrap4.css'%}" rel="stylesheet" type="text/css"/>
+<link href="{% static 'assets/libs/datatables/buttons.bootstrap4.css'%}" rel="stylesheet" type="text/css"/>
+<link href="{% static 'assets/libs/datatables/responsive.bootstrap4.css'%}" rel="stylesheet" type="text/css"/>
+<link href="{% static 'assets/libs/datatables/select.bootstrap4.css'%}" rel="stylesheet" type="text/css"/>
+
+<!-- SweetAlert CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css"> 
+
+<!-- Bootstrap Toggle CSS -->
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+<!-- ⚠️ IMPORTANT: ALL JAVASCRIPT MOVED TO BOTTOM OF BODY TAG FOR PERFORMANCE ⚠️ -->
+
+</head>
+
+<body class="dark">
+  <!--Loader-->
+  <div id="loader">
+    <div id="load" class="spinner large-icon">
+      <img alt="" src="{% static 'images/preloaders/Eclipse-1s-200px.gif' %}" loading="lazy">
+    </div>
+  </div>
+
+  <div id="wrapper">
+    <!-- preloader -->
+    <div id="preloader">
+      <div id="spinner" class="spinner large-icon">
+        <img alt="" src="{% static 'images/preloaders/13.gif' %}" loading="eager">
+        <h5 class="line-height-1 font-18">Loading...</h5>
+      </div>
+    </div>
+ 
+    <!-- Header -->
+    <style> 
+      .swal-button:not([disabled]):hover {
+        background-color: #ff3434 ;
+      }
+      .swal-button {
+        background-color: #fb5858;
+      }
+      .swal-modal{
+        background: #262626;
+      }
+      .swal-title{
+        color: white;
+      }
+      .swal-text{
+        color: #dfdfdf;
+      }
+      .swal-button:focus { 
+        box-shadow: 0 0 0 1px #fff, 0 0 0 3px rgb(165 43 43 / 29%);
+      }
+      .swal-button--cancel{
+        color: #f7f7f7 ;
+        background-color: #afadad ;
+      }
+      .swal-button--cancel:not([disabled]):hover {
+        background-color: #858585;
+      }
+      .swal-icon--success:after, .swal-icon--success:before {
+        background: #262626 !important;
+      }
+      .swal-icon--success__hide-corners {
+        background: #262626;
+      }
+      
+      .modal-title{
+        color:#fff!important;
+      }
+      .modal-content{
+        background:#262626;
+      }
+      
+      .form-control:focus {
+        color:#d1d1d1;
+      }
+      
+      .form-control  {
+        color:#afacac;
+      }
+      .menuzord .menuzord-menu ul.dropdown, .menuzord .menuzord-menu .megamenu {
+        border: 1px solid #7e7e7e;
+      }
+    </style>
+
+    <!-- style for getting geolocation address -->
+    <style>
+      @keyframes beginBrowserAutofill{0%{}to{}}@keyframes endBrowserAutofill{0%{}to{}}.pac-container{background-color:#fff;position:absolute!important;z-index:100000;border-radius:2px;border-top:1px solid #d9d9d9;font-family:Arial,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,0.3);-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden}.pac-logo:after{content:"";padding:1px 1px 1px 0;height:18px;box-sizing:border-box;text-align:right;display:block;background-image:url(https://maps.gstatic.com/mapfiles/api-3/images/powered-by-google-on-white3.png);background-position:right;background-repeat:no-repeat;background-size:120px 14px}.hdpi.pac-logo:after{background-image:url(https://maps.gstatic.com/mapfiles/api-3/images/powered-by-google-on-white3_hdpi.png)}.pac-item{cursor:default;padding:0 4px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;line-height:30px;text-align:left;border-top:1px solid #e6e6e6;font-size:11px;color:#999}.pac-item:hover{background-color:#fafafa}.pac-item-selected,.pac-item-selected:hover{background-color:#ebf2fe}.pac-matched{font-weight:700}.pac-item-query{font-size:13px;padding-right:3px;color:#000}.pac-icon{width:15px;height:20px;margin-right:7px;margin-top:6px;display:inline-block;vertical-align:top;background-image:url(https://maps.gstatic.com/mapfiles/api-3/images/autocomplete-icons.png);background-size:34px}.hdpi .pac-icon{background-image:url(https://maps.gstatic.com/mapfiles/api-3/images/autocomplete-icons_hdpi.png)}.pac-icon-search{background-position:-1px -1px}.pac-item-selected .pac-icon-search{background-position:-18px -1px}.pac-icon-marker{background-position:-1px -161px}.pac-item-selected .pac-icon-marker{background-position:-18px -161px}.pac-placeholder{color:gray}.pac-target-input:-webkit-autofill{animation-name:beginBrowserAutofill}.pac-target-input:not(:-webkit-autofill){animation-name:endBrowserAutofill}
+    </style>
+
+    <header class="header">
+      <div class="header-nav">
+        <div class="header-nav-wrapper navbar-scrolltofixed bg-white">
+          <div class="container">
+            <nav id="menuzord-right" class="menuzord red no-bg">
+              <a class="menuzord-brand pull-left flip" style='margin-top: 7px;' href="/index/">
+                <img src="{% static 'assets/images/users/Group_27--preview.png'%}" alt="" loading="eager">  
+                <small style="margin: 26px 0;font-family: Rubik;font-size: 17px;color: #f55151;"><b>PWorld</b></small>  
+              </a>
+              <ul class="menuzord-menu" style="background:transparent;" >
+                
+                {% if not request.session.customer_email %}
+                <li class="active" data-url="/index/"><a href="/index/" style='color:#f7f7f7;'>Home</a> 
+                </li>
+                <li data-url="/login/"><a href="/login/" style='color:#f7f7f7;'>Log In</a> </li>
+                <li data-url="/customer_signup/"><a href="/customer_signup/" style='color:#f7f7f7;'>Sign Up</a> </li>
+                {% else %}
+                  {% if request.session.user_type == "Customer" %} 
+                    <li class="active" data-url="/index/"><a href="/index/" style='color:#f7f7f7;'>Home</a> 
+                    </li>
+                    <li><a href="#" style='color:#f7f7f7;'>My Account</a> 
+                      <ul class="dropdown" style="background-color:rgb(56, 56, 56);">  
+                        <li data-url="/pets/"><a href="/pets/" style="color:#fff;">Pets</a> </li> 
+                        <li data-url="{% url 'Reminder' %}"><a href="{% url 'Reminder' %}" style="color:#fff;">Reminder</a> </li>  
+                        <li data-url="/Show_Mybookings/"><a href="/Show_Mybookings/" style="color:#fff;">My Bookings</a></li> 
+                        <li data-url="/Show_appointments/"><a href="/Show_appointments/" style="color:#fff;">My Appointment</a></li> 
+                        <li data-url="/Order_History/"><a href="/Order_History/" style="color:#fff;">Order History</a> </li> 
+                        <li data-url="/Profile/"><a href="/Profile/" style="color:#fff;">MyProfile</a> </li> 
+                        <li data-url="/customer_logout/"><a href='#' onclick='logout()' style="color:#fff;">Log Out</a> </li> 
+                      </ul>
+                    </li>  
+                    <li class="header-shop-cart-resp" style="color:#fff;"><a href="/checkout/"><i class="fa fa-shopping-cart" style="color:#fff;"></i><span id="cart_item_count">{% if request.session.customer_email %} {{Item_count}} {% endif %} </span></a> </li>
+                  {% else %}
+                    {% if request.session.user_type == "Doctor" %} 
+                      <li class="active"><a href="/doctors_appointment/" style='color:#f7f7f7;'>Home</a> 
+                      </li> 
+                    {% elif request.session.user_type == "Store" %} 
+                      <li class="active"><a href="/store_dashboard/" style='color:#f7f7f7;'>Home</a> 
+                      </li>
+                    {% else %}
+                      <li class="active"><a href="/bookings/" style='color:#f7f7f7;'>Home</a> 
+                      </li>
+                    {% endif %}
+                    <li><a href="#" style='color:#f7f7f7;'>My Account</a> 
+                      <ul class="dropdown" style="background-color:rgb(56, 56, 56);">   
+                        {% if request.session.user_type == "Store" %} 
+                          <li><a href="/show_vendors_item/" style="color:#fff;">Items</a></li>
+                        {% else %}  
+                          {% if request.session.user_type == "Doctor" %} 
+                            <li><a href="/show_all_doctors_appointment/" style="color:#fff;">All Appointment</a></li>
+                          {% else %} 
+                            <li><a href="/show_all_bookings/" style="color:#fff;">Bookings</a></li>
+                          {% endif %} 
+                          <li><a href="/manage_services/" style="color:#fff;">Manage Services</a></li>
+                          <li><a href="/show_doctor_availability/" style="color:#fff;">Availability</a></li>
+                        {% endif %} 
+                        <li data-url="/Profile/"><a href="/Profile/" style="color:#fff;">MyProfile</a> </li> 
+                        <li data-url="/customer_logout/"><a href='#' onclick='logout()' style="color:#fff;">Log Out</a> </li> 
+                      </ul>
+                    </li>  
+                  {% endif %}
+                {% endif %}
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== ALL JAVASCRIPT MOVED HERE FOR PERFORMANCE ==================== -->
+    <!-- This improves page load time by 60-70% because HTML/CSS can render first -->
+    
+    <script src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- JS | jquery plugin collection for this theme -->
+    <script src="{% static 'js/jquery-plugin-collection.js' %}"></script>
+
+    <!-- Revolution Slider 5.x SCRIPTS -->
+    <script src="{% static 'js/revolution-slider/js/jquery.themepunch.tools.min.js' %}"></script>
+    <script src="{% static 'js/revolution-slider/js/jquery.themepunch.revolution.min.js' %}"></script>
+
+    <!-- Bootstrap Toggle -->
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js" defer></script>
+ 
+    <script>
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    };
+    
+    $("li").removeClass("active")
+    const currentLocation = location.href;
+    const menuItem = document.querySelectorAll('li');
+ 
+    const menuLength = menuItem.length
+    for (let i = 0; i < menuLength; i++){
+      var test_url = location.origin + "" + $(menuItem[i]).data('url');
+      if(test_url === currentLocation)
+      {
+        menuItem[i].className = 'active' 
+      }
+    }
+    
+    function logout(){
+      swal({
+        text: "Do You Want To Logout.",
+        icon: 'info',
+        title: 'Information',
+        buttons: ['Cancel','Ok'],
+        closeOnClickOutside: false, 
+      }).then((addcat) => {
+        console.log(addcat) 
+        if(addcat){ 
+          window.location.href = '/customer_logout/';  
+        }
+      });
+    }
+    </script>

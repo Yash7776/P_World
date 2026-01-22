@@ -1,0 +1,22 @@
+{% for i in order_item %}
+	<div class="row">
+		<div class="col-sm-4">
+			<label class="dignModal" style="  color:#fff">Item Name:</label>	
+		</div>
+		<div class="col-sm-8">
+			<p  >{{i.fk_item.item_name}}</p>
+		</div>
+				
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<label style="color:#fff;">Quantity/Price:</label>
+		</div>
+		<div class="col-sm-8">
+			<p  >{{i.item_quantity}} / ${{i.item_price}}</p>
+		</div>
+	</div>
+	<hr style="margin: 0.3rem 0 !important; width: 475px;">
+{% endfor %}
+	
+									

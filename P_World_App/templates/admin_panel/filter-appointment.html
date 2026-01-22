@@ -1,0 +1,40 @@
+{% load static %}
+<link href="{% static 'assets/libs/datatables/dataTables.bootstrap4.css'%}" rel="stylesheet" type="text/css"/>
+<table id="datatable" class="table table-striped table-bordered dt-responsive nowrap"
+       style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+    <thead>
+    <tr>
+        <th>Sr. No.</th>
+        <th>{{vendor_type}}</th>
+        <th>Customer</th>
+        <th>Pet</th>
+        <th>{% if vendor_type == "Doctor" %} Appointment {% else %} Booking {% endif %}Date</th>
+        <th>Booking For</th>
+        <th>Service</th>
+        <th>Amount</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for i in obj %}
+    <tr>
+        <td>{{forloop.counter}}</td>
+        <td>{{i.vendor_name}}</td>
+        <td>{{i.customer_name}}</td>
+        <td>{{i.pet_name}}</td>
+        <td>{{i.date}} {{i.time}}</td>
+        <td>{{i.booking_date}} {{i.booking_time}}</td>
+        <td>{% if i.service %} {{i.service}} {% else %} --- {% endif %}</td>
+        <td>{{i.amount}}</td>
+        <td>{{i.book_status}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<input hidden id="is_data" value="{{is_data}}">
+
+<script src="{% static 'assets/libs/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'assets/libs/datatables/dataTables.bootstrap4.min.js'%}"></script>
+<script src="{% static 'assets/js/pages/datatables.init.js'%}"></script>
+<script src="{% static 'assets/libs/datatables/dataTables.responsive.min.js'%}"></script>
+<script src="{% static 'assets/libs/datatables/responsive.bootstrap4.min.js'%}"></script>

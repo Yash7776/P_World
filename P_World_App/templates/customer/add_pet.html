@@ -1,0 +1,415 @@
+{% load static %}
+{% include 'customer/header.html' %}
+<style>
+	/* Force dark background immediately */
+	body, html {
+		background-color: #1a1a1a !important;
+		color: #f7f7f7 !important;
+	}
+
+	.main-content {
+		background-color: #1a1a1a;
+		min-height: 100vh;
+		padding-bottom: 80px;
+	}
+
+	.card {
+		background-color: #2c2c2c !important;
+		border: 1px solid #5e5e5e;
+		color: #f7f7f7;
+		padding: 30px;
+		border-radius: 8px;
+		position: relative;
+	}
+
+	/* Headings */
+	h3 {
+		color: #f7f7f7 !important;
+		margin-top: 0;
+	}
+
+	h5 {
+		color: #f7f7f7 !important;
+	}
+
+	/* Form inputs dark theme */
+	.form-control {
+		background-color: #3a3a3a !important;
+		border: 1px solid #5e5e5e !important;
+		color: #afacac !important;
+		padding: 12px;
+		font-size: 16px;
+		border-radius: 5px;
+	}
+	select.form-control {
+		background: rgb(50 48 48);
+		color: #bbb6b6;
+		height: 45px;  /* Add this */
+		padding: 10px 12px;  /* Add this */
+	}
+
+	.form-control:focus {
+		background-color: #444444 !important;
+		border-color: #d9534f !important;
+		color: #d1d1d1 !important;
+		box-shadow: 0 0 0 0.2rem rgba(217, 83, 79, 0.25);
+		outline: none;
+	}
+
+	.form-control::placeholder {
+		color: #bbb6b6 !important;
+	}
+
+	/* Select dropdown styling */
+	select.form-control option {
+		background: rgb(50 48 48);
+		color: #bbb6b6;
+	}
+
+	/* Error messages */
+	span[id^="errmsg"] {
+		color: #ff6b6b;
+		font-size: 14px;
+		display: block;
+		margin-top: 5px;
+		text-align: left;
+		position: relative;
+		margin-left: 0 !important;
+	}
+
+	/* Buttons */
+	.login-btn {
+		background-color: #d9534f;
+		border: none;
+		color: white;
+		padding: 12px 30px;
+		font-size: 16px;
+		font-weight: bold;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: background-color 0.3s;
+	}
+
+	.login-btn:hover {
+		background-color: #c9302c;
+	}
+
+	/* Back button styling - circular */
+	.back-btn {
+		position: absolute;
+		top: 13px;
+		right: 0;
+		background-color: #d9534f;
+		border: none;
+		color: white;
+		width: 45px;
+		height: 45px;
+		border-radius: 50%;
+		cursor: pointer;
+		transition: background-color 0.3s;
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.back-btn:hover {
+		background-color: #c9302c;
+	}
+
+	.back-btn i {
+		font-size: 18px;
+	}
+
+	/* Image upload area */
+	#show_img {
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-color: #3a3a3a;
+		border: 2px dashed #5e5e5e !important;
+	}
+
+	.attachment {
+		cursor: pointer;
+	}
+
+	.btn-file__actions__item--shadow {
+		color: #bbb6b6;
+	}
+
+	/* Gender buttons */
+	.gender-btn {
+		padding: 10px 26px;
+		line-height: 1.3333333;
+		border-radius: 6px;
+		font-family: inherit;
+		-webkit-appearance: button;
+		cursor: pointer;
+	}
+
+	.gender-btn-selected {
+		color: #fff;
+		background-color: #c9302c;
+		border-color: #ac2925;
+	}
+
+	.gender-btn-unselected {
+		background: #3a3a3a;
+		color: #bbb6b6;
+		border: 1px solid #5e5e5e;
+	}
+
+	/* Date picker styling */
+	::-webkit-calendar-picker-indicator {
+		filter: invert(6);
+	}
+
+	/* SweetAlert styling */
+	.swal-icon--success:after, .swal-icon--success:before {
+		background: #262626 !important;
+	}
+
+	.swal-icon--success__hide-corners {
+		background: #262626;
+	}
+
+	/* Form spacing */
+	.mb-3 > * {
+		margin-bottom: 15px;
+	}
+
+	/* Responsive adjustments */
+	@media (max-width: 768px) {
+		.card {
+			padding: 25px 20px;
+		}
+		
+		.back-btn {
+			top: 0;
+			right: 0;
+			width: 40px;
+			height: 40px;
+		}
+		
+		.back-btn i {
+			font-size: 16px;
+		}
+
+		.gender-btn {
+			margin-left: 0 !important;
+		}
+	}
+</style>
+
+<!-- Start main-content -->
+<div class="main-content">
+	<!-- Section: inner-header -->
+	<div class='container text-center'>
+		<div class="row" style="margin: 1.5rem 1rem 1rem 1rem;">
+			<div class="col-lg-3"></div>
+			<div class="col-lg-6" style="position: relative;">
+				<h3>ADD NEW PET</h3>
+				
+				<!-- Back Button - Circular -->
+				<button class="back-btn" onclick="window.location.href='/pets/'" title="Go Back">
+					<i class="fa fa-arrow-left" aria-hidden="true"></i>
+				</button>
+			</div>
+			<div class="col-lg-3"></div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<div class='card shadow text-center'> 
+					<div class="mb-3"> 
+						<label for="pet_img" class="attachment" id='show_img' style='height: 12rem; width: 14rem;'> 
+							<div class="btn-file__actions__item--shadow" style='margin-top:5rem;' id="lbl">
+								<i class="fa fa-plus fa-lg fa-fw" aria-hidden="true"></i>
+								<div class="visible-xs-block"></div>
+								Select Pet Image
+							</div> 
+							<input name="file" type="file" id="pet_img" onchange="onFileSelected(event)" style='display:none' accept="image/jpg, image/jpeg, image/png">
+						</label><br>
+						<span id="errmsg1" style="color:red;"></span><br>
+						   
+						<input type="text" class="form-control" id="name" name="Name" placeholder="Pet Name*">
+						<span id="errmsg2" style="color:red;"></span><br>
+					   
+						<select id='pet_type' class="form-control">
+							<option selected value='' style='background:rgb(50 48 48);color:#bbb6b6;'>Select Type*</option>
+							{% for i in pet_obj %}
+							<option value='{{i.name}}' style='background:rgb(50 48 48);color:#bbb6b6;'>{{i.name}}</option>
+							{% endfor %}
+						</select> 
+						<span id="errmsg3" style="color:red;"></span><br>
+						 
+						<input type="text" class="form-control" id="breed" name="Breed" placeholder="Pet Breed*">
+						<span id="errmsg4" style="color:red;"></span><br>
+						
+						<h5 style='margin:0;' class='text-left'> Date Of Birth<span style='color:#ff0000ad'>*</span></h5>
+						<input type='date' id='birth_date' class="form-control" placeholder='Birth Date*' max="{% now 'Y-m-d' %}">
+						<span id="errmsg5" style="color:red;"></span><br>
+						
+						<h5 style='margin:0;' class='text-left mb-5'> Gender<span style='color:#ff0000ad'>*</span></h5>
+						<label class='gender-btn gender-btn-selected mr-5' id='label_male' style='margin-left: -16rem;' for="Male" onclick='changeSelect()'>Male 
+							<input type="radio" name="Gender" id="Male" checked style='display:none;' value='male'>
+						</label>
+						<label class='gender-btn gender-btn-unselected ml-4' id='label_female' for="Female" onclick='changeSelect()'> Female
+							<input type="radio" name="Gender" id="Female" style='display:none;' value='female'>
+						</label>
+						
+						<input type="text" class="form-control mt-5" id="weight" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" placeholder="Pet Weight (Kg)*">
+						<span id="errmsg6" style="color:red;"></span><br>
+						
+						<textarea class="form-control" id="description" maxlength="200" placeholder="Description"></textarea>
+						<br>
+						
+						<button class="login-btn nextBtn btn-danger btn-lg" onclick="save()">Save</button>
+					</div> 
+				</div> 
+			</div>
+			<div class="col-md-3"></div>
+		</div>
+	</div>
+</div>
+<!-- end main-content -->
+
+<script>
+	function changeSelect() {
+		var gender = $("input[name='Gender']:checked").val();
+		if (gender == 'male'){
+			$("#label_male").addClass("gender-btn-selected");
+			$("#label_male").removeClass("gender-btn-unselected");
+			$("#label_female").removeClass("gender-btn-selected");
+			$("#label_female").addClass("gender-btn-unselected");
+		}
+		else{
+			$("#label_male").removeClass("gender-btn-selected");
+			$("#label_male").addClass("gender-btn-unselected");
+			$("#label_female").addClass("gender-btn-selected");
+			$("#label_female").removeClass("gender-btn-unselected");
+		}
+	}		
+
+	$('#name').keyup(function(){
+		$('#errmsg2').hide();
+	});
+	
+	$('#pet_type').mouseup(function(){
+		$('#errmsg3').hide();
+	});
+
+	$('#breed').keyup(function(){
+		$('#errmsg4').hide();
+	});
+	
+	$('#birth_date').mouseup(function(){
+		$('#errmsg5').hide();
+	});
+
+	$('#weight').keyup(function(){
+		$('#errmsg6').hide();
+	});
+	
+	function save(){
+		var pet_img = $("#pet_img").val();
+		var name = $("#name").val();
+		var pet_type = $("#pet_type").val();
+		var breed = $("#breed").val();
+		var birth_date = $("#birth_date").val();
+		var weight = $("#weight").val();
+		var description = $("#description").val();
+		var gender = $("input[name='Gender']:checked").val();
+		
+		var form = $("#form_data")[0];
+		var data_item = new FormData(form);
+		
+		if (pet_img == ''){
+			$('#errmsg1').html('Select Pet Image');
+			$('#errmsg1').show();
+		}
+		else if (name == ''){
+			$('#errmsg2').html('Enter Pet Name');
+			$('#errmsg2').show();
+		}
+		else if (pet_type == ''){
+			$('#errmsg3').html('Select Pet Type');
+			$('#errmsg3').show();
+		}
+		else if (breed == ''){
+			$('#errmsg4').html('Enter Breed');
+			$('#errmsg4').show();
+		}
+		else if (birth_date == ''){
+			$('#errmsg5').html('Select Date OF Birth');
+			$('#errmsg5').show();
+		}
+		else if (weight == ''){
+			$('#errmsg6').html('Enter Weight');
+			$('#errmsg6').show();
+		}
+		else {
+			data_item.append("pet_image",document.getElementById("pet_img").files[0])
+			data_item.append("pet_name",name)
+			data_item.append("type_of_pet",pet_type)
+			data_item.append("breed",breed)
+			data_item.append("birth_date",birth_date)
+			data_item.append("weight",weight)
+			data_item.append("pet_description",description)
+			data_item.append("gender",gender)
+			data_item.append("fk_customer",'{{request.session.customer_id}}')
+			
+			$.ajax({
+				method:"POST",
+				url:"/add_new_pet/",
+				enctype : "mutipart/form_data",
+				processData : false,
+				contentType : false,
+				cache : false,
+				data:data_item,
+				success: function(response){
+					if(response.status ==200){
+						swal({
+							text : response.msg,
+							icon : 'success',
+							title: 'Success',
+							button: "OK",
+							closeOnClickOutside: false,
+						}).then((addcat)=>{
+							window.location.href="/pets/";  
+						});
+					}
+					else{
+						swal({
+							title:"Error",
+							text: response.msg,
+							icon : 'error',
+							button: 'OK',
+							closeOnClickOutside: false,
+						});
+					}
+				}  
+			});
+		}
+	} 
+	
+	function onFileSelected(event) {
+		$('#errmsg1').hide();
+		var selectedFile = event.target.files[0];
+		var reader = new FileReader();
+		
+		var imgtag = document.getElementById("show_img");
+		imgtag.title = selectedFile.name;
+
+		reader.onload = function(event) {
+			$('#show_img').css('background-image', 'url(' + event.target.result + ')');
+			$("#lbl").html("");
+		};
+
+		reader.readAsDataURL(selectedFile);
+	}	
+</script>
+
+{% include 'customer/footer.html' %}

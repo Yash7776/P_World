@@ -1,0 +1,288 @@
+{% load static %}
+{% include 'customer/header.html' %}
+<style>
+    .main-content {
+        min-height: calc(100vh - 150px);
+    }
+    
+    .nav-tabs {
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .nav-tabs .nav-link {
+        color: #8d8d8d;
+        font-weight: 600;
+        border: none;
+        padding: 10px 20px;
+        background-color: transparent;
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: #dc3545;
+        background-color: #ffffff !important;
+        border: none;
+        border-bottom: 3px solid #dc3545;
+    }
+    
+    .date-filter-section {
+        background-color: #292929;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .date-filter-section label {
+        color: #ffffff;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .date-filter-section input[type="date"] {
+        color: #ffffff;
+        font-weight: 500;
+    }
+    
+    .filter-btn {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+    
+    .filter-btn:hover {
+        background-color: #c82333;
+    }
+    
+    .reset-btn {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: 10px;
+        font-weight: 600;
+    }
+    
+    .reset-btn:hover {
+        background-color: #5a6268;
+    }
+    
+    .reminder-item {
+        border: 3px solid #504e4e;
+        box-shadow: 2px 2px 9px 0px grey;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        transition: transform 0.2s;
+        background-color: #1e1e1e;
+    }
+    
+    .reminder-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 3px 3px 12px 0px grey;
+    }
+    
+	.reminder-item.expired {
+    opacity: 0.9;              /* subtle difference only */
+    background-color: #1e1e1e; /* same white as upcoming */
+	}
+
+    .reminder-item a {
+        text-decoration: none;
+    }
+    
+    .pet-name {
+        color: #dc3545;
+        font-weight: 600;
+        text-align: left;
+        margin-bottom: 5px;
+    }
+    
+    .reminder-details {
+        color: #ffffff;
+        text-align: left;
+        margin-bottom: 3px;
+    }
+    
+    /* Fix Bootstrap tab visibility conflict */
+    .tab-pane {
+        display: none;
+    }
+
+    .tab-pane.active.show {
+        display: block !important;
+        opacity: 1 !important;
+    }
+
+	/* Make calendar icon white (Chrome, Edge, Safari) */
+	input[type="date"]::-webkit-calendar-picker-indicator {
+		filter: invert(1);
+		opacity: 1;
+		cursor: pointer;
+	}
+	/* Force same white background for both tabs */
+	.tab-content {
+		background-color: #1e1e1e !important;
+	}
+
+	.tab-pane {
+		background-color: #1e1e1e !important;
+		opacity: 1 !important;
+	}
+
+</style>
+
+<!-- Start main-content -->
+<div class="main-content">
+    <div class='container'>
+        <!-- Header Section -->
+        <div class="row text-center" style="margin-top: 5rem; margin-bottom: 1rem;">
+            <div class="col-lg-12">
+                <h2 style="font-weight: 700;">REMINDERS</h2>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 1rem;">
+            <div class="col-lg-12 text-end">
+                <a href='{% url "Add_Reminder" %}'>
+                    <button class="btn btn-danger btn-lg">+ Add Reminder</button>
+                </a>
+            </div>
+        </div>
+
+        <!-- Date Filter Section -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="date-filter-section">
+                    <form method="GET" action="{% url 'Reminder' %}">
+                        <div class="row align-items-end">
+                            <div class="col-md-3 col-sm-6">
+                                <label for="from_date">From Date:</label>
+                                <input type="date" id="from_date" name="from_date" class="form-control" value="{{ from_date }}">
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <label for="to_date">To Date:</label>
+                                <input type="date" id="to_date" name="to_date" class="form-control" value="{{ to_date }}">
+                            </div>
+                            <div class="col-md-6 col-sm-12" style="margin-top: 28px;">
+                                <button type="submit" class="filter-btn">Apply Filter</button>
+                                <a href="{% url 'Reminder' %}">
+                                    <button type="button" class="reset-btn">Reset</button>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Section -->
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-lg-12">
+                <div class='card shadow'>
+                    <!-- Tabs Navigation -->
+                    <ul class="nav nav-tabs" id="reminderTabs" role="tablist" style="padding: 10px 10px 0 10px;">
+                        <li class="nav-item" role="presentation" style="flex: 1;">
+                            <button class="nav-link active w-100" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="true">
+                                Upcoming Reminders <span class="badge bg-danger">{{ upcoming_count }}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation" style="flex: 1;">
+                            <button class="nav-link w-100" id="expired-tab" data-bs-toggle="tab" data-bs-target="#expired" type="button" role="tab" aria-controls="expired" aria-selected="false">
+                                Expired Reminders <span class="badge bg-secondary">{{ expired_count }}</span>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tabs Content -->
+                    <div class="tab-content" id="reminderTabsContent">
+                        <!-- Upcoming Reminders Tab -->
+                        <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+                            {% if upcoming_reminders %}
+                                <div class="reminder-container" style="max-height: 500px; overflow-y: auto; overflow-x: hidden; padding: 20px;">
+                                    {% for i in upcoming_reminders %}
+                                        <div class="reminder-item">
+                                            <a href="{% url 'Edit_Reminder' i.id %}">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-3 col-sm-4 text-center">
+                                                        <img src="{{ i.fk_pet.pet_image.url }}" alt="{{ i.fk_pet.pet_name }}" 
+                                                             style="height: 100px; width: 120px; object-fit: cover; border-radius: 5px;"/>
+                                                    </div>
+                                                    <div class="col-md-9 col-sm-8">
+                                                        <div class="pet-name">{{ i.fk_pet.pet_name }}</div>
+                                                        <div class="reminder-details"><strong>Reminder:</strong> {{ i.reminder_name }}</div>
+                                                        <div class="reminder-details"><strong>Date:</strong> {{ i.select_date|date:"M d, Y" }}</div>
+                                                        <div class="reminder-details"><strong>Time:</strong> {{ i.select_time|time:"h:i A" }}</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="text-center" style="padding: 60px 20px;">
+                                    <h4 style="color: #6c757d;">No Upcoming Reminders Available</h4>
+                                    <!-- <p style="color: #6c757d;">All your future reminders will appear here.</p> -->
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Expired Reminders Tab -->
+                        <div class="tab-pane fade" id="expired" role="tabpanel" aria-labelledby="expired-tab">
+                            {% if expired_reminders %}
+                                <div class="reminder-container" style="max-height: 500px; overflow-y: auto; overflow-x: hidden; padding: 20px;">
+                                    {% for i in expired_reminders %}
+                                        <div class="reminder-item expired">
+                                            <a href="{% url 'Edit_Reminder' i.id %}">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-3 col-sm-4 text-center">
+                                                        <img src="{{ i.fk_pet.pet_image.url }}" alt="{{ i.fk_pet.pet_name }}" 
+                                                             style="height: 100px; width: 120px; object-fit: cover; border-radius: 5px;"/>
+                                                    </div>
+                                                    <div class="col-md-9 col-sm-8">
+                                                        <div class="pet-name">{{ i.fk_pet.pet_name }}</div>
+                                                        <div class="reminder-details"><strong>Reminder:</strong> {{ i.reminder_name }}</div>
+                                                        <div class="reminder-details"><strong>Date:</strong> {{ i.select_date|date:"M d, Y" }}</div>
+                                                        <div class="reminder-details"><strong>Time:</strong> {{ i.select_time|time:"h:i A" }}</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="text-center" style="padding: 60px 20px;">
+                                    <h4 style="color: #6c757d;">No Expired Reminders</h4>
+                                    <!-- <p style="color: #6c757d;">Your past reminders will appear here.</p> -->
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end main-content -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Initialize Bootstrap tabs
+    document.addEventListener('DOMContentLoaded', function() {
+        var triggerTabList = [].slice.call(document.querySelectorAll('#reminderTabs button'));
+        triggerTabList.forEach(function (triggerEl) {
+            var tabTrigger = new bootstrap.Tab(triggerEl);
+            triggerEl.addEventListener('click', function (event) {
+                event.preventDefault();
+                tabTrigger.show();
+            });
+        });
+    });
+</script>
+
+{% include 'customer/footer.html' %}

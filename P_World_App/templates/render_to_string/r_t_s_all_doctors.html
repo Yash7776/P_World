@@ -1,0 +1,31 @@
+ 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.2/css/star-rating.min.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.2/js/star-rating.min.js"></script>
+	
+{% for i in data_list %}
+<div class="col-md-3" style='margin-top:1.5rem;'  >
+<div style='border: 2px solid #505050;'> 
+	<div class="text-center mt-10 mb-10"> 
+		<a href="/service/{{i.id}}" style="text-decoration:none !important;">
+		 
+			<img {% if i.profile_image %} src="{{i.profile_image.url}}" {% else %} src="/media/profile_image/no_image.jpg "  {% endif %} style="height: 180px;width: 270px;">
+			 
+			<h4 style='color:#f7f7f7;margin-bottom:0;'>{{ i.name|default:"--" }}</h4>
+			<p style='margin-bottom:0;'>- {{ i.bussiness_name|default:"--" }}</p>
+			<p class="product-title-two" style='margin-bottom:0;'>
+			<!-- {% if i.distance %}
+			<i class="fa fa-map-marker" style='color: #df314f !important;' aria-hidden="true"></i> {{i.distance}} Km.
+			{% endif %} -->
+						{% if i.distance %}
+			<p class="product-title-two" style="margin-bottom:0;">
+			<i class="fa fa-map-marker" style="color:#df314f"></i>
+			{{ i.distance }} Km.
+			</p>
+			{% endif %}
+			</p>
+			 <input id="input-1" name="input-1" class="rating rating-loading "   data-min="0" data-max="5" data-step="0.1" value="{{i.rating}}" disabled style="display: none;">
+		</a> 
+	</div>
+  </div>
+</div>
+{% endfor %}

@@ -1,0 +1,618 @@
+{% load static %}
+{% include 'customer/header.html' %}
+  <style>
+   
+   @keyframes beginBrowserAutofill{0%{}to{}}@keyframes endBrowserAutofill{0%{}to{}}.pac-container{background-color:#fff;position:absolute!important;z-index:100000;border-radius:2px;border-top:1px solid #d9d9d9;font-family:Arial,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,0.3);-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;overflow:hidden}.pac-logo:after{content:"";padding:1px 1px 1px 0;height:18px;box-sizing:border-box;text-align:right;display:block;background-image:url(https://maps.gstatic.com/mapfiles/api-3/images/powered-by-google-on-white3.png);background-position:right;background-repeat:no-repeat;background-size:120px 14px}.hdpi.pac-logo:after{background-image:url(https://maps.gstatic.com/mapfiles/api-3/images/powered-by-google-on-white3_hdpi.png)}.pac-item{cursor:default;padding:0 4px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;line-height:30px;text-align:left;border-top:1px solid #e6e6e6;font-size:11px;color:#999}.pac-item:hover{background-color:#fafafa}.pac-item-selected,.pac-item-selected:hover{background-color:#ebf2fe}.pac-matched{font-weight:700}.pac-item-query{font-size:13px;padding-right:3px;color:#000}.pac-icon{width:15px;height:20px;margin-right:7px;margin-top:6px;display:inline-block;vertical-align:top;background-image:url(https://maps.gstatic.com/mapfiles/api-3/images/autocomplete-icons.png);background-size:34px}.hdpi .pac-icon{background-image:url(https://maps.gstatic.com/mapfiles/api-3/images/autocomplete-icons_hdpi.png)}.pac-icon-search{background-position:-1px -1px}.pac-item-selected .pac-icon-search{background-position:-18px -1px}.pac-icon-marker{background-position:-1px -161px}.pac-item-selected .pac-icon-marker{background-position:-18px -161px}.pac-placeholder{color:gray}.pac-target-input:-webkit-autofill{animation-name:beginBrowserAutofill}.pac-target-input:not(:-webkit-autofill){animation-name:endBrowserAutofill}
+   
+   #show_img{
+    background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+  }
+  .swal-icon--success:after, .swal-icon--success:before {
+     background: #262626 !important;
+		 }
+	.swal-icon--success__hide-corners {
+		background: #262626;
+	}
+	
+	/* Profile Form Container Box Styling */
+	.profile-form-container-box {
+		border: 2px solid #333;
+		border-radius: 12px;
+		padding: 40px 30px;
+		background: #1a1a1a;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+	}
+	.country-dropdown {
+    position: relative;
+	}
+
+	.country-options {
+		position: absolute;
+		width: 100%;
+		max-height: 220px;
+		overflow-y: auto;
+		background: #2c2c2c;
+		border: 1px solid #5e5e5e;
+		border-top: none;
+		display: none;
+		z-index: 9999;
+	}
+
+	.country-option {
+		padding: 10px;
+		cursor: pointer;
+		color: #f7f7f7;
+	}
+
+	.country-option:hover {
+		background: #444;
+	}
+  </style>
+  <!-- Start main-content -->
+  <div class="main-content">
+    <!-- Section: inner-header -->
+     <div class='container text-center' style='margin-top: 1rem;'>
+	     <h2>My Profile</h2>
+	     <div class="row" style="margin-top: 1rem;margin-bottom: 1rem;">
+				<div class="col-lg-4" ></div>
+				<div class="col-lg-4" >
+					<h3 style="margin: 0rem;">{{vendor_type}}</h3>
+				</div>
+				<div class="col-lg-1">
+					<button class="login-btn nextBtn btn-danger btn-sm" onclick="window.location.href='/index/'" data-toggle="tooltip" data-placement="top" title="Back"><i class="fa fa-arrow-left" aria-hidden="true" style="cursor:pointer;"  ></i></button>
+				</div>
+			</div>
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<div class='card shadow text-center' > 
+				 <!-- <div class="profile-form-container-box" style='height:54rem;' >  -->
+					<div class="profile-form-container-box">
+
+					
+					<label for="pet_img" class="attachment" id='show_img' {% if user_obj.profile_image %} style='height: 12rem;  border: 2px dashed;width: 14rem; background-image: url("{{user_obj.profile_image.url}}");' {% else %} style='height: 12rem;  border: 2px dashed;width: 14rem; background-image: url("/media/profile_image/no_image.jpg");' {% endif %}>
+						{% if user_obj.profile_image %}
+						
+						{% else %}
+							<div class="btn-file__actions__item--shadow" style='margin-top:5rem;' id="lbl">
+							  <i class="fa fa-plus fa-lg fa-fw" aria-hidden="true"></i>
+							  <div class="visible-xs-block"></div>
+						  
+							</div> 
+						{% endif %}
+					    <input name="file" type="file" id="pet_img" onchange="onFileSelected(event)" style='display:none' accept="image/jpg, image/jpeg, image/png" >
+					</label><br>
+					
+					
+					<input type="text" class="form-control" id="name" name="Name" maxlength='50' placeholder="Enter Your Name*" value="{{user_obj.name}}">
+					<span id="errmsg1" style="color:red;  "></span><br>
+					<!-- {% if user_obj.user_type != 'Customer' %}
+						<input type="text" class="form-control" id="business_name" name="business_name" maxlength='50' placeholder="Enter Your  Business Name*" value="{{user_obj.bussiness_name}}">{{user_obj.business_name}}
+						<span id="errmsg0" style="color:red;  "></span><br>
+					{% endif %} -->
+				   
+				    <input type="email" class="form-control" id="email" maxlength='50' name="email" placeholder="Email Address*" value="{{user_obj.email}}">
+				    <span id="errmsg2" style="color:red;  "></span><br>
+					
+					<input type="text" class="form-control" id="local_address"  name="address" placeholder=" Address*" value="{{user_obj.address}}"> 
+					<span id="errmsg3" style="color:red;  "></span><br>
+					
+					<!-- COMMENTED: Map Address Field -->
+				    <!-- <input type="text" class="form-control" id="address"  name="address" placeholder=" Map Address*" value="{{user_obj.map_location}}"disabled> 
+					<i class="fa fa-map-marker fa-2x" aria-hidden="true" data-toggle="modal" data-target="#geolocation_model" style="position:absolute;margin-top: -2.2rem;margin-left: 12.5rem;"></i>  
+					
+				    <span id="errmsg4" style="color:red;position: absolute;margin-left: 10rem; display:block;"></span><br> -->
+					<!-- END COMMENTED: Map Address Field -->
+					
+				    {% if request.session.user_type != "Customer" %}  
+					<input type="text" class="form-control" id="business_name" name="Business Name" maxlength='60' {% if user_obj.bussiness_name %} value="{{user_obj.bussiness_name}}" {% else %} placeholder="Enter Business Name" {% endif %}> </br>
+						<input type="text" class="form-control" name="Business Address" id="business_address"  {% if user_obj.bussiness_address %} value="{{user_obj.bussiness_address}}" {% else %} placeholder="Enter Business Address" {% endif %}  />   </br> 
+						<!-- <textarea  class="form-control" id="about" rows="2" cols="10" name="About"  placeholder="Enter About Me"> {% if user_obj.about_me %}  {{user_obj.about_me}} {% endif %}</textarea>   -->
+						 <textarea class="form-control" id="about" rows="2" cols="10" name="About"
+							placeholder="Enter About Me">{% if user_obj.about_me %}{{ user_obj.about_me }}{% endif %}</textarea>
+					</br>
+					{% endif %}
+					<div class='row'>
+						<div class='col-md-6'> 
+							<!-- <select class="form-control" placeholder="Country Code*" id="country_code" name="country_code"  >
+							
+								{% for obj in country_obj %}
+								 <option
+								{% if user_obj.country %}
+									{% if user_obj.country == obj.name %}selected{% endif %}
+								{% else %}
+									{% if obj.country_code == '93' %}selected{% endif %}
+								{% endif %}
+								value="{{obj.id}}"
+								style="background:rgb(50 48 48);color:#bbb6b6;">
+									+{{obj.country_code}} {{obj.sortname}}
+								</option>
+
+								{% endfor %}
+							
+							</select>	 -->
+							<div class="country-select-wrapper">
+								<div class="country-dropdown">
+									<input
+										type="text"
+										id="country_search"
+										class="form-control"
+										placeholder="Country Code*"
+										value="{% if user_obj.country %}+{{ user_obj.country_code }} {{ user_obj.country_sortname }}{% endif %}"
+										readonly
+									>
+
+									<div class="country-options" id="country_options">
+										{% for obj in country_obj %}
+											<div class="country-option"
+												data-id="{{obj.id}}">
+												+{{obj.country_code}} {{obj.sortname}}
+											</div>
+										{% endfor %}
+									</div>
+								</div>
+							</div>
+
+							<input type="hidden" id="country_code" name="country_code"
+								value="{% if user_obj.country_code %}{{ user_obj.country_code }}{% endif %}">
+
+							<span id="errmsg5" style="color:red;"></span>
+			
+						</div>
+						<div class='col-md-6'>
+							<input type="text" class="form-control" id="mobile" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" name="mobile" placeholder=" Mobile*" maxlength='10' value="{{user_obj.mobile_no}}">
+							 <span id="errmsg6" style="color:red;"></span>
+							 <a href="{% url 'Change_Password' %}" style="text-decoration:underline; margin-left:41%;">Change Password</a>
+						</div> 
+					</div>
+					
+				    <div class="row">
+						<div class="col-md-8" style="margin-left: -3%;">
+							<button class="login-btn nextBtn btn-danger btn-lg pull-right" onclick="Edit_Profile()" style="margin-bottom: 2%;">Update</button>
+						</div>
+					</div>
+					</br>
+				</div> 
+				 
+		   </div> 
+		  </div> 
+		</div> 
+	 </div>
+  </div>
+  
+   
+  
+   
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8iRFBrLfP6JZr35cKPkgz6OE79U2jSJQ &libraries=places"></script>
+
+ <script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+ 
+  
+  
+  
+  <!-- COMMENTED: Geolocation Modal -->
+  <!-- <div class="modal fade in   " id="geolocation_model" tabindex="-1" data-keyboard="false" data-backdrop="static"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style='background: #323030;'>
+                <div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Geolocation <span style="color:#ff4c4ce8"> *</span></h5>
+                   
+                </div>
+                <div class="modal-body">
+                   <input type="text" name="Address" value="" id="Geo_Address" class="MAP_LOCATION form-control pac-target-input" 
+                                                placeholder="Address"><br>
+												<center><span style="display:none;color:#ff4c4ce8;font-size: 10px;" class="Address_error1"  id ="Address_error">Please Enter Valid Geolocation</span></center>
+												<input class="form-control" id="sup_latitude" value="" name="sup_latitude" type="text" style="display:none;">
+												<input class="form-control" id="map_id_selected" value="Address_new"  type="text" style="display:none;">
+											<input class="form-control" id="sup_longitude" value="" name="sup_longitude" type="text" style="display:none;">
+												<div id="mapdiv" style="width: 99.7%; height: 200px;">
+												</div>
+                </div>
+				<input type="text" value="Address_new" id="save_giolocation_module_id" hidden>
+                <div class="modal-footer">
+				
+                    <div class="text-center">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close_model_geolocation">Close</button>
+								<button type="button" class="btn btn-danger" onclick="save_giolocation_details()">Select</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+  <!-- END COMMENTED: Geolocation Modal -->
+  <!-- end main-content -->
+ 
+
+<script>
+	function onFileSelected(event) 
+	{
+	   
+	  var selectedFile = event.target.files[0];
+	  var reader = new FileReader();
+	 
+	  var imgtag = document.getElementById("show_img");
+	  imgtag.title = selectedFile.name;
+
+	  reader.onload = function(event) {
+		 
+		$('#show_img').css('background-image', 'url(' + event.target.result + ')');
+		$("#lbl").html("");
+	  };
+
+	  reader.readAsDataURL(selectedFile);
+	  
+	 
+	}	
+	 
+</script>
+ <script>
+       $('#name').keyup(function(){
+            $('#errmsg1').hide();
+        });
+		
+		$('#business_name').keyup(function(){
+            $('#errmsg0').hide();
+        });
+
+        $('#password').keyup(function(){
+            $('#errmsg2').hide();
+        });
+		
+		$('#email').keyup(function(){
+            $('#errmsg2').hide();
+        });
+		
+		$('#local_address').keyup(function(){
+            $('#errmsg3').hide();
+        });
+		
+		/* COMMENTED: Map Address Field Events
+		$('#address').keyup(function(){
+            $('#errmsg4').hide();
+        });
+		
+		$('#address').mouseup(function(){
+            $('#errmsg4').hide();
+        });
+		*/
+		
+		$('#country_code').mouseup(function(){
+            $('#errmsg5').hide();
+        });
+		
+		$('#mobile').keyup(function(){
+            $('#errmsg6').hide();
+        });
+		
+		function Edit_Profile()
+		{
+		  
+			var name = $('#name').val();
+			var email = $('#email').val();
+			var local_address = $("#local_address").val();
+			// var address = $('#address').val();  // COMMENTED: Map address variable
+			var mobile = $('#mobile').val(); 
+			var country_code = $('#country_code').val(); 
+			// var latitude = $('#sup_latitude').val();  // COMMENTED: Latitude variable
+			// var longitude = $('#sup_longitude').val();  // COMMENTED: Longitude variable
+			var business_name = $('#business_name').val(); 
+			var business_address = $('#business_address').val(); 
+			var about = $('#about').val(); 
+			var form = $("#form_data")[0];
+			var data_item = new FormData(form);
+			
+		    if(name == "" ){
+		      $('#errmsg1').html("Please Enter Your Name");
+			  $('#errmsg1').show();
+                
+		    } 
+			else if(email == "" ){
+		      
+			  $('#errmsg2').html("Please Enter Email Address");  
+              $('#errmsg2').show();
+                
+		    }
+		    else if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)))
+            {
+                $('#errmsg2').html("Invalid Email Address...");
+                $('#errmsg2').show();
+
+            }
+			else if(local_address == "" ){
+		      $('#errmsg3').html("Please Enter Address");
+			  $('#errmsg3').show();
+                
+		    }
+			/* COMMENTED: Map Address Validation
+			else if(address == "" ){
+		      $('#errmsg4').html("Please Enter Map Address");
+			  $('#errmsg4').show();
+                
+		    }
+			*/
+			
+			else if(country_code == ""  ){
+		      $('#errmsg5').html("Please Select Country Code");
+			  $('#errmsg5').show();
+                
+		    }
+			else if(mobile == "" ){
+		      $('#errmsg6').html("Please Enter Mobile Number");
+			  $('#errmsg6').show();
+                
+		    }
+			else if(mobile.length != 10 ){
+		      $('#errmsg6').html("Please Enter Valid Mobile Number");
+			  $('#errmsg6').show();
+                
+		    }
+			
+			else
+			{
+				data_item.append("name",name);
+				data_item.append("local_address",local_address);
+				// data_item.append("address",address);  // COMMENTED: Map address append
+				data_item.append("email",email);
+				data_item.append("mobile",mobile);
+				data_item.append("country_code",country_code);
+				// data_item.append("latitude",latitude);  // COMMENTED: Latitude append
+				// data_item.append("longitude",longitude);  // COMMENTED: Longitude append
+				data_item.append("business_name",business_name);
+				data_item.append("business_address",business_address);
+				data_item.append("about",about);
+				data_item.append("profile_image",document.getElementById("pet_img").files[0]);
+				   $.ajax({
+				   method:"POST",
+				   url:"/Edit_Profile/",
+				   enctype : "mutipart/form_data",
+				   processData : false,
+				   contentType : false,
+				   cache : false,
+				   data:data_item,
+				   success: function(response){
+					if(response.status =='1'){
+						   swal({
+							title:"Success",
+							text: response.msg,
+							icon : 'success',
+							button: 'OK',
+							closeOnClickOutside: false,
+						  }).then((addcat)=>{
+							  window.location.reload();  
+						});
+					}
+					else{
+					  swal({
+						title:"Error",
+						text: response.msg,
+						icon : 'error',
+						button: 'OK',
+						closeOnClickOutside: false,
+					  });
+					}
+				   }  
+				});
+		  
+			}
+		} 
+		 
+		
+		
+ </script>
+ 
+ <script>
+const csInput = document.getElementById('country_search');
+const csBox = document.getElementById('country_options');
+const csHidden = document.getElementById('country_code');
+
+csInput.addEventListener('click', () => {
+    csBox.style.display = 'block';
+    csInput.removeAttribute('readonly');
+});
+
+csInput.addEventListener('keyup', () => {
+    const val = csInput.value.toLowerCase();
+    document.querySelectorAll('.country-option').forEach(opt => {
+        opt.style.display = opt.textContent.toLowerCase().includes(val)
+            ? 'block'
+            : 'none';
+    });
+});
+
+document.querySelectorAll('.country-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+        csInput.value = opt.textContent.trim();
+        csHidden.value = opt.dataset.id;
+        csBox.style.display = 'none';
+        csInput.setAttribute('readonly', true);
+    });
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.country-dropdown')) {
+        csBox.style.display = 'none';
+        csInput.setAttribute('readonly', true);
+    }
+});
+</script>
+
+ 	<!-- COMMENTED: Geolocation Map Scripts -->
+	<!-- <script>
+			
+			 $(document).ready(function () {
+				curr_lat = '21.1458'
+				curr_long = '79.0882'
+				var MAPDIV = new google.maps.Map(document.getElementById('mapdiv'), {
+					
+					center: new google.maps.LatLng(curr_lat, curr_long),
+					zoom: 13,
+					mapTypeId: google.maps.MapTypeId.ROADMAP,
+					streetViewControl: false
+				});
+				var MAPDIV_MARKER = new google.maps.Marker({
+					
+					position: new google.maps.LatLng(curr_lat, curr_long),
+					map: MAPDIV,
+					draggable: true
+				});
+				google.maps.event.addListener(MAPDIV_MARKER, 'dragend', function () {
+					MAP_LAT_LNG();
+				});
+
+				var MAP_GEOCODER = new google.maps.Geocoder();
+				
+				var MAP_LAT_LNG = function () {
+					var LAT_LNG = MAPDIV_MARKER.getPosition();
+					MAPDIV.panTo(LAT_LNG);
+		
+					
+					$('input[name="sup_latitude"]').val(LAT_LNG.lat());
+					$('input[name="sup_longitude"]').val(LAT_LNG.lng());
+					
+					
+					var lat = LAT_LNG.lat()
+					var lng = LAT_LNG.lng()
+
+					latlng 	 = new google.maps.LatLng(lat, lng),
+					geocoder = new google.maps.Geocoder();
+					geocoder.geocode({'latLng': latlng}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+					    console.log(status)
+						
+					}
+					else {
+					console.log("Geocoder failed: " + status)
+					}
+				});
+					
+										
+					MAP_GEOCODER.geocode({
+						latLng: LAT_LNG
+					}, function (results, status) {
+						if (status == google.maps.GeocoderStatus.OK) {
+							$('.MAP_LOCATION').val(results[0].formatted_address);
+						}
+					});
+				};
+				var LAT_LNG_MAP = function () {
+					var LAT = $('input[name="sup_latitude"]').val().trim();
+					var LNG = $('input[name="sup_longitude"]').val().trim();
+					if ($.isNumeric(LAT) && $.isNumeric(LNG) && (-90 <= LAT) && (LAT <= 90) && (-180 <= LNG) && (LNG <= 180)) {
+						var LAT_LNG = new google.maps.LatLng(LAT, LNG);
+						MAPDIV.setCenter(LAT_LNG);
+						MAPDIV_MARKER.setPosition(LAT_LNG);
+
+						if (!$('.MAP_LOCATION').val()) {
+							MAP_GEOCODER.geocode({
+								latLng: LAT_LNG
+							}, function (results, status) {
+								if (status == google.maps.GeocoderStatus.OK) {
+									$('.MAP_LOCATION').val(results[0].formatted_address);
+								}
+							});
+						}
+					} else {
+						console.log('Latitude and Longitude is error');
+					}
+				};
+				$('.LAT_LNG_MAP').on('click', function () {
+					LAT_LNG_MAP();
+				});
+				if ($('input[name="sup_latitude"]').val().trim() && $('input[name="sup_longitude"]').val().trim()) {
+					$('.LAT_LNG_MAP').trigger('click');
+				}
+
+				function search_loc(){
+					var address = $('#Geo_Address').val(); 
+					MAP_GEOCODER.geocode({'address': address}, function (results, status) { 
+						if (status == google.maps.GeocoderStatus.OK) {
+							MAPDIV.setCenter(results[0].geometry.location);
+							MAPDIV_MARKER.setPosition(results[0].geometry.location);
+							$('input[name="sup_latitude"]').val(results[0].geometry.location.lat());
+							$('input[name="sup_longitude"]').val(results[0].geometry.location.lng()); 
+
+						} else {
+							console.log("Location was not successful for the following reason: " + status);
+						}
+					});
+				} 
+
+				var MAP_AUTOCOMPLETE = new google.maps.places.Autocomplete($('.MAP_LOCATION')[0], {
+					componentRestrictions: {
+						country: 'IND'
+					}
+				});
+				 
+				MAP_AUTOCOMPLETE.addListener('place_changed', function () {
+					var place = MAP_AUTOCOMPLETE.getPlace();
+ 
+					if (!place || !place.geometry) {
+						console.log("Autocomplete's returned place contains no geometry");
+						return;
+					}
+                    
+					MAPDIV.setCenter(place.geometry.location);
+					MAPDIV_MARKER.setPosition(place.geometry.location);
+					
+			 
+					
+					$('input[name="sup_latitude"]').val(place.geometry.location.lat());
+					$('input[name="sup_longitude"]').val(place.geometry.location.lng());
+					
+					
+					
+					var lat = place.geometry.location.lat()
+					var lng = place.geometry.location.lng()
+
+					latlng 	 = new google.maps.LatLng(lat, lng),
+					geocoder = new google.maps.Geocoder();
+					geocoder.geocode({'latLng': latlng}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+					    console.log(status)
+						
+					}
+					else {console.log("Geocoder failed: " + status)}
+				});
+					
+					
+				});
+
+				$('.MAP_LOCATION').on('keydown', function (ev) {
+				   
+					if (ev.keyCode === 13) {
+					 
+						ev.preventDefault();
+						
+						search_loc()
+					}
+				});
+			});
+		
+		
+		
+		
+		
+						   
+		$("#Geo_Address").keyup(function(){
+		 $("#Geo_Address").removeClass("error");
+		 });
+		function save_giolocation_details(){
+			var gio_add_set  =$('#Geo_Address').val()
+			
+			if(gio_add_set ==''){
+
+			
+			$("#Geo_Address").addClass("error");
+			}
+			else{
+			$('#address').val($('#Geo_Address').val()); 
+			$('#close_model_geolocation').click()
+			}
+
+		}
+	 </script> -->
+	 <!-- END COMMENTED: Geolocation Map Scripts -->
+  {% include 'customer/footer.html' %}

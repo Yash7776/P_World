@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtualenv
+venv/
+
+# Media & uploads
+media/
+
+# Static collected files
+staticfiles/
+
+firebase_service_account.json
+*.json
+.env

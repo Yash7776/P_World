@@ -1,0 +1,650 @@
+{% load static %}
+{% include 'customer/header.html' %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.2/css/star-rating.min.css" />
+
+<style>
+  .caption, .clear-rating {
+    display: none !important;
+  }
+  .rating-stars {
+    font-size: 20px;
+    margin-top: -3rem;
+  }
+  .rating-disabled .rating-input, .rating-disabled .rating-stars {
+    cursor: pointer !important;
+  }
+  p {
+    color: #d5d5d5;
+    font-weight: bold;
+  }
+  .rating-container .filled-stars { 
+    color: #EE163B !important;
+    text-shadow: none;
+  }
+</style>
+
+<!-- Start main-content -->
+<div class="main-content">
+
+  <!-- Section: home -->
+  <section id="home">
+    <div class="container-fluid p-0">
+      
+      <div class="rev_slider_wrapper">
+        <div class="rev_slider" data-version="5.0">
+          <ul>
+
+            <!-- SLIDE 1 -->
+            <li data-index="rs-1" data-transition="slidingoverlayhorizontal" data-slotamount="default" data-easein="default" data-easeout="default" data-masterspeed="default" data-thumb="http://placehold.it/1920x1280" data-rotate="0" data-saveperformance="off" data-title="Web Show" data-description="">
+              
+              <img src="{% static 'images/pet_doc.avif' %}" alt="" data-bgposition="center 40%" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-bgparallax="6" data-no-retina loading="lazy">
+              
+              <div class="tp-caption tp-resizeme text-white font-roboto bg-dark-transparent-4 font-weight-500 pr-20 pl-20" 
+                id="rs-1-layer-1"
+                data-x="['left']"
+                data-hoffset="['30']"
+                data-y="['middle']"
+                data-voffset="['-120']"
+                data-fontsize="['36']"
+                data-lineheight="['64']"
+                data-width="none"
+                data-height="none"
+                data-whitespace="nowrap"
+                data-transform_idle="o:1;s:500"
+                data-transform_in="y:100;scaleX:1;scaleY:1;opacity:0;"
+                data-transform_out="x:left(R);s:1000;e:Power3.easeIn;s:1000;e:Power3.easeIn;"
+                data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+                data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+                data-start="1000" 
+                data-splitin="none" 
+                data-splitout="none" 
+                data-responsive_offset="on" 
+                style="z-index: 5; white-space: nowrap;">Best place for your dog
+              </div>
+
+              <div class="tp-caption tp-resizeme font-roboto bg-theme-colored text-white font-weight-700 m-0 pr-20 pl-20" 
+                id="rs-1-layer-2"
+                data-x="['left']"
+                data-hoffset="['30']"
+                data-y="['middle']"
+                data-voffset="['-40']"
+                data-fontsize="['48']"
+                data-lineheight="['72']"
+                data-width="none"
+                data-height="none"
+                data-whitespace="nowrap"
+                data-transform_idle="o:1;s:500"
+                data-transform_in="y:100;scaleX:1;scaleY:1;opacity:0;"
+                data-transform_out="x:left(R);s:1000;e:Power3.easeIn;s:1000;e:Power3.easeIn;"
+                data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+                data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+                data-start="1000" 
+                data-splitin="none" 
+                data-splitout="none" 
+                data-responsive_offset="on" 
+                style="z-index: 5; white-space: nowrap;">Your dog deserves the best
+              </div>
+
+              <div class="tp-caption tp-resizeme font-raleway text-white" 
+                id="rs-1-layer-3"
+                data-x="['left']"
+                data-hoffset="['30']"
+                data-y="['middle']"
+                data-voffset="['40']"
+                data-fontsize="['18']"
+                data-lineheight="['30']"
+                data-width="none"
+                data-height="none"
+                data-whitespace="nowrap"
+                data-transform_idle="o:1;s:500"
+                data-transform_in="y:100;scaleX:1;scaleY:1;opacity:0;"
+                data-transform_out="x:left(R);s:1000;e:Power3.easeIn;s:1000;e:Power3.easeIn;"
+                data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+                data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+                data-start="1400" 
+                data-splitin="none" 
+                data-splitout="none" 
+                data-responsive_offset="on"
+                style="z-index: 5; white-space: nowrap; font-weight:400;">We always try to Provide your dog <br> the best Services
+              </div>
+
+              <div class="tp-caption tp-resizeme"  
+                id="rs-1-layer-4"
+                data-x="['left']"
+                data-hoffset="['30']"
+                data-y="['middle']"
+                data-voffset="['105']"
+                data-width="none"
+                data-height="none"
+                data-whitespace="nowrap"
+                data-transform_idle="o:1;s:500"
+                data-transform_in="y:100;scaleX:1;scaleY:1;opacity:0;"
+                data-transform_out="x:left(R);s:1000;e:Power3.easeIn;s:1000;e:Power3.easeIn;"
+                data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+                data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+                data-start="1600" 
+                data-splitin="none" 
+                data-splitout="none" 
+                data-responsive_offset="on"
+                style="z-index: 5; white-space: nowrap; letter-spacing:1px;">
+              </div>
+            </li>
+
+            <!-- SLIDE 2 -->
+            <li data-index="rs-2" data-transition="slidingoverlayhorizontal" data-slotamount="default" data-easein="default" data-easeout="default" data-masterspeed="default" data-thumb="http://placehold.it/1920x1280" data-rotate="0" data-saveperformance="off" data-title="Web Show" data-description="">
+              
+              <img src="{% static 'images/pet_food.webp' %}" alt="" data-bgposition="center 20%" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-bgparallax="6" data-no-retina loading="lazy">
+          
+              <div class="tp-caption tp-resizeme text-uppercase font-roboto bg-dark-transparent-6 text-center text-white" 
+                id="rs-2-layer-1"
+                data-x="['left']"
+                data-hoffset="['0']"
+                data-y="['middle']"
+                data-voffset="['-80']"
+                data-fontsize="['64','64','54','24']"
+                data-lineheight="['95']"
+                data-width="none"
+                data-height="none"
+                data-whitespace="nowrap"
+                data-transform_idle="o:1;s:500"
+                data-transform_in="y:100;scaleX:1;scaleY:1;opacity:0;"
+                data-transform_out="x:left(R);s:1000;e:Power3.easeIn;s:1000;e:Power3.easeIn;"
+                data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+                data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+                data-start="1000" 
+                data-splitin="none" 
+                data-splitout="none" 
+                data-responsive_offset="on"
+                style="z-index: 5; white-space: nowrap; font-weight:700;">Order<span class="text-theme-colored"> Food</span>
+              </div>
+
+              <div class="tp-caption tp-resizeme text-center font-raleway bg-theme-colored-transparent text-white" 
+                id="rs-2-layer-2"
+                data-x="['left']"
+                data-hoffset="['0']"
+                data-y="['middle']"
+                data-voffset="['0']"
+                data-fontsize="['18']"
+                data-lineheight="['30']"
+                data-width="none"
+                data-height="none"
+                data-whitespace="nowrap"
+                data-transform_idle="o:1;s:500"
+                data-transform_in="y:100;scaleX:1;scaleY:1;opacity:0;"
+                data-transform_out="x:left(R);s:1000;e:Power3.easeIn;s:1000;e:Power3.easeIn;"
+                data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+                data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+                data-start="1200" 
+                data-splitin="none" 
+                data-splitout="none" 
+                data-responsive_offset="on"
+                style="z-index: 5; white-space: nowrap; font-weight:500;">We always try to Provide you the best quality food <br> for your pet
+              </div>
+
+              <div class="tp-caption tp-resizeme" 
+                id="rs-2-layer-3"
+                data-x="['left']"
+                data-hoffset="['0']"
+                data-y="['middle']"
+                data-voffset="['80']"
+                data-width="none"
+                data-height="none"
+                data-whitespace="nowrap"
+                data-transform_idle="o:1;s:500"
+                data-transform_in="y:100;scaleX:1;scaleY:1;opacity:0;"
+                data-transform_out="x:left(R);s:1000;e:Power3.easeIn;s:1000;e:Power3.easeIn;"
+                data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+                data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+                data-start="1400" 
+                data-splitin="none" 
+                data-splitout="none" 
+                data-responsive_offset="on"
+                style="z-index: 5; white-space: nowrap; letter-spacing:1px;">
+                {% if request.session.customer_id %} 
+                {% else %}
+                  <a class="btn btn-default btn-lg btn-circled mr-10" href="{% url 'customer_signup' %}">Signup Now</a> 
+                  <a class="btn btn-colored btn-lg btn-circled btn-theme-colored" href="#">View Details</a>
+                {% endif %}
+              </div>
+            </li>
+
+            <!-- SLIDE 3 -->
+            <li data-index="rs-3" data-transition="slidingoverlayhorizontal" data-slotamount="default" data-easein="default" data-easeout="default" data-masterspeed="default" data-thumb="http://placehold.it/1920x1280" data-rotate="0" data-saveperformance="off" data-title="Web Show" data-description="">
+              
+              <img src="{% static 'images/puppy1.jpg' %}" alt="" data-bgposition="center 20%" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-bgparallax="6" data-no-retina loading="lazy">
+              
+              <div class="tp-caption tp-resizeme text-white text-uppercase font-roboto bg-theme-colored-transparent font-weight-600 pr-20 pl-20" 
+                id="rs-3-layer-1"
+                data-x="['left']"
+                data-hoffset="['30']"
+                data-y="['middle']"
+                data-voffset="['-110']"
+                data-fontsize="['48']"
+                data-lineheight="['72']"
+                data-width="none"
+                data-height="none"
+                data-whitespace="nowrap"
+                data-transform_idle="o:1;s:500"
+                data-transform_in="y:100;scaleX:1;scaleY:1;opacity:0;"
+                data-transform_out="x:left(R);s:1000;e:Power3.easeIn;s:1000;e:Power3.easeIn;"
+                data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+                data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+                data-start="1000" 
+                data-splitin="none" 
+                data-splitout="none" 
+                data-responsive_offset="on" 
+                style="z-index: 5; white-space: nowrap; font-weight:700;">We take care of your pet
+              </div>
+
+              <div class="tp-caption tp-resizeme font-roboto text-white bg-dark-transparent-6 font-weight-400 m-0 pr-20 pl-20" 
+                id="rs-3-layer-2"
+                data-x="['left']"
+                data-hoffset="['30']"
+                data-y="['middle']"
+                data-voffset="['-35']"
+                data-fontsize="['48']"
+                data-lineheight="['64']"
+                data-width="none"
+                data-height="none"
+                data-whitespace="nowrap"
+                data-transform_idle="o:1;s:500"
+                data-transform_in="y:100;scaleX:1;scaleY:1;opacity:0;"
+                data-transform_out="x:left(R);s:1000;e:Power3.easeIn;s:1000;e:Power3.easeIn;"
+                data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+                data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+                data-start="1000" 
+                data-splitin="none" 
+                data-splitout="none" 
+                data-responsive_offset="on" 
+                style="z-index: 5; white-space: nowrap; font-weight:700;">Best services for your pet
+              </div>
+
+              <div class="tp-caption tp-resizeme text-right font-raleway text-white" 
+                id="rs-3-layer-3"
+                data-x="['left']"
+                data-hoffset="['30']"
+                data-y="['middle']"
+                data-voffset="['40']"
+                data-fontsize="['18']"
+                data-lineheight="['28']"
+                data-width="none"
+                data-height="none"
+                data-whitespace="nowrap"
+                data-transform_idle="o:1;s:500"
+                data-transform_in="y:100;scaleX:1;scaleY:1;opacity:0;"
+                data-transform_out="x:left(R);s:1000;e:Power3.easeIn;s:1000;e:Power3.easeIn;"
+                data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+                data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+                data-start="1400" 
+                data-splitin="none" 
+                data-splitout="none" 
+                data-responsive_offset="on"
+                style="z-index: 5; white-space: nowrap; font-weight:300;">We always try to Provide Our best Services for <br> your pet 
+              </div>
+
+              <div class="tp-caption tp-resizeme" 
+                id="rs-3-layer-4"
+                data-x="['left']"
+                data-hoffset="['20']"
+                data-y="['middle']"
+                data-voffset="['105']"
+                data-width="none"
+                data-height="none"
+                data-whitespace="nowrap"
+                data-transform_idle="o:1;s:500"
+                data-transform_in="y:100;scaleX:1;scaleY:1;opacity:0;"
+                data-transform_out="x:left(R);s:1000;e:Power3.easeIn;s:1000;e:Power3.easeIn;"
+                data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
+                data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+                data-start="1600" 
+                data-splitin="none" 
+                data-splitout="none" 
+                data-responsive_offset="on"
+                style="z-index: 5; white-space: nowrap; letter-spacing:1px;">
+              </div>
+            </li>
+
+          </ul>
+        </div> 
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Call to Action -->
+  <section class="bg-theme-colored">
+    <div class="container pt-0 pb-30">
+      <div class="row">
+        <div class="call-to-action p-0 pt-30 pb-20">
+          <div class="col-md-9">
+            <h3 class="mt-5 text-white">Best Pet Care & Pet Services Available Here!</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Section: About -->
+  <section id="about">
+    <div class="container pb-80">
+      <div class="section-content">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="meet-doctors">
+              <h2 class="text-uppercase mt-20">Welcome to <span class="text-theme-colored">PWorld</span></h2>
+              <p>PWorld is a mobile and web application designed to facilitate pet owners in booking appointments with pet doctors, sitters, stores, trainers, and walkers. The app offers a user-friendly interface that enables users to browse through a list of available service providers and choose the one that best fits their needs.</p>
+              <p>One of the standout features of PWorld is the appointment booking system, which allows pet owners to schedule appointments with their preferred service providers. Users can choose the date and time that suits them best and can view the availability of each service provider to ensure that they get the appointment they need.</p>
+              <p>Another great feature of Pet World is the ability for doctors, sitters, trainers, and walkers to accept or reject appointments based on their availability. This ensures that pet owners get timely responses and can make alternative arrangements if needed.</p>
+              <p>Adding a store feature to Pet World would allow vendors to sell various items related to pets, such as food, toys, grooming products, and accessories. Pet owners could easily browse through the available products, add them to their cart, and check out securely through the app.</p>
+              <p>The store feature could also offer a delivery service, allowing vendors to deliver the purchased items directly to the customer's location. This would provide convenience for pet owners who may have difficulty finding time to visit a physical store or may not have a nearby pet store.</p>
+              <p>Overall, Pet World is a comprehensive app that simplifies the process of finding and booking appointments with pet service providers. Its user-friendly interface and appointment booking system make it an essential tool for any pet owner looking for convenient and reliable pet services.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <img class="img-fullwidth" src="{% static 'images/idog.jpg' %}" style="height: 32em; margin-top: 5rem" alt="" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Services -->
+  <section id="services" class="layer-overlay overlay-dark-8" data-bg-img="{% static 'images/pattern/pt18.png' %}">
+    <div class="container pt-40 pb-40">
+      <div class="section-title text-center">
+        <div class="row">
+          <div class="col-md-12">
+            <h2 class="text-white">Our <span class="text-theme-colored">Services</span></h2>
+          </div>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="row multi-row-clearfix">
+          <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="icon-box bg-lighter p-20 border-1px">
+              <a class="icon icon-lg bg-theme-colored icon-circled icon-border-effect effect-circled pull-right sm-pull-none flip text-white mt-40 ml-5 mr-20" href="{% url 'Show_all_services' %}">
+                <i class="flaticon-pet-man"></i>
+              </a>
+              <h4 class="icon-box-title"><a href="{% url 'Show_all_services' %}">Pet Sitter, Pet Trainer & Pet Walker</a></h4>
+              <p>We provide Pet trainers who have a deep and genuine respect for dogs, an inquiring mind, good observational skills, and thorough understanding of the canine behaviour. Pet walkers who have strong interpersonal and communication skills.</p>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="icon-box bg-lighter p-20 border-1px">
+              <a class="icon icon-lg bg-theme-colored icon-circled icon-border-effect effect-circled pull-right sm-pull-none flip text-white mt-40 ml-5 mr-20" href="/all/Doctor/"> 
+                <i class="flaticon-pet-veterinarian-hospital"></i>
+              </a>
+              <h4 class="icon-box-title"><a href="/all/Doctor/">Veterinary Doctor</a></h4>
+              <p>We will suggest to you a variety of doctors with their services and charges. We will show you the doctors along with their clients genuine feedback, and ratings to help you choose the best doctor for your pet.</p>
+            </div>
+          </div>
+        </div>
+        <div class="row multi-row-clearfix">
+          <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="icon-box bg-lighter p-20 border-1px">
+              <a class="icon icon-lg bg-theme-colored icon-circled icon-border-effect effect-circled pull-right sm-pull-none flip text-white mt-40 ml-5 mr-20" href="/items/">
+                <i class="flaticon-pet-shopping-cart-with-product-inside"></i>
+              </a>
+              <h4 class="icon-box-title"><a href="/items/">Pet Shop</a></h4>
+              <p>We will provide you with the best food vendors for your pets. All accessories for your pets are available on our site. Our site will help you to compare items with different vendors.</p>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="icon-box bg-lighter p-20 border-1px">
+              <a class="icon icon-lg bg-theme-colored icon-circled icon-border-effect effect-circled pull-right sm-pull-none flip text-white mt-40 ml-5 mr-20" href="/all/Salon/">
+                <i class="flaticon-pet-scissors"></i>
+              </a>
+              <h4 class="icon-box-title"><a href="/all/Salon/">Pet Grooming</a></h4>
+              <p>We will suggest for you the best pet groomer with their ratings. This will assist you with choosing the best groomer for your pet. We will also show you a variety of groomers with their services and charges.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: team Our Doctors -->
+  <section class="layer-overlay overlay-dark-8" data-bg-img="{% static 'images/pattern/pattern2.png' %}">
+    <div class="container">
+      <div class="section-title text-center">
+        <div class="row auto">
+          <div class="col-md-12">
+            <h2 class="line-height-1 mt-0 mb-0">Meet Our <span class="text-theme-colored">Veterinary Doctor</span></h2>
+          </div>
+          <div class="row">
+            <div class="col-md-2" style="float: right;margin-top: -2.2%;">
+              <a href="/all/Doctor/" style="color:white;">See all</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="owl-carousel-4col" data-dots="true">
+              {% for i in doctors_obj %}
+              {% if i.fk_user_receiver.user_type == 'Doctor' %}
+                <div class="item">
+                  <div class="team-member maxwidth400">
+                    <div class="info">
+                      <h4 style='color:white;'>{{i.fk_user_receiver.name}} <small style='color:#dfdfdf;font-size: 80%;'> - {{i.fk_user_receiver.bussiness_name}}</small></h4>
+                      <p>Email: {{i.fk_user_receiver.email}}<br><br>
+                        <input id="input-1" name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="0.1" value="{{i.RatingAvg}}" disabled style="display:none;">
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+              {% endfor %} 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Divider: Funfact -->
+  <section class="layer-overlay overlay-dark-8">
+    <div class="container pb-50">
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 mb-md-50">
+          <div class="funfact text-center">
+            <div class="funfact-content">
+              <div class="funfact-icon">
+                <i class="flaticon-pet-man font-30"></i>
+              </div>
+              <h2 data-animation-duration="2000" data-value="{{total_customers}}" class="animate-number text-theme-colored font-30 mt-10">{{total_customers}}</h2>
+              <h4 class="text-white text-uppercase">Customers</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 mb-md-50">
+          <div class="funfact text-center">
+            <div class="funfact-content">
+              <div class="funfact-icon">
+                <i class="flaticon-pet-veterinarian-hospital font-30"></i>
+              </div>
+              <h2 data-animation-duration="2000" data-value="{{total_doctors}}" class="animate-number text-theme-colored font-30 mt-10">{{total_doctors}}</h2>
+              <h4 class="text-white text-uppercase">Doctors</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 mb-md-50">
+          <div class="funfact text-center">
+            <div class="funfact-content">
+              <div class="funfact-icon">
+                <i class="flaticon-pet-shopping-cart-with-product-inside font-30"></i>
+              </div>
+              <h2 data-animation-duration="2000" data-value="{{total_store}}" class="animate-number text-theme-colored font-30 mt-10">{{total_store}}</h2>
+              <h4 class="text-white text-uppercase">Stores</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 mb-md-50">
+          <div class="funfact text-center">
+            <div class="funfact-content">
+              <div class="funfact-icon">
+                <i class="flaticon-pet-scissors font-30"></i>
+              </div>
+              <h2 data-animation-duration="2000" data-value="{{total_salon}}" class="animate-number text-theme-colored font-30 mt-10">{{total_salon}}</h2>
+              <h4 class="text-white text-uppercase">Pet Salons</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="funfact text-center">
+            <div class="funfact-content">
+              <div class="funfact-icon">
+                <i class="flaticon-pet-man-2 font-30"></i>
+              </div>
+              <h2 data-animation-duration="2000" data-value="{{total_sitter}}" class="animate-number text-theme-colored font-30 mt-10">{{total_sitter}}</h2>
+              <h4 class="text-white text-uppercase">Pet Sitter</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="funfact text-center">
+            <div class="funfact-content">
+              <div class="funfact-icon">
+                <i class="flaticon-pet-play font-30"></i>
+              </div>
+              <h2 data-animation-duration="2000" data-value="{{total_trainer}}" class="animate-number text-theme-colored font-30 mt-10">{{total_trainer}}</h2>
+              <h4 class="text-white text-uppercase">Pet Trainer</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="funfact text-center">
+            <div class="funfact-content">
+              <div class="funfact-icon">
+                <i class="flaticon-pet-walking-the-dog font-30"></i>
+              </div>
+              <h2 data-animation-duration="2000" data-value="{{total_walker}}" class="animate-number text-theme-colored font-30 mt-10">{{total_walker}}</h2>
+              <h4 class="text-white text-uppercase">Pet Walker</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- end main-content -->
+
+<!-- OPTIMIZED SCRIPTS - LOADED AT END -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.2/js/star-rating.min.js"></script>
+
+<script>
+// Defer slider initialization for better performance
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    if (typeof $.fn.revolution !== 'undefined') {
+      var revapi = $(".rev_slider").revolution({
+        sliderType: "standard",
+        jsFileLocation: "js/revolution-slider/js/",
+        sliderLayout: "auto",
+        dottedOverlay: "none",
+        delay: 5000,
+        navigation: {
+          keyboardNavigation: "off",
+          keyboard_direction: "horizontal",
+          mouseScrollNavigation: "off",
+          onHoverStop: "off",
+          touch: {
+            touchenabled: "on",
+            swipe_threshold: 75,
+            swipe_min_touches: 1,
+            swipe_direction: "horizontal",
+            drag_block_vertical: false
+          },
+          arrows: {
+            style: "gyges",
+            enable: true,
+            hide_onmobile: false,
+            hide_onleave: true,
+            hide_delay: 200,
+            hide_delay_mobile: 1200,
+            tmp: '',
+            left: {
+              h_align: "left",
+              v_align: "center",
+              h_offset: 0,
+              v_offset: 0
+            },
+            right: {
+              h_align: "right",
+              v_align: "center",
+              h_offset: 0,
+              v_offset: 0
+            }
+          },
+          bullets: {
+            enable: true,
+            hide_onmobile: true,
+            hide_under: 800,
+            style: "hebe",
+            hide_onleave: false,
+            direction: "horizontal",
+            h_align: "center",
+            v_align: "bottom",
+            h_offset: 0,
+            v_offset: 30,
+            space: 5,
+            tmp: '<span class="tp-bullet-image"></span><span class="tp-bullet-imageoverlay"></span><span class="tp-bullet-title"></span>'
+          }
+        },
+        responsiveLevels: [1240, 1024, 778],
+        visibilityLevels: [1240, 1024, 778],
+        gridwidth: [1170, 1024, 778, 480],
+        gridheight: [680, 768, 960, 720],
+        lazyType: "smart",
+        parallax: "mouse",
+        parallaxBgFreeze: "off",
+        parallaxLevels: [2,3,4,5,6,7,8,9,10,1],
+        shadow: 0,
+        spinner: "off",
+        stopLoop: "on",
+        stopAfterLoops: 0,
+        stopAtSlide: -1,
+        shuffle: "off",
+        autoHeight: "off",
+        fullScreenAutoWidth: "off",
+        fullScreenAlignForce: "off",
+        fullScreenOffsetContainer: "",
+        fullScreenOffset: "0",
+        hideThumbsOnMobile: "off",
+        hideSliderAtLimit: 0,
+        hideCaptionAtLimit: 0,
+        hideAllCaptionAtLilmit: 0,
+        debugMode: false,
+        fallbacks: {
+          simplifyAll: "off",
+          nextSlideOnWindowFocus: "off",
+          disableFocusListener: false,
+        }
+      });
+    }
+  }, 200);
+});
+
+// Pet check popup
+$(document).ready(function(){
+  var have_pets = '{{have_pets}}' 
+  var user_type = '{{request.session.user_type}}'
+  if(have_pets == 'No' && user_type == 'Customer'){
+    swal({
+      text: "Please Add Pet Details.",
+      icon: 'info',
+      title: 'Information',
+      button: "OK",
+      closeOnClickOutside: false,
+    }).then((addcat) => {
+      window.location.href = '/add_pets/';  
+    });
+  }
+});
+</script> 
+
+{% include 'customer/footer.html' %}

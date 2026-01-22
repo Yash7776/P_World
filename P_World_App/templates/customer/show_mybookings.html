@@ -1,0 +1,282 @@
+{% load static %}
+{% include 'customer/header.html' %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.2/css/star-rating.min.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.2/js/star-rating.min.js"></script>
+	
+<style>
+.main-content {
+min-height: calc(100vh - 150px);
+}
+ 
+p{
+color: #d5d5d5;
+font-weight: bold;
+}  
+ .caption , .clear-rating {
+  display:none!important;
+}
+.rating-stars{
+ font-size:20px;
+ margin-top: -3rem;
+}
+.rating-disabled .rating-input, .rating-disabled .rating-stars{
+  cursor:pointer!important; 
+}
+ 
+ 
+.rating-container .filled-stars { 
+    color: #EE163B !important;
+    text-shadow:none;
+	}
+.rating-container {
+	height: 2rem;
+	width: 8rem;
+	}
+ 
+	  
+	.swal-icon--success:after, .swal-icon--success:before {
+     background: #262626 !important;
+		 }
+	.swal-icon--success__hide-corners {
+		background: #262626;
+	}
+
+ 
+ </style>
+  <!-- Start main-content -->
+  <div class="main-content">
+    <!-- Section: inner-header -->
+      <div class='container text-center'>
+			<div class="row" style="margin-top: 1rem;margin-bottom: 1rem;">
+				<div class="col-lg-4"  ></div>
+				<div class="col-lg-4"  >
+					{% if bookings %}
+						<h4 style="color:#fff;">BOOKINGS</h4>
+					{% endif %}
+				</div>
+				<div class="col-lg-2" >
+					<button class="login-btn nextBtn btn-danger btn-sm" onclick="window.location.href='/index/'"><i class="fa fa-arrow-left" aria-hidden="true" style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Back" ></i></button>
+				</div>
+			</div>
+			
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-7">
+				<div class='card shadow text-center'   > 
+				{% if bookings %}
+					<div class="reminder overflow-auto" id="reminder" style="max-height:600px !important;overflow-y: scroll !important;">
+						{% for i in bookings %}
+								<div style='border: 3px solid #504e4e;box-shadow: 2px 2px 9px 0px grey; padding: 10px 0px 10px 0px;width: 98%;' > 
+									<div class="row ">
+										<div class="col-md-3">
+										  <img {% if i.doctor.profile_image %} src="{{i.doctor.profile_image.url}}" {% else %} src="/media/profile_image/no_image.jpg "  {% endif %} alt="" width="60" height="40" style="height:82px; width:100px;"/> 
+										</div>
+										<div class="col-md-6 text-left" style='margin-left:2rem;'> 
+											 <p style='margin-bottom:0;'>{{i.doctor.name}}</p> 
+											 <p style='margin-bottom:0;'>{{i.doctor.bussiness_address}}<p> 
+											 <p style='margin-bottom:0;'>{{i.booking_date}} , {{i.booking_time}} <p> 
+										</div>
+										<div class="col-md-2 text-right"> 	 
+											 <p class='mr-10'>$ {{i.amount|floatformat:2}}<p> 
+											 <p class='mr-10' {% if i.book_status == 'Completed' %} style='color:#128112;' {% elif i.book_status == 'Cancelled' %} style='color:#dd1717;' {% else %} style='color:#1c7d9b;' {% endif %}  >{{i.book_status}}</p>
+										</div>
+									</div>
+									<hr style="margin-top: 1px;">
+									<div class="row">
+										<div class="col-md-9" style='word-wrap: break-word;' >
+										 {% if i.review_status == True %}
+										    <p style='margin-bottom:0; ' >{% if i.review %} {{i.review}} {% else %} No Review {% endif %}</p>
+										 {% endif %}
+										</div>
+										<div class="col-md-3" style="margin-top: -9px;">
+											{% if i.book_status == "Booked" %} 
+												
+												<button class="login-btn nextBtn btn-danger ml-40 btn-sm" onclick="Cancel_Appointment('{{i.id}}')">Cancel</button>
+											{% elif i.book_status == "Completed" and i.review_status == False %}
+												<button class="login-btn nextBtn btn-danger ml-40 btn-sm" onclick="Append_data('{{i.id}}','{{i.doctor.id}}','{{i.client.id}}','{{i.fk_pet.id}}')">Review</button>
+											{% elif i.review_status == True %}
+												<input id="input-1" name="input-1" class="rating rating-loading "   data-min="0" data-max="5" data-step="0.1" value="{{i.rating}}" disabled style="display:none;">
+											{% endif %}
+										</div>
+									</div>
+								</div>
+								<br>
+						{% endfor %}
+					</div>
+				{% else %}
+					<div class="row" style="margin-top: 2%;">
+						<h2> No Bookings Available.</h2>
+					</div>
+					
+				{% endif %}
+				
+		    </div>
+		   </div>
+         </div>
+			<div class="modal  fade mt-3" id="ReiviewModal" role="dialog" data-keyboard="false" data-backdrop="static" style="margin-top:5%;">
+				<div class="modal-dialog">
+					  
+					<div class="modal-content">
+						<div class="modal-header" style="background:#404040;" >
+						   <h4 class="modal-title" style="color: #fff; margin-top: 0px;margin-bottom: -20px;">Add Review</h4>
+						  <button type="button" class="close"  style="color: #fff;" data-dismiss="modal" onclick="clear_data1()">&times;</button>
+
+						</div>
+						<div class="modal-body">
+							<input type="hidden" id="appointment_id" name="appointment_id" value="">
+							<input type="hidden" id="doctor_id" name="doctor_id" value="">
+							<input type="hidden" id="pet_id" name="pet_id" value="">
+							<input type="hidden" id="client_id" name="client_id" value="">
+
+						   <div class="row" style='margin-bottom: 1rem;'>
+								<div class="col-md-3" style="margin-left:-3%;">
+								
+								<label>Give Rating</label>
+								</div>
+								<div class="col-md-4">
+									<input  name="input-1" class="rating rating-loading "  id="rating" data-min="0" data-max="5" data-step="0.1" value="" style="display:none;">
+								</div>
+							</div>
+							<div class="row ml-5" style='width:98%'> 
+									<input type="text" class="form-control" id="review" placeholder="Enter Review"  > 
+							</div>
+						</div>
+						<div class="modal-footer" style="margin-top: -1%;">
+						  <button type="button" class="btn view-btn-style btn-danger"   onclick="Review_Feedback()" >ADD</button>
+						  <button type="button" class="btn view-btn-style btn-default"  data-dismiss="modal" onclick="close_modal()">Close</button>
+						</div>
+					</div>
+			 
+				</div>
+			</div>
+		   </div>
+	  </div>
+  </div>
+  
+	
+			  
+  <!-- end main-content -->
+ <script>
+	function Cancel_Appointment(appointment_id)
+	{
+		
+		swal({
+			title: "Cancel Booking.",
+			text: "Do you want to cancel this booking?",
+			icon: "warning",
+			buttons: ["No", "Yes"],
+			html:true,
+			className: "swal-back",
+			closeOnClickOutside: false,
+			dangerMode: true,			
+		})		
+		.then((willUpdate) => {
+			if (willUpdate) {
+				$.ajax({
+					type:"POST",
+					url: "/cancel_doctors_appointment_api/",
+					headers : {'X-CSRFToken' : getCookie('csrftoken')},
+					data: {
+						'id': appointment_id,
+						'book_status':'Cancelled',
+						"cancelled_by": "Customer"
+					},
+					success: function (response) 
+					{
+						if (response.status == 200){
+							swal("Booking Cancelled Successfully.", {
+								icon: "success",
+								button: "Ok",
+								closeOnClickOutside: false,
+								
+							})
+							.then((addcat)=>{
+						   if(addcat){
+						    window.location.reload();
+						   }
+						});
+							
+						}
+						else{
+							swal(""+response.msg+"", {
+							icon: "error",
+							button: "Ok",
+							closeOnClickOutside: false,
+							});
+						}
+					}
+					
+				})
+				
+			}	
+		});
+	}
+    
+	function Append_data(appointment_id,doctor_id,client_id,pet_id)
+	{
+		$('#ReiviewModal').modal('show');
+		$("#appointment_id").val(appointment_id);
+		$("#doctor_id").val(doctor_id);
+		$("#client_id").val(client_id);
+		$("#pet_id").val(pet_id);
+		
+	}
+	function Review_Feedback()
+	{
+		pet_id = $("#pet_id").val();
+		client_id = $("#client_id").val();
+		doctor_id = $("#doctor_id").val();
+		appointment_id = $("#appointment_id").val();
+		rating = $("#rating").val();
+		review = $("#review").val();
+		
+		if (rating == "")
+		{
+			swal("Please Give Rating.");
+		}
+		else
+		{
+			$.ajax({
+					type:"POST",
+					url: "/user_rating_api/",
+					headers : {'X-CSRFToken' : getCookie('csrftoken')},
+					data: {
+						'fk_apt': appointment_id,
+						'fk_user_sender':client_id,
+						"fk_user_receiver": doctor_id,
+						"rating":rating,
+						"comment":review,
+						"created_datetime":""
+					},
+					success: function (response) 
+					{
+						if (response.status == 200){
+							swal("Thank you so much for the rating.", {
+								icon: "success",
+								button: "Ok",
+								closeOnClickOutside: false,
+								
+							})
+							.then((addcat)=>{
+						   if(addcat){
+							window.location.reload();
+						   }
+						});
+							
+						}
+						else{
+							swal(""+response.msg+"", {
+							icon: "error",
+							button: "Ok",
+							closeOnClickOutside: false,
+							});
+						}
+					}
+					
+				});
+		}
+	}
+		 
+ </script>
+  {% include 'customer/footer.html' %}

@@ -1,0 +1,79 @@
+  /*
+    Flaticon icon font: Flaticon
+    Creation date: 01/05/2016 18:49
+    */
+
+@font-face {
+  font-family: "flaticon-set-pet";
+  src: url("../fonts/flaticons/flaticon-set-pet.eot");
+  src: url("../fonts/flaticons/flaticon-set-pet.eot?#iefix") format("embedded-opentype"),
+       url("../fonts/flaticons/flaticon-set-pet.woff") format("woff"),
+       url("../fonts/flaticons/flaticon-set-pet.ttf") format("truetype"),
+       url("../fonts/flaticons/flaticon-set-pet.svg#flaticon-set-pet") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "flaticon-set-pet";
+    src: url("../fonts/flaticons/flaticon-set-pet.svg#flaticon-set-pet") format("svg");
+  }
+}
+
+[class^="flaticon-pet-"]:before, [class*=" flaticon-pet-"]:before,
+[class^="flaticon-pet-"]:after, [class*=" flaticon-pet-"]:after {   
+  font-family: "flaticon-set-pet";
+  font-style: normal;
+}
+
+.flaticon-pet-animal:before { content: "\f100"; }
+.flaticon-pet-animal-1:before { content: "\f101"; }
+.flaticon-pet-animal-prints:before { content: "\f102"; }
+.flaticon-pet-animals:before { content: "\f103"; }
+.flaticon-pet-bone:before { content: "\f104"; }
+.flaticon-pet-cat:before { content: "\f105"; }
+.flaticon-pet-dog:before { content: "\f106"; }
+.flaticon-pet-dog-1:before { content: "\f107"; }
+.flaticon-pet-dog-2:before { content: "\f108"; }
+.flaticon-pet-dog-3:before { content: "\f109"; }
+.flaticon-pet-dog-4:before { content: "\f10a"; }
+.flaticon-pet-dog-5:before { content: "\f10b"; }
+.flaticon-pet-dog-6:before { content: "\f10c"; }
+.flaticon-pet-dog-7:before { content: "\f10d"; }
+.flaticon-pet-dog-bone:before { content: "\f10e"; }
+.flaticon-pet-dog-bone-1:before { content: "\f10f"; }
+.flaticon-pet-dog-dish:before { content: "\f110"; }
+.flaticon-pet-dog-eating:before { content: "\f111"; }
+.flaticon-pet-dog-food-bowl:before { content: "\f112"; }
+.flaticon-pet-emergency-ambulance:before { content: "\f113"; }
+.flaticon-pet-feeding-the-dog:before { content: "\f114"; }
+.flaticon-pet-food:before { content: "\f115"; }
+.flaticon-pet-jack-russell-terrier:before { content: "\f116"; }
+.flaticon-pet-mall-pets-sign:before { content: "\f117"; }
+.flaticon-pet-man:before { content: "\f118"; }
+.flaticon-pet-man-1:before { content: "\f119"; }
+.flaticon-pet-man-2:before { content: "\f11a"; }
+.flaticon-pet-pawprint-in-a-circle-of-pet-hotel-sign:before { content: "\f11b"; }
+.flaticon-pet-people:before { content: "\f11c"; }
+.flaticon-pet-people-1:before { content: "\f11d"; }
+.flaticon-pet-people-2:before { content: "\f11e"; }
+.flaticon-pet-person:before { content: "\f11f"; }
+.flaticon-pet-pet-hotel-sign-of-a-bone-in-a-dog-house:before { content: "\f120"; }
+.flaticon-pet-pet-house:before { content: "\f121"; }
+.flaticon-pet-pet-shop:before { content: "\f122"; }
+.flaticon-pet-pets-hotel-house-sign-with-a-paw:before { content: "\f123"; }
+.flaticon-pet-pets-hotel-symbol-with-a-dog-and-a-cat-in-a-circle-with-one-star:before { content: "\f124"; }
+.flaticon-pet-plain-dog:before { content: "\f125"; }
+.flaticon-pet-play:before { content: "\f126"; }
+.flaticon-pet-rat:before { content: "\f127"; }
+.flaticon-pet-scissors:before { content: "\f128"; }
+.flaticon-pet-shopping-cart-with-product-inside:before { content: "\f129"; }
+.flaticon-pet-squirrel:before { content: "\f12a"; }
+.flaticon-pet-tooth-outline:before { content: "\f12b"; }
+.flaticon-pet-track:before { content: "\f12c"; }
+.flaticon-pet-transport:before { content: "\f12d"; }
+.flaticon-pet-transport-1:before { content: "\f12e"; }
+.flaticon-pet-veterinarian-hospital:before { content: "\f12f"; }
+.flaticon-pet-walking-the-dog:before { content: "\f130"; }
+.flaticon-pet-walking-with-dog:before { content: "\f131"; }

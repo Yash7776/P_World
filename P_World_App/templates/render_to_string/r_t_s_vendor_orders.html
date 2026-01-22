@@ -1,0 +1,56 @@
+    
+<div class='card shadow row'  style="justify-content:center;"> 
+				<div class="col-12" style='border: 3px solid #504e4e;box-shadow: 2px 2px 9px 0px grey;padding:2.5rem;' >
+				  <div class="card-box table-responsive"> 
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                           style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead>
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>Order Id</th>
+                            <th>Order Date</th> 
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for i in order_obj %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{i.order_no}}</td>
+                            <td>{{i.booking_date}}</td> 
+                            <td> {{i.total_amount}} </td>
+                            <td> {{i.order_status}} </td>
+                            <td>  
+							    {% if i.order_status == "Approved" %} 
+								<i class="fa fa-solid fa-thumbs-down " style="color:red;"data-toggle="tooltip" data-placement="top" title="Cancel"     onClick="ChangeStatus('Cancelled','{{i.id}}')"></i> 
+								{% elif i.order_status == "Cancelled" %} 
+							    {% else %}
+							    <i class="fa fa-solid fa-thumbs-up ml-5" style="color:green;" data-toggle="tooltip" data-placement="top" title="Approve" onClick="ChangeStatus('Approved','{{i.id}}')"></i>
+								<i class="fa fa-solid fa-thumbs-down ml-5" style="color:red;"data-toggle="tooltip" data-placement="top" title="Cancel"onClick="ChangeStatus('Cancelled','{{i.id}}')"></i> 
+								{% endif %}
+								
+								<i class="fa fa-solid fa-eye ml-5" style="color:#fffafa;"data-toggle="tooltip" data-placement="top" title="Details" onclick="OpenModal('{{i.id}}')"></i>
+							</td>
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table> 
+				   </div>
+		    	  </div>
+               </div> 
+			   
+    
+	<script>
+    
+          $('#datatable').DataTable( {
+              responsive: true,
+          } );
+       
+	  
+	</script> 
+
+	  

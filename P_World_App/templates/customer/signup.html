@@ -1,0 +1,833 @@
+{% load static %}
+{% include 'customer/header.html' %}
+<style>
+	/* Force dark background immediately to prevent white flash */
+	body, html {
+		background-color: #1a1a1a !important;
+		color: #f7f7f7 !important;
+	}
+
+	.main-content {
+		background-color: #1a1a1a;
+		min-height: 100vh;
+		padding-bottom: 80px;
+	}
+
+	.card {
+		background-color: #2c2c2c !important;
+		border: 1px solid #5e5e5e;
+		color: #f7f7f7;
+	}
+
+	/* Form inputs dark theme */
+	.form-control {
+		background-color: #3a3a3a !important;
+		border-color: #5e5e5e !important;
+		color: #f7f7f7 !important;
+	}
+
+	.form-control:focus {
+		background-color: #444444 !important;
+		border-color: #d9534f !important;
+		color: #f7f7f7 !important;
+		box-shadow: 0 0 0 0.2rem rgba(217, 83, 79, 0.25);
+	}
+
+	.form-control::placeholder {
+		color: #bbb6b6 !important;
+	}
+
+	.form-control:disabled {
+		background-color: #2a2a2a !important;
+		color: #888 !important;
+	}
+
+	/* Button styling */
+	.btn-group > .btn.active {
+		background-color: #d9534f !important;
+		border-color: #d9534f !important;
+	}
+
+	.radio_background1 {
+		background-color: #2c2c2c;
+		border-color: #5e5e5e;
+		color: #f7f7f7 !important;
+	}
+
+	.radio_background1:hover {
+		background-color: #3a3a3a;
+	}
+
+	.btn-group > .btn1.active {
+		background-color: #d9534f !important;
+		border-color: #d9534f !important;
+		color: #ffffff !important;
+	}
+
+	.btn-group-toggle {
+		min-width: 100%;
+		display: flex;
+		justify-content: center;
+		margin-bottom: 1rem;
+	}
+
+	/* Vendor dropdown list - properly aligned in grid */
+	#vendor_list {
+		background: #312f2f;
+		padding: 15px;
+		border-radius: 5px;
+		margin-top: 10px;
+		width: 100%;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 12px;
+	}
+
+	#vendor_list label {
+		display: flex;
+		align-items: center;
+		font-size: 15px;
+		color: #f7f7f7;
+		margin: 0;
+		cursor: pointer;
+		padding: 10px 15px;
+		border-radius: 4px;
+		transition: all 0.2s;
+		background-color: #3a3a3a;
+		border: 1px solid #5e5e5e;
+	}
+
+	#vendor_list label:hover {
+		background-color: #454545;
+		border-color: #d9534f;
+	}
+
+	#vendor_list input[type="radio"] {
+		margin-right: 10px;
+		cursor: pointer;
+		accent-color: #d9534f;
+	}
+
+	/* For smaller screens, make it single column */
+	@media (max-width: 768px) {
+		#vendor_list {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	/* Error messages */
+	span[id^="errmsg"] {
+		color: #ff6b6b;
+		font-size: 14px;
+		display: block;
+		margin-top: 5px;
+		text-align: left;
+	}
+
+	/* Button styling */
+	.login-btn {
+		width: 100%;
+		padding: 12px;
+		font-size: 16px;
+		font-weight: bold;
+		background-color: #d9534f;
+		border: none;
+		color: white;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: background-color 0.3s;
+	}
+
+	.login-btn:hover {
+		background-color: #c9302c;
+	}
+
+	/* Map icon */
+	#map_icon {
+		cursor: pointer;
+		color: #d9534f;
+	}
+
+	#map_icon:hover {
+		color: #c9302c;
+	}
+
+	/* Toggle password icon */
+	#togglePassword {
+		cursor: pointer;
+		color: #bbb6b6;
+	}
+
+	#togglePassword:hover {
+		color: #f7f7f7;
+	}
+
+	/* Links */
+	a {
+		color: #d9534f;
+	}
+
+	a:hover {
+		color: #c9302c;
+	}
+
+	/* Modal dark theme */
+	.modal-content {
+		background: #323030 !important;
+		color: #f7f7f7 !important;
+	}
+
+	.modal-header {
+		border-bottom: 1px solid #5e5e5e;
+	}
+
+	.modal-footer {
+		border-top: 1px solid #5e5e5e;
+	}
+
+	/* Textarea dark theme */
+	textarea.form-control {
+		background-color: #3a3a3a !important;
+		color: #f7f7f7 !important;
+		border-color: #5e5e5e !important;
+	}
+
+	/* Select dropdown dark theme */
+	select.form-control {
+		background-color: #3a3a3a !important;
+		color: #f7f7f7 !important;
+	}
+
+	select.form-control option {
+		background: rgb(50, 48, 48);
+		color: #bbb6b6;
+	}
+
+	/* Checkbox styling */
+	input[type="checkbox"] {
+		cursor: pointer;
+		width: 18px;
+		height: 18px;
+	}
+	.modal-footer .btn-secondary {
+	color: #000 !important;
+	}
+	.country-dropdown {
+		position: relative;
+	}
+
+	.country-options {
+		position: absolute;
+		width: 100%;
+		max-height: 220px;
+		overflow-y: auto;
+		background: #2c2c2c;
+		border: 1px solid #5e5e5e;
+		border-top: none;
+		display: none;
+		z-index: 999;
+	}
+
+	.country-option {
+		padding: 10px;
+		cursor: pointer;
+		color: #f7f7f7;
+	}
+
+	.country-option:hover {
+		background: #444;
+	}
+
+
+</style>
+
+<!-- Start main-content -->
+<div class="main-content">
+	<!-- Section: inner-header -->
+	<div class='container text-center' style='margin-top: 1.5rem;'>
+		<div class="row">
+			<div class="col-md-4"></div>
+			<div class="col-md-5">
+				<h3 style="margin-bottom: 5px;">Create An Account</h3>
+				<p style="margin-top: 5px; margin-bottom: 20px;">Enter your details</p>
+				
+				<div class='card shadow text-center'>
+					<div style='padding: 25px;'>
+						
+						<!-- User Type Selection -->
+						<div class='row' style='margin-bottom: 15px;'>
+							<div class='col-md-12'>
+								<div role="group" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn1 radio_background1 active" style="font-size: 16px; padding: 10px 30px; margin-right: 10px;" onClick='hide_vendor_list()'>
+										<input autocomplete="off" type="radio" name="userType" id="customer" value="Customer" checked> 
+										Customer
+									</label>  
+									<label class="btn btn1 radio_background1" style="font-size: 16px; padding: 10px 30px;" onClick='show_vendor_list()'>
+										<input autocomplete="off" type="radio" name="userType" value=""> 
+										Vendors
+									</label>  
+								</div>
+							</div>
+						</div>
+
+						<!-- Vendor Type Dropdown -->
+						<div class='row'>
+							<div class='col-md-12'>
+								<div id='vendor_list'>
+									<label>
+										<input autocomplete="off" type="radio" name="userType" value="Doctor">
+										Doctor
+									</label>
+									<label>
+										<input autocomplete="off" type="radio" name="userType" value="Trainer">
+										Pet Trainer
+									</label>
+									<label>
+										<input autocomplete="off" type="radio" name="userType" value="Sitter">
+										Pet Sitter
+									</label>
+									<label>
+										<input autocomplete="off" type="radio" name="userType" value="Walker">
+										Pet Walker
+									</label>
+									<label>
+										<input autocomplete="off" type="radio" name="userType" value="Salon">
+										Pet Salon
+									</label>
+									<label>
+										<input autocomplete="off" type="radio" name="userType" value="Store">
+										Pet Store
+									</label>
+								</div>
+							</div>
+						</div>
+
+						<span id="errmsg_type" style="color:red;"></span>
+						
+						<!-- Name Field -->
+						<input type="text" class="form-control" id="name" name="Name" maxlength='50' placeholder="Enter Your Name*">
+						<span id="errmsg1"></span><br>
+						
+						<!-- Password Field -->
+						<div style="position: relative;">
+							<input type="password" class="form-control" name="password" maxlength='16' id="password" placeholder="Enter your Password*" />  
+							<i class="fa fa-eye-slash" style="position: absolute; top: 12px; right: 15px; cursor: pointer;" id="togglePassword"></i>
+						</div>
+						<span id="errmsg2"></span><br>
+						
+						<!-- Email Field -->
+						<input type="email" class="form-control" id="email" maxlength='50' name="email" placeholder="Email Address*">
+						<span id="errmsg3"></span><br>
+						
+						<!-- Address Field -->
+						<div style="position: relative;">
+							<input type="text" class="form-control" id="address" name="address" placeholder="Select Address*" disabled> 
+							<i class="fa fa-map-marker fa-2x" aria-hidden="true" data-toggle="modal" data-target="#geolocation_model" style="position: absolute; top: 8px; right: 15px; cursor: pointer;" id="map_icon"></i>
+						</div>
+						<span id="errmsg4"></span><br>
+
+						<!-- Address Field -->
+						<!-- <input type="text" class="form-control" id="address" name="address" placeholder="Enter Your Address*">
+						<span id="errmsg4"></span><br> -->
+						
+						
+						<!-- Country Code and Mobile -->
+						<div class='row'>
+							<div class='col-md-6'> 
+								<!-- <select class="form-control" placeholder="Country Code*" id="country_code" name="country_code">
+									<option selected style='background:rgb(50 48 48);color:#bbb6b6;' value=''>Country Code*</option>
+									{% for obj in country_obj %}
+									<option value="+{{obj.country_code}},{{obj.sortname}}" style='background:rgb(50 48 48);color:#bbb6b6;'>+{{obj.country_code}} {{obj.sortname}}</option>  
+									{% endfor %}
+								</select>	 -->
+									<div class="country-select-wrapper">
+    <div class="country-dropdown">
+        <input
+            type="text"
+            id="country_search"
+            class="form-control"
+            placeholder="Select country code*"
+            readonly
+        >
+        <div class="country-options" id="country_options">
+            {% for obj in country_obj %}
+                <div class="country-option"
+                     data-value="+{{obj.country_code}},{{obj.sortname}}">
+                    +{{obj.country_code}} {{obj.sortname}}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<span id="errmsg7"></span>
+<input type="hidden" id="country_code" name="country_code">
+
+
+									</div>
+							<div class='col-md-6'>
+								<input type="text" class="form-control" id="mobile" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" name="mobile" placeholder="Mobile*" maxlength='10'>
+								<span id="errmsg5"></span><br>
+							</div> 
+						</div>
+						
+						<!-- Vendor Details -->
+						<div id="vendor_details">
+							<input type="text" class="form-control" id="business_name" name="Business Name" maxlength='60' placeholder="Enter Business Name"><br>
+							<input type="text" class="form-control" name="Business Address" id="business_address" placeholder="Enter Business Address" /><br> 
+							<textarea class="form-control" id="about" rows="2" cols="10" name="About" placeholder="About Me"></textarea><br>
+						</div>
+						
+						<!-- Terms and Conditions -->
+						<div style='display: flex; align-items: center; justify-content: center; margin-bottom: 10px;'>
+							<input type="checkbox" id="t_and_c" style='margin-right: 10px;'> 
+							<p style="margin: 0;">I have accept <a href="/terms_and_conditions/">terms and conditions</a></p>
+						</div>
+						<span id="errmsg6"></span><br>
+						
+						<!-- Sign Up Button -->
+						<button class="login-btn nextBtn btn-danger btn-lg" onclick="signUp()">Sign Up</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Geolocation Modal -->
+<div class="modal fade in" id="geolocation_model" tabindex="-1" data-keyboard="false" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content" style='background: #323030;'>
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Geolocation <span style="color:#ff4c4ce8"> *</span></h5>
+			</div>
+			<div class="modal-body">
+				<input type="text" name="Address" value="" id="Geo_Address" class="MAP_LOCATION form-control pac-target-input" placeholder="Address"><br>
+				<center><span style="display:none;color:#ff4c4ce8;font-size: 10px;" class="Address_error1" id="Address_error">Please Enter Valid Geolocation</span></center>
+				<input class="form-control" id="sup_latitude" value="" name="sup_latitude" type="text" style="display:none;">
+				<input class="form-control" id="map_id_selected" value="Address_new" type="text" style="display:none;">
+				<input class="form-control" id="sup_longitude" value="" name="sup_longitude" type="text" style="display:none;">
+				<div id="mapdiv" style="width: 99.7%; height: 200px;"></div>
+			</div>
+			<input type="text" value="Address_new" id="save_giolocation_module_id" hidden>
+			<div class="modal-footer">
+				<div class="text-center">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" id="close_model_geolocation">Close</button>
+					<button type="button" class="btn btn-danger" onclick="save_giolocation_details()">Select</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$("#vendor_list").hide();
+	$("#vendor_details").hide();
+// Replace your show_vendor_list and hide_vendor_list functions with these:
+
+function show_vendor_list(){   
+	$("#vendor_list").show(); 
+	$("#vendor_details").show(); 
+	
+	// Uncheck customer radio button
+	$("#customer").prop('checked', false);
+	
+	// Clear ALL form fields
+	$("#name").val('');
+	$("#password").val('');
+	$("#email").val('');
+	$("#address").val('');
+	$("#mobile").val('');
+	$("#country_search").val('');
+	$("#country_code").val('');
+	$("#sup_latitude").val('');
+	$("#sup_longitude").val('');
+	$("#Geo_Address").val('');
+	
+	// Hide all error messages
+	$('span[id^="errmsg"]').hide();
+}
+
+function hide_vendor_list(){
+	$("#vendor_list").hide(); 
+	$("#vendor_details").hide(); 
+	
+	// Clear ALL form fields (including vendor fields)
+	$("#name").val('');
+	$("#password").val('');
+	$("#email").val('');
+	$("#address").val('');
+	$("#mobile").val('');
+	$("#country_search").val('');
+	$("#country_code").val('');
+	$("#sup_latitude").val('');
+	$("#sup_longitude").val('');
+	$("#Geo_Address").val('');
+	$("#business_name").val('');
+	$("#business_address").val('');
+	$("#about").val('');
+	
+	// Uncheck all vendor radio buttons
+	$("#vendor_list input[type='radio']").prop('checked', false);
+	
+	// Check customer radio button
+	$("#customer").prop('checked', true);
+	
+	// Hide all error messages
+	$('span[id^="errmsg"]').hide();
+}
+
+// Handle radio button changes in vendor list
+$('#vendor_list input[type=radio][name=userType]').change(function() {
+	// Hide all error messages when vendor type changes
+	$('span[id^="errmsg"]').hide();
+	// Uncheck customer button when vendor is selected
+	$("#customer").prop('checked', false);
+});
+	
+	$('input[type=radio][name=userType]').change(function() {
+		$("#errmsg_type").hide(); 
+	});
+	
+	$('#name').keyup(function(){
+		$('#errmsg1').hide();
+	});
+
+	$('#password').keyup(function(){
+		$('#errmsg2').hide();
+	});
+	
+	$('#email').keyup(function(){
+		$('#errmsg3').hide();
+	});
+	
+	$('#map_icon').mouseup(function(){
+		$('#errmsg4').hide();
+	});
+	
+	$('#mobile').keyup(function(){
+		$('#errmsg5').hide();
+	}); 
+	
+	$('#t_and_c').mouseup(function(){
+		$('#errmsg6').hide();
+	});
+	
+	$('#country_code').mouseup(function(){
+		$('#errmsg7').hide();
+	});
+	
+	function signUp(){
+		var name = $('#name').val();
+		var email = $('#email').val();
+		var pswd = $('#password').val();
+		var address = $('#address').val();
+		var mobile = $('#mobile').val(); 
+		var country_code = $('#country_code').val(); 
+		var latitude = $('#sup_latitude').val(); 
+		var longitude = $('#sup_longitude').val(); 
+		var business_name = $('#business_name').val(); 
+		var business_address = $('#business_address').val(); 
+		var about = $('#about').val(); 
+		var t_and_c = document.getElementById('t_and_c').checked;
+		var user_type = $("input[name='userType']:checked").val();
+		
+		if(user_type == '' || user_type == undefined){
+			$('#errmsg_type').html("Please Select User Type.");
+			$('#errmsg_type').show();
+		}
+		else if(name == ""){
+			$('#errmsg1').html("Please Enter Your Name");
+			$('#errmsg1').show();
+		} 
+		else if(pswd == ""){
+			$('#errmsg2').html("Please Enter Password");  
+			$('#errmsg2').show();
+		}
+		else if(email == ""){
+			$('#errmsg3').html("Please Enter Email Address");
+			$('#errmsg3').show();
+		}
+		else if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))){
+			$('#errmsg3').html("Invalid Email Address...");
+			$('#errmsg3').show();
+		}
+		else if(address == ""){
+			$('#errmsg4').html("Please Enter Address");
+			$('#errmsg4').show();
+		}
+		// else if(country_code == ""){
+		// 	$('#errmsg7').html("Please Select Country Code");
+		// 	$('#errmsg7').show();
+		// }
+		else if(mobile == ""){
+			$('#errmsg5').html("Please Enter Mobile Number");
+			$('#errmsg5').show();
+		}
+		else if(mobile.length != 10){
+			$('#errmsg5').html("Please Enter Valid Mobile Number");
+			$('#errmsg5').show();
+		}
+		else if(t_and_c == false){
+			$('#errmsg6').html("Please accept terms and conditions");
+			$('#errmsg6').show();
+		} 
+		else {
+			$.ajax({
+				method: "POST",
+				url: "/create_account_customer/",
+				headers: {'X-CSRFToken': getCookie('csrftoken')},
+				data: {
+					"user_type": user_type,
+					"sign_up_status": 'True',
+					"name": name,
+					"email": email,
+					"password": pswd,
+					"mobile_no": mobile,
+					"address": address,
+					"country_code": country_code,
+					"map_location": address,
+					"latitude": latitude,
+					"longitude": longitude,
+					"about": about,
+					"business_address": business_address,
+					"business_name": business_name,
+					"token": '',
+				},
+				success: function(response){
+					if(response.status == 200){
+						if(response.user_type == 'Doctor'){
+							window.location.href = "/doctor_availability/";
+						}
+						else if(response.user_type == 'Customer'){
+							window.location.href = "/add_pets/";
+						}
+						else if(response.user_type == 'Store'){
+							window.location.href = "/add_item/";
+						}
+						else {
+							window.location.href = "/bookings/";
+						}
+					}
+					else {
+						swal({
+							title: "Error",
+							text: response.msg,
+							icon: 'error',
+							button: 'OK',
+							closeOnClickOutside: false,
+						});
+					}
+				}  
+			});
+		}
+	} 
+	
+	const togglePassword = document.querySelector('#togglePassword');
+	const password = document.querySelector('#password');
+	
+	togglePassword.addEventListener('click', () => {
+		const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+		password.setAttribute('type', type);
+		togglePassword.classList.toggle("fa-eye");
+		togglePassword.classList.toggle("fa-eye-slash");
+	});
+</script>
+
+<script>
+	// Map initialization code
+	$(document).ready(function () {
+		curr_lat = '21.1458'
+		curr_long = '79.0882'
+		var MAPDIV = new google.maps.Map(document.getElementById('mapdiv'), {
+			center: new google.maps.LatLng(curr_lat, curr_long),
+			zoom: 13,
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			streetViewControl: false
+		});
+		var MAPDIV_MARKER = new google.maps.Marker({
+			position: new google.maps.LatLng(curr_lat, curr_long),
+			map: MAPDIV,
+			draggable: true
+		});
+		google.maps.event.addListener(MAPDIV_MARKER, 'dragend', function () {
+			MAP_LAT_LNG();
+		});
+
+		var MAP_GEOCODER = new google.maps.Geocoder();
+		
+		var MAP_LAT_LNG = function () {
+			var LAT_LNG = MAPDIV_MARKER.getPosition();
+			MAPDIV.panTo(LAT_LNG);
+			
+			$('input[name="sup_latitude"]').val(LAT_LNG.lat());
+			$('input[name="sup_longitude"]').val(LAT_LNG.lng());
+			
+			var lat = LAT_LNG.lat()
+			var lng = LAT_LNG.lng()
+
+			latlng = new google.maps.LatLng(lat, lng),
+			geocoder = new google.maps.Geocoder();
+			geocoder.geocode({'latLng': latlng}, function(results, status) {
+				if (status == google.maps.GeocoderStatus.OK) {
+					console.log(status)
+				}
+				else {
+					console.log("Geocoder failed: " + status)
+				}
+			});
+			
+			MAP_GEOCODER.geocode({
+				latLng: LAT_LNG
+			}, function (results, status) {
+				if (status == google.maps.GeocoderStatus.OK) {
+					$('.MAP_LOCATION').val(results[0].formatted_address);
+				}
+			});
+		};
+		
+		var LAT_LNG_MAP = function () {
+			var LAT = $('input[name="sup_latitude"]').val().trim();
+			var LNG = $('input[name="sup_longitude"]').val().trim();
+			if ($.isNumeric(LAT) && $.isNumeric(LNG) && (-90 <= LAT) && (LAT <= 90) && (-180 <= LNG) && (LNG <= 180)) {
+				var LAT_LNG = new google.maps.LatLng(LAT, LNG);
+				MAPDIV.setCenter(LAT_LNG);
+				MAPDIV_MARKER.setPosition(LAT_LNG);
+
+				if (!$('.MAP_LOCATION').val()) {
+					MAP_GEOCODER.geocode({
+						latLng: LAT_LNG
+					}, function (results, status) {
+						if (status == google.maps.GeocoderStatus.OK) {
+							$('.MAP_LOCATION').val(results[0].formatted_address);
+						}
+					});
+				}
+			} else {
+				console.log('Latitude and Longitude is error');
+			}
+		};
+		
+		$('.LAT_LNG_MAP').on('click', function () {
+			LAT_LNG_MAP();
+		});
+		
+		if ($('input[name="sup_latitude"]').val().trim() && $('input[name="sup_longitude"]').val().trim()) {
+			$('.LAT_LNG_MAP').trigger('click');
+		}
+
+		function search_loc(){
+			var address = $('#Geo_Address').val(); 
+			MAP_GEOCODER.geocode({'address': address}, function (results, status) { 
+				if (status == google.maps.GeocoderStatus.OK) {
+					MAPDIV.setCenter(results[0].geometry.location);
+					MAPDIV_MARKER.setPosition(results[0].geometry.location);
+					$('input[name="sup_latitude"]').val(results[0].geometry.location.lat());
+					$('input[name="sup_longitude"]').val(results[0].geometry.location.lng()); 
+				} else {
+					console.log("Location was not successful for the following reason: " + status);
+				}
+			});
+		} 
+
+		var MAP_AUTOCOMPLETE = new google.maps.places.Autocomplete($('.MAP_LOCATION')[0], {
+			componentRestrictions: {
+				country: 'IND'
+			}
+		});
+		
+		MAP_AUTOCOMPLETE.addListener('place_changed', function () {
+			var place = MAP_AUTOCOMPLETE.getPlace();
+
+			if (!place || !place.geometry) {
+				console.log("Autocomplete's returned place contains no geometry");
+				return;
+			}
+			
+			MAPDIV.setCenter(place.geometry.location);
+			MAPDIV_MARKER.setPosition(place.geometry.location);
+			
+			$('input[name="sup_latitude"]').val(place.geometry.location.lat());
+			$('input[name="sup_longitude"]').val(place.geometry.location.lng());
+			
+			var lat = place.geometry.location.lat()
+			var lng = place.geometry.location.lng()
+
+			latlng = new google.maps.LatLng(lat, lng),
+			geocoder = new google.maps.Geocoder();
+			geocoder.geocode({'latLng': latlng}, function(results, status) {
+				if (status == google.maps.GeocoderStatus.OK) {
+					console.log(status)
+				}
+				else {
+					console.log("Geocoder failed: " + status)
+				}
+			});
+		});
+
+		$('.MAP_LOCATION').on('keydown', function (ev) {
+			if (ev.keyCode === 13) {
+				ev.preventDefault();
+				search_loc()
+			}
+		});
+	});
+	
+	$("#Geo_Address").keyup(function(){
+		$("#Geo_Address").removeClass("error");
+	});
+	
+	function save_giolocation_details(){
+		var gio_add_set = $('#Geo_Address').val()
+		if(gio_add_set == ''){
+			$("#Geo_Address").addClass("error");
+		}
+		else {
+			$('#address').val($('#Geo_Address').val()); 
+			$('#close_model_geolocation').click()
+		}
+	}
+</script>
+<script>
+document.getElementById("name").addEventListener("input", function() {
+      this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, "");
+});
+
+const searchInput = document.getElementById('country_search');
+const optionsBox = document.getElementById('country_options');
+const hiddenInput = document.getElementById('country_code');
+
+searchInput.addEventListener('click', () => {
+    optionsBox.style.display = 'block';
+    searchInput.removeAttribute('readonly');
+});
+
+searchInput.addEventListener('keyup', () => {
+    const val = searchInput.value.toLowerCase();
+    document.querySelectorAll('.country-option').forEach(opt => {
+        opt.style.display = opt.textContent.toLowerCase().includes(val)
+            ? 'block'
+            : 'none';
+    });
+});
+
+document.querySelectorAll('.country-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+        searchInput.value = opt.textContent.trim();
+        hiddenInput.value = opt.dataset.value;
+        optionsBox.style.display = 'none';
+        searchInput.setAttribute('readonly', true);
+		// ADD THIS LINE - Hide error message when country is selected
+		   $('#errmsg7').hide();
+    });
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.country-dropdown')) {
+        optionsBox.style.display = 'none';
+        searchInput.setAttribute('readonly', true);
+    }
+});
+</script>
+
+
+{% include 'customer/footer.html' %}

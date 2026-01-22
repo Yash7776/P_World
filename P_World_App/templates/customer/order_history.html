@@ -1,0 +1,181 @@
+{% load static %}
+{% include 'customer/header.html' %}
+  <style>
+  .dataTables_wrapper .dataTables_paginate .paginate_button.current
+	{
+		color: #e70404 !important;
+	}
+	.dataTables_wrapper .dataTables_paginate .paginate_button
+	{
+		color: #e70404 !important;
+		
+	}
+	.dataTables_wrapper .dataTables_paginate .paginate_button:hover 
+	{
+		color: #e70404 !important;
+	}
+	.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover{
+	
+		color: #e70404 !important;
+	}
+	.modal-header {
+    height: 56px !important;
+}
+	</style>
+  <!-- Start main-content -->
+  <div class="main-content">
+    <!-- Section: inner-header -->
+      <div class='container text-center'>
+	       <div class='card shadow text-center'  > 
+		       <h4 style="color:#fff;">ORDER HISTORY</h4>
+				
+				<div id = "table_div">	
+					<section class="delivery-table pb-20" style="">
+						<div class="div-table" style="margin-top: 1rem;">
+							<table class="table table-bordered dt-responsive nowrap" id="pets_table" style="padding:20px;border-collapse: collapse; border-spacing: 0; width: 100%; ">
+								<thead id="table_filedname" style="background-color:#a54b4b; color:#fff;" >
+									<tr>
+										<th style="text-align:center;">Sr.No</th>
+										<th style="text-align:center;">Order No</th>
+										<th style="text-align:center;">Order Date</th>
+										<th style="text-align:center;">No of Item</th>
+										<th style="text-align:center;">Total Amount</th>
+										<th style="text-align:center;">Order Status</th>
+										<th style="text-align:center;">Action</th>
+									</tr>
+								</thead>
+								<tbody id="tbody">
+									{% for i in order %}
+										<tr>
+											<td>{{forloop.counter}}</td>
+											<td>{{i.order_no}}</td>
+											<td>{{i.booking_date}}</td>
+											<td>{{i.total_quantity}}</td>
+											<td>{{i.total_amount}}6</td>
+											<td>{{i.order_status}}</td>
+											<td><a href="#" class="login-btn nextBtn btn-danger btn-sm"  data-toggle="tooltip" data-placement="top" title="View Items" style="font-size: 17px;padding: 5px 9px;" onclick="OpenModal('{{i.id}}')"><i class="fa fa-eye fa-1x" aria-hidden="true" style="cursor:pointer;" ></i></a>
+											<!-- <button class="login-btn nextBtn btn-danger btn-sm"  data-toggle="tooltip" data-placement="top" title="Delete Pet" style="font-size: 14px;padding: 5px 10px;" onclick="Delete_Pet()"><i class="fa fa-eye fa-1x" aria-hidden="true" style="cursor:pointer;" ></i></button> -->
+											</td>
+										</tr>
+									{% endfor %}
+									
+								</tbody>
+							</table> 
+						</div>
+					</section>
+	  
+				</div>
+				<div class="modal fade fade mt-3" id="Item_detail_Modal" role="dialog" data-keyboard="false" data-backdrop="static">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header" style="background:grey;" >
+								<h4 class="modal-title" style="color: #fff;">Item Detail</h4>
+								<button type="button" class="close"  style="color: #fff; margin-top: -4%;" data-dismiss="modal" onclick="clear_data1()">&times;</button>
+
+							</div>
+							<div class="modal-body">
+							   <input type="hidden" value="" id="order_id">
+							   <div id="item">
+									
+									
+							   </div>
+							</div>
+								
+						</div>
+							
+					</div>
+				  
+				</div>
+		   </div> 
+	  </div>
+  </div>
+  <!-- end main-content -->
+ <script>
+    $(document).ready(function () {
+		$('#pets_table').DataTable({    
+		});
+	});
+ </script>
+ <script>
+	function OpenModal(order_id)
+	{
+		
+		$('#Item_detail_Modal').modal('show');
+		$("#order_id").val(order_id);
+		$.ajax({
+			type:"POST",
+			url: "/Order_Item_Detail/",
+			
+			data: {
+				'order_id': order_id
+			},
+			success: function (response) 
+			{
+				if (response.status == '1'){
+					$("#item").html(response.response);
+					
+				}
+				else{
+					swal(""+response.msg+"", {
+					icon: "error",
+					button: "Ok",
+					closeOnClickOutside: false,
+					});
+				}
+			}
+			
+		})
+	}
+	function Delete_Pet(pet_id)
+	{
+		swal({
+			title: "Delete Pet.",
+			text: "Do you want to delete this Pet?",
+			icon: "warning",
+			buttons: ["No", "Yes"],
+			html:true,
+			className: "swal-back",
+			closeOnClickOutside: false,
+			dangerMode: true,			
+		})		
+		.then((willUpdate) => {
+			if (willUpdate) {
+				$.ajax({
+					type:"POST",
+					url: "/delete_pet_api/",
+					headers : {'X-CSRFToken' : getCookie('csrftoken')},
+					data: {
+						'pet_id': pet_id
+					},
+					success: function (response) 
+					{
+						if (response.status == 200){
+							swal(""+response.msg+"", {
+								icon: "success",
+								button: "Ok",
+								closeOnClickOutside: false,
+								
+							})
+							.then((addcat)=>{
+						   if(addcat){
+						    window.location.reload();
+						   }
+						});
+							
+						}
+						else{
+							swal(""+response.msg+"", {
+							icon: "error",
+							button: "Ok",
+							closeOnClickOutside: false,
+							});
+						}
+					}
+					
+				})
+				
+			}	
+		});
+	}
+ </script>
+  {% include 'customer/footer.html' %}

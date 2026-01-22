@@ -1,0 +1,129 @@
+{% include "admin_panel/header.html" %}
+{% load static %}
+<style>
+    .page-item.active .page-link {
+        background: #343b4a;
+        border-color: #343b4a;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card-box table-responsive">
+                <!-- Dynamic Title -->
+                <h4 class="header-title" style="margin-bottom:20px;">
+                    {{ page_title }}
+                </h4>
+                <table id="datatable" class="table table-striped table-bordered dt-responsive nowrap"
+                    style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in obj %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ i.name }}</td>
+                            <td>{{ i.email }}</td>
+                            <td>{{ i.mobile_no }}</td>
+                            <td>
+                                <a href="/user_detail/{{ i.id }}/" class="btn btn-info btn-sm"
+                                    style="padding: 2px 6px;">
+                                    View
+                                </a>
+                                <button class="btn btn-danger btn-sm" style="padding: 2px 6px;"
+                                    onclick="Del('{{ i.id }}')">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                No {{ user_type }} Found
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "admin_panel/footer.html" %}
+
+<script>
+    //Function of Delete Product
+    function Del(id) {
+        swal({
+            title: "Are you sure?",
+            text: "To Delete This Vendor!",
+            icon: "warning",
+            buttons: ["No", "Yes"],
+            closeOnClickOutside: false,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        method: "POST",
+                        url: "/delete_doctor_entry/",
+                        data: {
+                            'doc_id': id,
+                        },
+                        success: function (response) {
+                            if (response == "deleted") {
+                                swal("Vendor's account has been Deleted..!", {
+                                    icon: "success",
+                                    button: "Ok",
+                                    closeOnClickOutside: false,
+                                }).then(function () {
+                                    location.reload();
+                                });
+                            }
+                        }
+                    })
+                }
+            });
+    }
+
+    function view_detail(id) {
+        $('#loading').show();
+        $.ajax({
+            url: "/render_to_doctor_detail/",
+            method: "POST",
+            data: {
+                'id': id,
+            },
+            success: function (response) {
+                $('#table_sec').hide();
+                $('#form_sec').html('');
+                $('#form_sec').html(response);
+                $('#form_sec').show();
+                $('#loading').hide();
+            }
+        });
+    }
+
+    function back_to() {
+        $('#loading').show();
+        $.ajax({
+            url: "/filter_user_table/",
+            method: "POST",
+            data: {},
+            success: function (response) {
+                $('#users_form').hide();
+                $('#filter_table').html('');
+                $('#filter_table').html(response);
+                $('#users_report').show();
+                $('#loading').hide();
+            }
+        });
+    }
+</script>

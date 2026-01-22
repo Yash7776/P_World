@@ -1,0 +1,60 @@
+{% load static %}
+<!-- 
+<div class="row">
+	{% for i in item %}
+		<div class="col-md-3 mb-10">
+			<div style='border: 2px solid #505050;'> 
+				<div class="text-center mt-10 mb-10"> 
+					<a href="{% url 'product_details' i.id %}" style="text-decoration:none; cursor:pointer!important;">
+					 
+						{% if i.item_image %}
+								<img src="{{ i.item_image.url }}" style="height: 129px;width: 195px;">
+							{% else %}
+								<img src="{% static 'images/no_image.jpg' %}" style="height: 129px;width: 195px;">
+							{% endif %}
+					 
+						<h5 style='color:#f7f7f7;margin-bottom:0; font-weight:normal;'>{{i.item_name}}</h5>
+						
+						<p style='margin-bottom:0;'>{{i.fk_category.category_name}}</p> 
+						
+						<p class="product-title-two" style='margin-bottom:0;'>${{i.item_price}}</p>
+						 
+					</a> 
+				</div>
+			 </div>
+		</div>
+	{% endfor %}
+</div> -->
+
+<div class="row">
+    {% for i in item %}
+        <div class="col-md-3 mb-10">
+            <div style='border: 2px solid #505050;'> 
+                <div class="text-center mt-10 mb-10"> 
+                    <a href="{% url 'product_details' i.id %}" style="text-decoration:none; cursor:pointer!important;">
+                    
+                        {% comment %} Load first 12 normally, rest lazy {% endcomment %}
+                        {% if forloop.counter <= 12 %}
+                            {% if i.item_image %}
+                                <img src="{{ i.item_image.url }}" style="height: 129px;width: 195px;" alt="{{ i.item_name }}">
+                            {% else %}
+                                <img src="{% static 'images/no_image.jpg' %}" style="height: 129px;width: 195px;" alt="No Image">
+                            {% endif %}
+                        {% else %}
+                            {% if i.item_image %}
+                                <img src="{{ i.item_image.url }}" style="height: 129px;width: 195px;" loading="lazy" alt="{{ i.item_name }}">
+                            {% else %}
+                                <img src="{% static 'images/no_image.jpg' %}" style="height: 129px;width: 195px;" loading="lazy" alt="No Image">
+                            {% endif %}
+                        {% endif %}
+                    
+                        <h5 style='color:#f7f7f7;margin-bottom:0; font-weight:normal;'>{{i.item_name}}</h5>
+                        <p style='margin-bottom:0;'>{{i.fk_category.category_name}}</p> 
+                        <p class="product-title-two" style='margin-bottom:0;'>${{i.item_price}}</p>
+                         
+                    </a> 
+                </div>
+             </div>
+        </div>
+    {% endfor %}
+</div>

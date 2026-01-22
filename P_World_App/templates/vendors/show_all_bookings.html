@@ -1,0 +1,154 @@
+{% load static %}
+{% include 'customer/header.html' %}
+ <style>
+    .main-content {
+    min-height: calc(100vh - 150px);
+}
+ 
+.swal-icon--success:after, .swal-icon--success:before {
+ background: #262626 !important;
+	 }
+.swal-icon--success__hide-corners {
+	background: #262626;
+}
+
+
+p{
+color: #d5d5d5;
+font-weight: bold;
+}  
+ .caption , .clear-rating {
+  display:none!important;
+}
+.rating-stars{
+ font-size:20px;
+ margin-top: -3rem;
+}
+.rating-disabled .rating-input, .rating-disabled .rating-stars{
+  cursor:pointer!important; 
+}
+ 
+ 
+.rating-container .filled-stars { 
+    color: #EE163B !important;
+    text-shadow:none;
+	}
+.rating-container {
+	height: 2rem;
+	width: 8rem;
+	}
+ 
+ </style>
+  <!-- Start main-content -->
+  <div class="main-content">
+    <!-- Section: inner-header -->
+      <div class='container text-center'>
+			<div class="row">
+				<div class="col-lg-4" style="margin-left:24rem; margin-top: 18px;">
+				{% if bookings %}
+					<h3 style="color:#fff;">All Bookings</h3>
+				{% endif %}
+				</div>
+				<div class="col-lg-2" style="margin-top: 43px;margin-left: -6rem; color:red;">
+					<button class="login-btn nextBtn btn-danger btn-sm" onclick="window.location.href='/bookings/'"><i class="fa fa-arrow-left" aria-hidden="true" style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Back" ></i></button>
+				</div>
+			 
+			</div>
+	       <div class='card shadow text-center'  style="display:flex; justify-content:center;"> 
+				{% if bookings %} 
+					<div class="reminder overflow-auto" id="reminder" style="width: 60%;margin-top: 20px; max-height:600px !important;  overflow-y: auto;">
+						{% for i in bookings %}
+								<div style='border: 3px solid #504e4e;box-shadow: 2px 2px 9px 0px grey; padding: 10px 0px 10px 0px;width: 98%;' > 
+									<div class="row ">
+										<div class="col-md-3">
+										  <img {% if i.fk_pet.pet_image.url %} src="{{i.fk_pet.pet_image.url}}" {% else %} src="/media/profile_image/no_image.jpg "  {% endif %} alt="" width="60" height="40" style="height:82px; width:100px;"/> 
+										</div>
+										<div class="col-md-6 text-left" style="padding-left: 2rem;">
+											 <p style='margin-bottom:0;'>{{i.fk_pet.pet_name}}</p> 
+											 <p style='margin-bottom:0;'>{{i.fk_pet.breed}}<p> 
+											 <p style='margin-bottom:0;'>{{i.booking_date}} , {{i.booking_time}} <p> 
+										</div>
+										<div class="col-md-3 text-right">   
+											<button class="login-btn nextBtn btn-danger mr-10 btn-sm" onclick="Cancel_Appointment('{{i.id}}')">Cancel</button>  
+										</div>
+									</div> 
+								</div>
+								<br>
+						{% endfor %}
+					</div>
+				{% else %}
+					<div class="row" style="margin-top: 2%;">
+						<h2>No Bookings Available.</h2>
+						
+					</div>
+				{% endif %}
+				
+		    </div>
+		 
+		   </div>
+	  </div>
+  </div>
+  
+	
+			  
+  <!-- end main-content -->
+ <script>
+	function Cancel_Appointment(appointment_id)
+	{
+		
+		swal({
+			title: "Cancel Booking.",
+			text: "Do you want to cancel this booking?",
+			icon: "warning",
+			buttons: ["No", "Yes"],
+			html:true,
+			className: "swal-back",
+			closeOnClickOutside: false,
+			dangerMode: true,			
+		})		
+		.then((willUpdate) => {
+			if (willUpdate) {
+				$.ajax({
+					type:"POST",
+					url: "/cancel_doctors_appointment_api/",
+					headers : {'X-CSRFToken' : getCookie('csrftoken')},
+					data: {
+						'id': appointment_id,
+						'book_status':'Cancelled',
+						"cancelled_by": "{{request.session.user_type}}"
+					},
+					success: function (response) 
+					{
+						if (response.status == 200){
+							swal("Bookings Cancelled Successfully.", {
+								icon: "success",
+								button: "Ok",
+								closeOnClickOutside: false,
+								
+							})
+							.then((addcat)=>{
+						   if(addcat){
+						    window.location.reload();
+						   }
+						});
+							
+						}
+						else{
+							swal(""+response.msg+"", {
+							icon: "error",
+							button: "Ok",
+							closeOnClickOutside: false,
+							});
+						}
+					}
+					
+				})
+				
+			}	
+		});
+	}
+    
+	 
+		 
+ </script>
+  {% include 'customer/footer.html' %}

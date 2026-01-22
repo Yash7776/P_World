@@ -1,0 +1,668 @@
+{% include "admin_panel/header.html"%}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+       body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    background: #f3f6f8;
+    color: #1a1a1a;
+    line-height: 1.6;
+}
+
+
+        .page-wrapper {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        /* Header Bar */
+        .header-bar {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .back-button {
+            background: transparent;
+            border: 1px solid #d0d0d0;
+            color: #424242;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .back-button:hover {
+            background: #f3f6f8;
+            border-color: #b0b0b0;
+        }
+
+        /* Main Content */
+        .content-wrapper {
+            padding: 24px 32px;
+        }
+
+        /* Profile Hero Section */
+        .profile-hero {
+            background: #343b4a;
+            border-radius: 8px;
+            padding: 28px 32px;
+            color: white;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .profile-image-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #2a3240;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 600;
+            border: 3px solid rgba(255,255,255,0.3);
+            flex-shrink: 0;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .profile-image-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-info h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+            color: #ffffff;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 6px 14px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        /* Info Cards Grid */
+        .info-section {
+            margin-bottom: 32px;
+        }
+
+        .section-header {
+            margin-bottom: 18px;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d2d2d;
+            margin-bottom: 6px;
+        }
+
+        .section-header p {
+            color: #757575;
+            font-size: 14px;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 18px;
+        }
+
+        .info-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .info-card:hover {
+            border-color: #c0c0c0;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            transform: translateY(-1px);
+        }
+
+        .info-card-icon {
+            width: 40px;
+            height: 40px;
+            background: #343b4a;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 14px;
+            color: #ffffff;
+        }
+
+        .info-card-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .info-card-value {
+            font-size: 15px;
+            font-weight: 500;
+            color: #2d2d2d;
+            word-break: break-word;
+            line-height: 1.5;
+        }
+
+        /* Availability Section */
+        .availability-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 20px;
+        }
+
+        .availability-item {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .availability-item:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            border-color: #c0c0c0;
+        }
+
+        .availability-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .availability-icon {
+            width: 42px;
+            height: 42px;
+            background: #343b4a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #ffffff;
+        }
+
+        .availability-header h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2d2d2d;
+        }
+
+        .availability-details {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .availability-time-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .time-block {
+            background: #f8f9fa;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .time-label {
+            font-size: 12px;
+            color: #757575;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .time-value {
+            font-size: 17px;
+            color: #2d2d2d;
+            font-weight: 700;
+            display: block;
+        }
+
+        .days-section {
+            margin-top: 6px;
+            background: #f8f9fa;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .days-label {
+            font-size: 12px;
+            color: #757575;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .days-bubbles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .day-bubble {
+            background: #343b4a;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            transition: all 0.2s;
+        }
+
+        .day-bubble:hover {
+            background: #2a3240;
+            transform: translateY(-1px);
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 20px;
+        }
+
+        .service-item {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .service-item:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+            border-color: #c0c0c0;
+        }
+
+        .service-header {
+            background: #343b4a;
+            padding: 18px 22px;
+            color: white;
+            position: relative;
+        }
+
+        .service-number {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .service-header h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding-right: 45px;
+            color: #ffffff;
+        }
+
+        .service-type-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        .service-body {
+            padding: 20px 22px;
+        }
+
+        .service-description {
+            font-size: 14px;
+            color: #555555;
+            line-height: 1.7;
+            margin-bottom: 18px;
+            min-height: 56px;
+        }
+
+        .service-price-box {
+            background: #f3f6f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .price-label {
+            font-size: 12px;
+            color: #757575;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .price-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: #343b4a;
+            letter-spacing: -0.5px;
+        }
+
+        /* Pagination */
+        .pagination-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 36px;
+            gap: 8px;
+        }
+
+        .pagination-wrapper a {
+            padding: 10px 16px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            color: #555555;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .pagination-wrapper a:hover {
+            background: #f3f6f8;
+            border-color: #c0c0c0;
+        }
+
+        .pagination-wrapper a.active_page {
+            background: #343b4a;
+            color: white;
+            border-color: transparent;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 70px 32px;
+            background: #ffffff;
+            border-radius: 10px;
+            border: 2px dashed #e0e0e0;
+        }
+
+        .empty-icon {
+            font-size: 52px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+            color: #343b4a;
+        }
+
+        .empty-text {
+            font-size: 15px;
+            color: #757575;
+        }
+
+        @media (max-width: 768px) {
+            .header-bar,
+            .content-wrapper {
+                padding: 16px;
+            }
+
+            .profile-hero {
+                padding: 22px;
+            }
+
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-info h1 {
+                font-size: 22px;
+            }
+
+            .info-cards,
+            .availability-list,
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .availability-time-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-bar">
+            <button class="back-button" onclick="window.history.back();">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </button>
+        </div>
+        <div class="content-wrapper">
+            <!-- Profile Hero -->
+            <div class="profile-hero">
+                <div class="hero-content">
+                    <div class="profile-image-large">
+                        {% if doc_obj.profile_image %}
+                        <img src="{{doc_obj.profile_image.url}}" alt="Profile">
+                        {% else %}
+                        {{doc_obj.name|first|upper|default:"U"}}
+                        {% endif %}
+                    </div>
+                    <div class="hero-info">
+                        <h1>{{doc_obj.name|default:"N/A"}}</h1>
+                        <span class="hero-badge">{{user_type}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="info-section">
+                <div class="section-header">
+                    <h2>Contact Information</h2>
+                    <p>Primary contact details and business information</p>
+                </div>
+                <div class="info-cards">
+                    <div class="info-card">
+                        <div class="info-card-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="info-card-label">Email Address</div>
+                        <div class="info-card-value">{{doc_obj.email|default:"Not provided"}}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="info-card-label">Phone Number</div>
+                        <div class="info-card-value">{{doc_obj.country_code|default_if_none:''}} {{doc_obj.mobile_no|default:"Not provided"}}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="info-card-label">Business Name</div>
+                        <div class="info-card-value">{{doc_obj.bussiness_name|default:"Not provided"}}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="info-card-label">Business Address</div>
+                        <div class="info-card-value">{{doc_obj.bussiness_address|default:"Not provided"}}</div>
+                    </div>
+                    {% if doc_obj.about_me %}
+                    <div class="info-card" style="grid-column: 1 / -1;">
+                        <div class="info-card-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="info-card-label">About</div>
+                        <div class="info-card-value">{{doc_obj.about_me}}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Availability Schedule -->
+            {% if availability_obj %}
+            <div class="info-section">
+                <div class="section-header">
+                    <h2>Availability Schedule</h2>
+                    <p>Working hours and shift information</p>
+                </div>
+                <div class="availability-list">
+    {% for avail in availability_obj %}
+    <div class="availability-item">
+        <div class="availability-header">
+            <div class="availability-icon">
+                <i class="far fa-clock"></i>
+            </div>
+            <h3>{{ avail.obj.add_shift|default:"Shift" }}</h3>
+        </div>
+
+        <div class="availability-details">
+            <div class="availability-time-row">
+                <div class="time-block">
+                    <div class="time-label">Start Time</div>
+                    <div class="time-value">
+                        {{ avail.obj.from_shift|time:"h:i A"|default:"N/A" }}
+                    </div>
+                </div>
+
+                <div class="time-block">
+                    <div class="time-label">End Time</div>
+                    <div class="time-value">
+                        {{ avail.obj.to_shift|time:"h:i A"|default:"N/A" }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="days-section">
+                <div class="days-label">Working Days</div>
+                <div class="days-bubbles">
+                    {% for day in avail.days %}
+                        <span class="day-bubble">{{ day }}</span>
+                    {% empty %}
+                        <span class="day-bubble">N/A</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+            </div>
+            {% endif %}
+
+            <!-- Services Offered -->
+            {% if apt_obj %}
+            <div class="info-section">
+                <div class="section-header">
+                    <h2>Services Offered</h2>
+                    <p>Complete list of available services and pricing</p>
+                </div>
+                <div class="services-grid" id="pagingBox">
+                    {% for service in apt_obj %}
+                    <div class="service-item">
+                        <div class="service-header">
+                            <div class="service-number">{{forloop.counter}}</div>
+                            <h3>{{service.title|default:"Service"}}</h3>
+                            <span class="service-type-badge">{{service.pet_type|default:"General"}}</span>
+                        </div>
+                        <div class="service-body">
+                            <div class="service-description">
+                                {{service.description|default:"No description available for this service."}}
+                            </div>
+                            <div class="service-price-box">
+                                <div class="price-label">Price</div>
+                                <div class="price-value">₹{{service.charges|default:"N/A"}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <input type='hidden' id='current_page'/>
+                <input type='hidden' id='show_per_page'/>
+                <div class="pagination-wrapper" id='page_navigation'></div>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <p class="empty-text">No services available at this time</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
+{% include "admin_panel/footer.html"%}

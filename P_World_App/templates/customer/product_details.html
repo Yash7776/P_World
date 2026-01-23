@@ -149,70 +149,112 @@
                                     {{ item_obj.fk_category.category_name }} — {{ item_obj.pet_type }}
                                 </h3>
                             </div>
-                            <div class="price"><ins><span class="amount" style="margin-left:-1.5%;">$200</span></ins></div>
-                            <div class="short-description">
+
+                            <!-- This will be updated when store is selected -->
+                            <div class="price" id="selected-price">
+                                <ins>
+                                    <span class="amount" style="margin-left:-1.5%;">
+                                    </span>
+                                </ins>
+                            </div>
+
+                            <div class="short-description" id="selected-description">
                                 <h4 style='font-weight:bold;'>Description:</h4>
-                                <p>desc</p>
+                                <p id="desc-text">
+                                    <!-- Default can be master item description if you add it later -->
+                                    Store Not Found
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
                 {% if store_list %}
-                <div class="row">
-                    <div class="">
-                        {% for entry in store_list %}
-                        <div class="col-md-8 col-lg-7 text-center mb-3 shadow-sm store-mini-card"
-                            style="border-radius: 12px; overflow: hidden; border: 1px solid #e0e0e0;">
+                <div class="row" id="store-list-container">
+                    {% for entry in store_list %}
+                    <div class="col-md-8 col-lg-7 text-center mb-3 shadow-sm store-mini-card"
+                        style="border-radius: 12px; overflow: hidden; border: 1px solid #e0e0e0; cursor: pointer;"
+                        data-price="{{ entry.price|floatformat:2 }}"
+                        data-desc="{{ entry.description|default:item_obj.item_name|escapejs }}"
+                        data-store-id="{{ entry.store.id }}"
+                        onclick="selectStore(this)">
 
-                            <div class="card-body d-flex align-items-center p-3">
-                                <!-- Main content -->
-                                <div class="flex-grow-1">
-                                    <h5 class="card-title mb-1" style="font-size: 1.15rem;">
-                                        {{ entry.store.bussiness_name }}
-                                    </h5>
+                        <div class="card-body d-flex align-items-center p-3">
+                            <div class="flex-grow-1">
+                                <h5 class="card-title mb-1" style="font-size: 1.15rem;">
+                                    {{ entry.store.bussiness_name }}
+                                </h5>
 
-                                    <div class="d-flex align-items-center mb-1" style="font-size: 0.95rem; color: #555;">
-                                        <small>
-                                            {{ entry.store.bussiness_address|truncatewords:8 }}
-                                        </small>
-                                    </div>
-
-                                    <!-- Price + Action -->
-                                    <div class="d-flex justify-content-between align-items-center mt-2">
-                                        <div>
-                                            <strong style="color: #EE163B; font-size: 1.3rem;">
-                                                ₹{{ entry.price|floatformat:2 }}
-                                            </strong>
-                                            {% if entry.price == 0 or not entry.price %}
-                                            <small class="text-muted">(Contact store)</small>
-                                            {% endif %}
-                                        </div>
-
-                                        <!-- <a href="#" class="btn btn-sm btn-danger px-3 py-1"
-                                        onclick="addToCart({{ item_obj.id }}, {{ entry.store.id }}); return false;">
-                                            Add to Cart
-                                        </a> -->
-                                    </div>
+                                <div class="d-flex align-items-center mb-1" style="font-size: 0.95rem; color: #555;">
+                                    <small>
+                                        {{ entry.store.bussiness_address|truncatewords:8 }}
+                                    </small>
                                 </div>
 
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div>
+                                        <strong style="color: #EE163B; font-size: 1.3rem;">
+                                            ₹{{ entry.price|floatformat:2 }}
+                                        </strong>
+                                        {% if entry.price == 0 or not entry.price %}
+                                        <small class="text-muted">(Contact store)</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        {% empty %}
-                        <div class="text-center py-5 text-muted">
-                            <p>No stores are currently selling this product.</p>
-                            <small>Check back later or explore similar items.</small>
-                        </div>
-                        {% endfor %}
-
                     </div>
+                    {% empty %}
+                    <div class="text-center py-5 text-muted">
+                        <p>No stores are currently selling this product.</p>
+                    </div>
+                    {% endfor %}
                 </div>
-            {% else %}
+                {% else %}
                 <div class="text-center py-5 text-muted">
                     <p>No stores found for this item yet.</p>
                 </div>
-            {% endif %}
+                {% endif %}
             </div>
         </div>
     </section>
 </div>
 {% include 'customer/footer.html' %}
+<script>
+function selectStore(element) {
+    // Remove active class from all cards
+    document.querySelectorAll('.store-mini-card').forEach(card => {
+        card.style.borderColor = '#e0e0e0';
+        card.style.boxShadow = 'none';
+    });
+
+    // Highlight selected card
+    element.style.borderColor = '#EE163B';
+    element.style.boxShadow = '0 4px 16px rgba(238, 22, 59, 0.2)';
+    element.style.transform = 'translateY(-4px)';
+
+    // Get data
+    const price = element.getAttribute('data-price');
+    const desc  = element.getAttribute('data-desc');
+
+    // Update price
+    const priceEl = document.getElementById('selected-price');
+    if (priceEl) {
+        let displayPrice = price && price > 0 ? `₹${parseFloat(price).toFixed(2)}` : 'Contact store';
+        priceEl.innerHTML = `<ins><span class="amount" style="margin-left:-1.5%;">${displayPrice}</span></ins>`;
+    }
+
+    // Update description
+    const descEl = document.getElementById('desc-text');
+    if (descEl) {
+        descEl.textContent = desc || 'No description available from this store.';
+    }
+}
+
+// Optional: Auto-select first store on page load
+window.addEventListener('load', () => {
+    const firstCard = document.querySelector('.store-mini-card');
+    if (firstCard) {
+        selectStore(firstCard);
+    }
+});
+</script>

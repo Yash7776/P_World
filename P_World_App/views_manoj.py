@@ -525,15 +525,18 @@ def items(request):
     # ── Items to display (initially all) ──────────────────────────────────
     items = queryset.select_related('fk_category').order_by('-created_at')  # or any ordering you prefer
 
+    item_count = Cart_Count(request)
+
     context = {
         'item': items,               # you'll loop over this in template
+        'Item_count': item_count,
         'pets': pet_types,           # list of dicts: {'pet_type': '...', 'item_count': N}
         'total_count': total_count,
         'category': categories,      # queryset of ItemCategoryMaster with .item_count
         'category_count': category_count or total_count,
     }
 
-    return render(request, 'customer/product_category.html', context)
+    return render(request,'customer/product_category.html', context)
  
 #### product details page
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -562,9 +565,12 @@ def product_details(request, id):
                 'description': si.item_description or item.item_name,  # fallback
                 # 'distance': None,  # ← you can calculate later
             })
+            
+    item_count = Cart_Count(request)
 
     context = {
         'item_obj': item,
+        'Item_count': item_count,
         'distance': None,               # placeholder for future
         'store_list': stores_with_price,
     }

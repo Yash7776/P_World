@@ -15,7 +15,7 @@ import calendar
 import h3
 from haversine import haversine
 from django.db.models import Count, Q
-
+from django.db.models import Sum
 
 def Cart_Count(request):
     if request.session.get('customer_id'):
@@ -549,30 +549,54 @@ def product_details(request, id):
 
     # Get all StoreItem entries for this master item
     store_items = StoreItem.objects.filter(
-        fk_master=item
+        fk_master=item,
+        fk_store__status=True,              # only active stores
+        fk_store__user_type="Store"         # only real stores
     ).select_related('fk_store')
 
-    # Optional: only active stores
-    # store_items = store_items.filter(fk_store__status=True)
-
-    stores_with_price = []
+    store_list = []
     for si in store_items:
         store = si.fk_store
-        if store and store.user_type == "Store":  # ← adjust this condition to match your actual value
-            stores_with_price.append({
-                'store': store,
-                'price': si.item_price,
-                'description': si.item_description or item.item_name,  # fallback
-                # 'distance': None,  # ← you can calculate later
-            })
-            
-    item_count = Cart_Count(request)
+        store_list.append({
+            'store': store,
+            'price': si.item_price,
+            'description': si.item_description.strip() if si.item_description else item.item_name,
+          })
+
+    # Optional: sort stores by price (lowest first)
+    store_list.sort(key=lambda x: x['price'] or float('inf'))
+
+    # Cart-related logic for this logged-in user
+    item_count = None                       # for quantity input pre-fill
+    has_this_product_in_cart = False        # for showing "View Cart" button
+
+    customer_id = request.session.get('customer_id')
+    if customer_id:
+        try:
+            user_obj = User_Details.objects.get(id=customer_id)
+
+            # Total quantity of THIS MasterItem (any store variant) in user's cart
+            total_qty = AddtoCart.objects.filter(
+                fk_user=user_obj,
+                fk_item__fk_master=item         # ← joins through StoreItem → MasterItem
+            ).aggregate(total=Sum('quantity'))['total'] or 0
+
+            if total_qty > 0:
+                item_count = total_qty
+                has_this_product_in_cart = True
+
+        except User_Details.DoesNotExist:
+            # Invalid session customer_id → ignore silently
+            pass
+
 
     context = {
         'item_obj': item,
-        'Item_count': item_count,
-        'distance': None,               # placeholder for future
-        'store_list': stores_with_price,
+        'store_list': store_list,
+        'distance': None,
+        'item_count': item_count,
+        'has_this_product_in_cart': has_this_product_in_cart,
+        'Item_count': Cart_Count(request),
     }
 
     return render(request, 'customer/product_details.html', context)

@@ -168,14 +168,28 @@
                             <div class="quantity buttons_added value">
                                 <span style="font-weight: bold;color: #d5d5d5;font-size:17px;"> Quantity: </span>
                                 <input type="button" class="minus" value="-" onclick="Item_Minus()" >
-                                <input type="number" size="4" class="input-text qty text" title="Qty" {% if item_count != None %} value="{{item_count.quantity}}" {% else %} value="1" {% endif %}  name="quantity" min="1" step="1" max="999" style="width: 5%; text-align:center;" id="data">
+                                <input type="number" size="4" class="input-text qty text" title="Qty" value="{{ item_count|default:1 }}"  name="quantity" min="1" step="1" max="999" style="width: 5%; text-align:center;" id="data">
                                 <input type="button" class="plus" value="+" onclick="Item_Plus()" >
                             </div>
-                            <div class="cart-form-wrapper mt-30">
-                                {% if request.session.customer_email and request.session.customer_id %} 
-                                    <button class=" btn btn-danger" onclick='AddtoCart()'  {% if item_obj.available_status == False %} disabled {% endif %} id="addtocart">Add to Cart</button> 
+                            <div class="cart-form-wrapper mt-30 d-flex gap-3 flex-wrap">
+                                {% if request.session.customer_email and request.session.customer_id %}
+                                    <!-- Add to Cart -->
+                                    <button style="background-color:#EE163B;color: white;border-radius: 30px;" class="btn px-4 py-2" 
+                                            onclick="AddtoCart()" 
+                                            {% if item_obj.available_status == False or not store_list %}disabled{% endif %} 
+                                            id="addtocart">
+                                        Add to Cart
+                                    </button>
+
+                                    <!-- View Cart – only if this product is already in cart -->
+                                    {% if has_this_product_in_cart %}
+                                    <button style="background-color:white; color: #EE163B;border-radius: 30px;" class="btn px-4 py-2" 
+                                            onclick="window.location.href='/checkout'">
+                                        View Cart
+                                    </button>
+                                    {% endif %}
+                                {% else %}
                                 {% endif %}
-                                {% if request.session.customer_email and request.session.customer_id  %} {% if item_count != None %} <button class="btn btn-danger" onclick="window.location.href='/checkout'">View Cart</button> {% endif %} {% endif %}
                             </div>
                         </div>
                     </div>

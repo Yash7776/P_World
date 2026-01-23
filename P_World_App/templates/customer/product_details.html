@@ -234,11 +234,14 @@
 
 <!-- JS For Store Selection -->
 <script>
+let selectedStoreId = null;  // Global variable to store selected store ID
+
 function selectStore(element) {
     // Remove active class from all cards
     document.querySelectorAll('.store-mini-card').forEach(card => {
         card.style.borderColor = '#e0e0e0';
         card.style.boxShadow = 'none';
+        card.style.transform = 'none';  // Reset transform
     });
 
     // Highlight selected card
@@ -249,6 +252,7 @@ function selectStore(element) {
     // Get data
     const price = element.getAttribute('data-price');
     const desc  = element.getAttribute('data-desc');
+    selectedStoreId = element.getAttribute('data-store-id');  // Save selected store ID
 
     // Update price
     const priceEl = document.getElementById('selected-price');
@@ -262,6 +266,9 @@ function selectStore(element) {
     if (descEl) {
         descEl.textContent = desc || 'No description available from this store.';
     }
+
+    // Enable Add to Cart if disabled (optional: if you want to disable until store selected)
+    document.getElementById('addtocart').disabled = false;
 }
 
 // Optional: Auto-select first store on page load
@@ -269,31 +276,86 @@ window.addEventListener('load', () => {
     const firstCard = document.querySelector('.store-mini-card');
     if (firstCard) {
         selectStore(firstCard);
+    } else {
+        // If no stores, disable Add to Cart
+        document.getElementById('addtocart').disabled = true;
     }
 });
 </script>
 
-<!-- JS For Item Increasing Dncreasing -->
+<!-- JS For Item Increasing Decreasing -->
 <script>
-	function Item_Plus()
-	{
+	function Item_Plus() {
 		var quantity = $("#data").val();
-		var update_quantity = parseInt(quantity) + 1
+		var update_quantity = parseInt(quantity) + 1;
 		$("#data").val(update_quantity);
-		
 	}
-	function Item_Minus()
-	{
+	function Item_Minus() {
 		var quantity = $("#data").val();
-		if (quantity == 1)
-		{
+		if (quantity == 1) {
 			$("#data").val(quantity);
-		}
-		else
-		{
-			var update_quantity = parseInt(quantity) - 1
+		} else {
+			var update_quantity = parseInt(quantity) - 1;
 			$("#data").val(update_quantity);
 		}
 	}
-  
+</script>
+
+<!-- JS For Add to Cart -->
+<script>
+function AddtoCart() {
+    if (!selectedStoreId) {
+        swal({
+            text: "Please select a store first.",
+            icon: 'info',
+            title: 'Information',
+            button: "OK",
+            closeOnClickOutside: false,
+        });
+        return;
+    }
+
+    var quantity = $("#data").val();
+    $.ajax({
+        method: "POST",
+        url: '/AddtoCart/',  // Adjust URL if needed
+        data: {
+            "item_id": "{{ item_obj.id }}",  // MasterItem ID
+            "store_id": selectedStoreId,     // Selected Store ID
+            "quantity": quantity,
+            "customer_id": {{ request.session.customer_id }},
+            "csrfmiddlewaretoken": "{{ csrf_token }}",  // Add CSRF if not using headers
+        },
+        success: function(response) {
+            if (response.status == '1') {
+                swal({
+                    text: response.msg,
+                    icon: 'success',
+                    title: 'Success',
+                    button: "OK",
+                    closeOnClickOutside: false,
+                }).then(() => {
+                    window.location.reload();  // Reload to update cart button if needed
+                });
+            } else {
+                swal({
+                    text: response.msg,
+                    icon: 'info',
+                    title: 'Information',
+                    button: "OK",
+                    closeOnClickOutside: false,
+                });
+            }
+        },
+        error: function() {
+            swal({
+                text: "Something went wrong.",
+                icon: 'error',
+                title: 'Error',
+                button: "OK",
+                closeOnClickOutside: false,
+            });
+        }
+    });
+}
 </script>

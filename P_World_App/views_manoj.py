@@ -573,46 +573,70 @@ def product_details(request, id):
 
 @csrf_exempt
 def Item_AddtoCart(request):
-    try:  
-        if request.method == 'POST':
-            item_id = request.POST.get('item_id')
-            quantity = request.POST.get('quantity')
-            customer_id = request.POST.get('customer_id')
-            item_obj = StoreItem.objects.filter(id = item_id)[0]
-            user_obj = User_Details.objects.filter(id =customer_id)[0]
-            vendor_obj = User_Details.objects.filter(id = item_obj.fk_vendor.id)[0]
-            delivery_charges = 100
-            convinience_fee = 40
-            total_amount = 0
-            if AddtoCart.objects.filter(fk_user = user_obj).exists():
-                obj = AddtoCart.objects.filter(fk_user = user_obj).last() 
-                if obj.fk_vendor !=  vendor_obj :
-                    print('............ Vendor are not same ..............')
-                    return JsonResponse({'status':'0','msg':'You can only order products from one store at a time'})
-            
-            
-            if AddtoCart.objects.filter(fk_user = user_obj, fk_item = item_obj).exists():
-                print("--------------------- Updated Item ---------------------")
-                cart_obj = AddtoCart.objects.filter(fk_user = user_obj , fk_item = item_obj)[0]
-               
-                updated_total_item_price = item_obj.item_price * int(quantity)
-                AddtoCart.objects.filter( id = cart_obj.id).update( quantity = quantity , total_item_price = updated_total_item_price)
-                
-            else:
-                print("--------------- New Item --------------",type(quantity))
-                total_item_price = int(quantity) * item_obj.item_price
-                total_amount = total_item_price + delivery_charges + convinience_fee
-                AddtoCart.objects.create(fk_item = item_obj , fk_vendor = vendor_obj , fk_user = user_obj , quantity = quantity , item_price = item_obj.item_price, total_item_price = total_item_price ,delivery_charge = delivery_charges,taxes = convinience_fee, total_amount = total_amount )
-                
-            print("------------------")
-            return JsonResponse({'status':'1','msg':'Item Added Successfully.'})
+    try:
+        if request.method != 'POST':
+            return JsonResponse({'status': '0', 'msg': 'Post method required.'})
+
+        master_item_id = request.POST.get('item_id')
+        store_id       = request.POST.get('store_id')
+        quantity       = request.POST.get('quantity')
+        customer_id    = request.POST.get('customer_id')
+
+        if not all([master_item_id, store_id, quantity, customer_id]):
+            return JsonResponse({'status': '0', 'msg': 'Missing required fields'})
+
+        quantity = int(quantity)
+
+        # Fetch objects
+        master_item = get_object_or_404(MasterItem, id=master_item_id)
+        store       = get_object_or_404(User_Details, id=store_id, user_type="Store", status=True)
+        store_item  = get_object_or_404(StoreItem, fk_master=master_item, fk_store=store)
+        user_obj    = get_object_or_404(User_Details, id=customer_id)
+
+        delivery_charges = 100
+        convenience_fee  = 40   # note: you wrote "convinience" earlier — fix typo if you want
+
+        # Enforce one vendor/store per cart
+        if AddtoCart.objects.filter(fk_user=user_obj).exists():
+            last_cart = AddtoCart.objects.filter(fk_user=user_obj).last()
+            if last_cart.fk_vendor != store:
+                return JsonResponse({
+                    'status': '0',
+                    'msg': 'You can only order products from one store at a time'
+                })
+
+        # Check if this exact StoreItem is already in cart
+        existing = AddtoCart.objects.filter(fk_user=user_obj, fk_item=store_item).first()
+
+        if existing:
+            # Update existing
+            updated_total_item_price = store_item.item_price * quantity
+            existing.quantity = quantity
+            existing.total_item_price = updated_total_item_price
+            existing.save()
         else:
-            return JsonResponse({'status':'0','msg':'Post method required.'})
-         
-    except:
+            # Create new
+            total_item_price = quantity * store_item.item_price
+            total_amount = total_item_price + delivery_charges + convenience_fee
+
+            AddtoCart.objects.create(
+                fk_item          = store_item,
+                fk_vendor        = store,               # ← using existing field
+                fk_user          = user_obj,
+                quantity         = quantity,
+                item_price       = store_item.item_price,
+                total_item_price = total_item_price,
+                delivery_charge  = delivery_charges,
+                taxes            = convenience_fee,
+                total_amount     = total_amount
+            )
+
+        return JsonResponse({'status': '1', 'msg': 'Item Added Successfully.'})
+
+    except Exception as e:
         traceback.print_exc()
-        return JsonResponse({'status':'0','msg':'Something went wrong.'})
-   
+        return JsonResponse({'status': '0', 'msg': str(e) or 'Something went wrong.'})
+     
 @csrf_exempt
 def Update_Cart(request):
     try:

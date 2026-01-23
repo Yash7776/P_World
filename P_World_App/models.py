@@ -193,9 +193,6 @@ class AddtoCart(models.Model):
     delivery_charge = models.FloatField(blank = True , null = True)
     taxes = models.FloatField(blank = True , null = True)
     total_amount = models.FloatField(null=True, blank=True)
-
-    def __str__(self):
-        return self.id
     
     
 class OrdersTable(models.Model):

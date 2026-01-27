@@ -527,7 +527,6 @@ def product_details(request, id):
     item = get_object_or_404(
         AllItemMaster.objects.select_related('fk_category'),
         id=id,
-        available_status=True
     )
 
     # Get all StoreItem entries for this master item

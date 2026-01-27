@@ -255,9 +255,6 @@ class OrderItemTable(models.Model):
     item_total_price = models.FloatField(blank = True , null = True)
     booking_time = models.TimeField(auto_now = True )
     booking_date = models.DateField( auto_now = True)
-
-    def __str__(self):
-        return self.id 
     
    
 

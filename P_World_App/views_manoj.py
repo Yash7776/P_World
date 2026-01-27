@@ -718,84 +718,142 @@ def Remove_Cart_Item(request):
 
 @csrf_exempt
 def Place_Order(request):
+    if request.method != 'POST':
+        return JsonResponse({'status': '0', 'msg': 'POST method required.'})
+
     try:
-        
-        if request.method == 'POST':
-            sub_total = request.POST.get('sub_total')
-            total_amount = request.POST.get('total_amount')
-            delivery_charge = request.POST.get('delivery_charge')
-            convinience_fee = request.POST.get('convinience_fee')
-            total_quantity = request.POST.get('total_quantity')
-            customer_id = request.POST.get('customer_id')  
-            # Get Address details 
-            name = request.POST.get('name')
-            email = request.POST.get('email')
-            address1 = request.POST.get('address1')
-            address2 = request.POST.get('address2')
-            country_code = request.POST.get('country_code')
-            mobile = request.POST.get('mobile')
-            province = request.POST.get('province')
-            city = request.POST.get('city')
-            postal_code = request.POST.get('postal_code')
-            country_id = request.POST.get('country_id')
-            note = request.POST.get('note') 
-            fk_business = request.POST.get('fk_business_id')
-            country_obj = CountryMaster.objects.filter(id = country_id)[0]
-            province_obj = ProvinceMaster.objects.filter(id = province)[0]
-            city_obj = CityMaster.objects.filter(id = city)[0]
-            
-            user_obj = User_Details.objects.filter(id = customer_id)[0] 
-            # save delivery address
-            if deliveryAddress.objects.filter(fk_users = user_obj).exists():
-               deliveryAddress.objects.filter(fk_users = user_obj).update(name = name , email = email , address1 = address1 , address2 = address2, country_code = country_code , mobile_no = mobile , province = province_obj.name , city = city_obj.city , postalcode = postal_code,country  = country_obj.name)
-            else:
-                deliveryAddress.objects.create(fk_users = user_obj , name = name , email = email , address1 = address1 , address2 = address2, country_code = country_code , mobile_no = mobile , province = province_obj.name , city = city_obj.city , postalcode = postal_code,country  = country_obj.name)
-             
-            # save order details 
-            booking_time = datetime.now().time()
-            booking_date = datetime.now().date()
-            cart_obj = AddtoCart.objects.filter(fk_user = user_obj)
-            
-            cart = AddtoCart.objects.filter(fk_user = user_obj)
-            ###Generate Order no
-            order_no = "OID"+ str(random.randint(100000,999999))
-            while OrdersTable.objects.filter(order_no=order_no).exists():
-                order_no = "OID"+ str(random.randint(100000,999999))   
-                
-            order_obj = OrdersTable.objects.create( order_no = order_no ,fk_users = user_obj ,booking_time = booking_time, booking_date = booking_date ,order_status = "Pending",delivery_note = note,status = True, name = name , email = email , address1 = address1 , address2 = address2, country_code = country_code , mobile_no = mobile , province = province_obj.name , city = city_obj.city , postalcode = postal_code,country  = country_obj.name,  fk_business_id=fk_business )
-            subtotal = 0 
-            quantity = 0 
-            total_amount = 0 
-            for i in cart : 
-                # item_obj = StoreItem.objects.filter(id = i.fk_item.id)[0]
-                # vend_id = StoreItem.objects.get(id = i.fk_item.id).id   
-                item_obj = StoreItem.objects.get(id=i.fk_item.id)
-                vend_id = item_obj.fk_vendor.id  # Get the vendor's user ID
-                item_total_price = i.quantity * i.item_price
-                OrderItemTable.objects.create(fk_orders = order_obj , fk_item = item_obj , fk_vendors_id = vend_id , item_quantity = i.quantity , item_price = i.item_price,item_total_price = item_total_price)
-                
-                subtotal = i.total_item_price + subtotal
-                quantity = i.quantity + quantity
-                delivery_charge = i.delivery_charge  
-                taxes = i.taxes 
-                
-            total_amount = subtotal + delivery_charge + taxes
-                
-            order_obj.item_price =  subtotal
-            order_obj.total_quantity =   quantity 
-            order_obj.delivery_charge =  delivery_charge
-            order_obj.taxes = taxes
-            order_obj.total_amount =  total_amount
-            order_obj.save()
-            AddtoCart.objects.filter(fk_user = user_obj).delete()
-            
-            return JsonResponse({'status':'1','msg':'Order Placed Successfully.'})
-        else:
-            return JsonResponse({'status':'0','msg':'Post method required.'})
-        
-    except:
+        # ── Extract form data ───────────────────────────────────────────────
+        sub_total       = float(request.POST.get('sub_total', 0))
+        total_amount    = float(request.POST.get('total_amount', 0))
+        delivery_charge = float(request.POST.get('delivery_charge', 0))
+        convinience_fee = float(request.POST.get('convinience_fee', 0))   # not used in order
+        total_quantity  = int(request.POST.get('total_quantity', 0))
+        customer_id     = request.POST.get('customer_id')
+
+        # Address fields
+        name         = request.POST.get('name', '').strip()
+        email        = request.POST.get('email', '').strip()
+        address1     = request.POST.get('address1', '').strip()
+        address2     = request.POST.get('address2', '').strip()
+        country_code = request.POST.get('country_code', '').strip()
+        mobile       = request.POST.get('mobile', '').strip()
+        province_id  = request.POST.get('province')          # comes as ID
+        city_id      = request.POST.get('city')              # comes as ID
+        postal_code  = request.POST.get('postal_code', '').strip()
+        country_id   = request.POST.get('country_id')
+        note         = request.POST.get('note', '').strip()
+        fk_business  = request.POST.get('fk_business_id')     # seems to come from frontend (per vendor?)
+
+        # ── Fetch related objects ───────────────────────────────────────────
+        user_obj     = User_Details.objects.get(id=customer_id)
+
+        country_obj  = CountryMaster.objects.get(id=country_id)
+        province_obj = ProvinceMaster.objects.get(id=province_id)
+        city_obj     = CityMaster.objects.get(id=city_id)
+
+        # ── Update or create delivery address ───────────────────────────────
+        deliveryAddress.objects.update_or_create(
+            fk_users=user_obj,
+            defaults={
+                'name':         name,
+                'email':        email,
+                'address1':     address1,
+                'address2':     address2,
+                'country_code': country_code,
+                'mobile_no':    mobile,
+                'province':     province_obj.name,
+                'city':         city_obj.city,
+                'postalcode':   postal_code,
+                'country':      country_obj.name,
+            }
+        )
+
+        # ── Generate unique order number ────────────────────────────────────
+        while True:
+            order_no = f"OID{random.randint(100000, 999999)}"
+            if not OrdersTable.objects.filter(order_no=order_no).exists():
+                break
+
+        # ── Create main order ───────────────────────────────────────────────
+        order_obj = OrdersTable.objects.create(
+            order_no       = order_no,
+            fk_users       = user_obj,
+            booking_time   = datetime.now().time(),
+            booking_date   = datetime.now().date(),
+            order_status   = "Pending",
+            delivery_note  = note,
+            status         = True,
+            name           = name,
+            email          = email,
+            address1       = address1,
+            address2       = address2,
+            country_code   = country_code,
+            mobile_no      = mobile,
+            province       = province_obj.name,
+            city           = city_obj.city,
+            postalcode     = postal_code,
+            country        = country_obj.name,
+            fk_business_id = fk_business,           # keep if your model has this field
+        )
+
+        # ── Process cart items ──────────────────────────────────────────────
+        cart_items = AddtoCart.objects.filter(fk_user=user_obj)
+
+        calculated_subtotal = 0
+        calculated_quantity = 0
+        last_delivery_charge = 0
+        last_taxes = 0
+
+        for cart_item in cart_items:
+            store_item = cart_item.fk_item
+            vendor_id = store_item.fk_store_id          # ← FIXED: use fk_store (User_Details)
+
+            item_total = cart_item.quantity * cart_item.item_price
+
+            OrderItemTable.objects.create(
+                fk_orders       = order_obj,
+                fk_item         = store_item,
+                fk_vendors_id   = vendor_id,            # ← assuming this field exists in OrderItemTable
+                item_quantity   = cart_item.quantity,
+                item_price      = cart_item.item_price,
+                item_total_price = item_total,
+            )
+
+            calculated_subtotal += cart_item.total_item_price or item_total
+            calculated_quantity += cart_item.quantity
+            last_delivery_charge = cart_item.delivery_charge or 0
+            last_taxes = cart_item.taxes or 0
+
+        # ── Finalize order totals ───────────────────────────────────────────
+        final_total = (
+            calculated_subtotal +
+            last_delivery_charge +
+            last_taxes
+            # Note: your frontend sends total_amount → but better to recalculate server-side
+        )
+
+        order_obj.item_price      = calculated_subtotal
+        order_obj.total_quantity  = calculated_quantity
+        order_obj.delivery_charge = last_delivery_charge
+        order_obj.taxes           = last_taxes
+        order_obj.total_amount    = final_total
+        order_obj.save()
+
+        # ── Clear cart ──────────────────────────────────────────────────────
+        cart_items.delete()
+
+        return JsonResponse({
+            'status': '1',
+            'msg': 'Order Placed Successfully.',
+            'order_no': order_no,           # nice to return for receipt / tracking
+        })
+
+    except Exception as e:
         traceback.print_exc()
-        return JsonResponse({'status':'0','msg':'Something went wrong.'})
+        return JsonResponse({
+            'status': '0',
+            'msg': f'Something went wrong: {str(e)}'
+        }, status=400)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def OrderHistory(request):

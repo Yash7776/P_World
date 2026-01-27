@@ -279,6 +279,7 @@
               button: "OK", closeOnClickOutside: false,
             }).then((addcat)=>{ window.location.href="/Order_History/"; });
           } else {
+            console.log(response.msg)
             swal({
               text: response.msg, icon: 'info', title: 'Information',
               button: "OK", closeOnClickOutside: false,

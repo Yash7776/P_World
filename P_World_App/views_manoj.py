@@ -491,7 +491,7 @@ def Search_by_PetType_Item(request):
 
 def items(request):
     # Base queryset - only available items
-    queryset = MasterItem.objects.filter(available_status=True)
+    queryset = AllItemMaster.objects.filter(available_status=True)
 
     # ── Pet type filter preparation ───────────────────────────────────────
     # Get distinct pet types + count of available items per pet type
@@ -542,7 +542,7 @@ def items(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def product_details(request, id):
     item = get_object_or_404(
-        MasterItem.objects.select_related('fk_category'),
+        AllItemMaster.objects.select_related('fk_category'),
         id=id,
         available_status=True
     )
@@ -575,10 +575,10 @@ def product_details(request, id):
         try:
             user_obj = User_Details.objects.get(id=customer_id)
 
-            # Total quantity of THIS MasterItem (any store variant) in user's cart
+            # Total quantity of THIS AllItemMaster (any store variant) in user's cart
             total_qty = AddtoCart.objects.filter(
                 fk_user=user_obj,
-                fk_item__fk_master=item         # ← joins through StoreItem → MasterItem
+                fk_item__fk_master=item         # ← joins through StoreItem → AllItemMaster
             ).aggregate(total=Sum('quantity'))['total'] or 0
 
             if total_qty > 0:
@@ -618,7 +618,7 @@ def Item_AddtoCart(request):
         quantity = int(quantity)
 
         # Fetch objects
-        master_item = get_object_or_404(MasterItem, id=master_item_id)
+        master_item = get_object_or_404(AllItemMaster, id=master_item_id)
         store       = get_object_or_404(User_Details, id=store_id, user_type="Store", status=True)
         store_item  = get_object_or_404(StoreItem, fk_master=master_item, fk_store=store)
         user_obj    = get_object_or_404(User_Details, id=customer_id)

@@ -164,19 +164,18 @@ class ItemCategoryMaster(models.Model):
     def __str__(self):
         return self.category_name
 
-class MasterItem(models.Model):  # Products added from backend (Admin)
-    item_name = models.CharField(max_length=200, blank=True, null=True)
-    fk_category = models.ForeignKey(ItemCategoryMaster,on_delete=models.CASCADE,null=True,blank=True,related_name='admin_products')
-    item_image = models.ImageField(upload_to='admin_product_image/',null=True,blank=True)
-    pet_type = models.CharField(max_length=1000, null=True, blank=True)
-    available_status = models.BooleanField(default=False)
+class AllItemMaster(models.Model):
+    item_name = models.CharField(max_length = 200 , blank = True , null = True)
+    fk_category = models.ForeignKey(ItemCategoryMaster , on_delete=models.CASCADE , null = True , blank = True)
+    item_image = models.ImageField(upload_to='category_images/', null=True, blank=True)
+    pet_type = models.CharField(max_length = 100 , null = True , blank = True)
+    
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 
 class StoreItem(models.Model):
     fk_store = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True)
-    fk_master = models.ForeignKey(MasterItem, on_delete=models.CASCADE, null=True, blank=True)
+    fk_master = models.ForeignKey(AllItemMaster, on_delete=models.CASCADE, null=True, blank=True)
     item_price = models.FloatField(blank = True , null = True, default=0)
     item_description = models.TextField(blank = True , null = True)
 

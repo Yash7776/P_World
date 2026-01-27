@@ -74,15 +74,13 @@ class PetMasterAdmin(admin.ModelAdmin):
     list_display = ['id', 'category_name' ]
     
 
-@admin.register(MasterItem)
-class MasterItemAdmin(admin.ModelAdmin):
+@admin.register(AllItemMaster)
+class AllItemMasterAdmin(admin.ModelAdmin):
     list_display = [
         'item_name',           # was ap_item_name
         'fk_category',         # was ap_fk_category
-        'pet_type',            # was ap_pet_type
-        'available_status',    # was ap_available_status
+        'pet_type',            # was ap_pet_type    # was ap_available_status
         'created_at',
-        'updated_at',
     ]
 
 @admin.register(StoreItem)

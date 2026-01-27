@@ -334,7 +334,7 @@ function AddtoCart() {
         method: "POST",
         url: '/AddtoCart/',  // Adjust URL if needed
         data: {
-            "item_id": "{{ item_obj.id }}",  // MasterItem ID
+            "item_id": "{{ item_obj.id }}",  // AllItemMaster ID
             "store_id": selectedStoreId,     // Selected Store ID
             "quantity": quantity,
             "customer_id": {{ request.session.customer_id }},

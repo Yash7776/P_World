@@ -491,7 +491,7 @@ def Search_by_PetType_Item(request):
 
 def items(request):
     # Base queryset - only available items
-    queryset = AllItemMaster.objects.filter(available_status=True)
+    queryset = AllItemMaster.objects.all()
 
     # ── Pet type filter preparation ───────────────────────────────────────
     # Get distinct pet types + count of available items per pet type
@@ -506,21 +506,6 @@ def items(request):
 
     total_count = queryset.count()
 
-    # ── Category filter preparation ───────────────────────────────────────
-    categories = (
-        ItemCategoryMaster.objects
-        .annotate(
-            item_count=Count(
-                'admin_products',  # using the related_name you defined
-                filter=Q(admin_products__available_status=True)
-            )
-        )
-        .filter(item_count__gt=0)          # optional: hide empty categories
-        .order_by('category_name')
-    )
-
-    category_count = categories.aggregate(total=Count('id'))['total'] or 0
-    # Alternatively: category_count = queryset.values('fk_category').distinct().count()
 
     # ── Items to display (initially all) ──────────────────────────────────
     items = queryset.select_related('fk_category').order_by('-created_at')  # or any ordering you prefer
@@ -532,8 +517,6 @@ def items(request):
         'Item_count': item_count,
         'pets': pet_types,           # list of dicts: {'pet_type': '...', 'item_count': N}
         'total_count': total_count,
-        'category': categories,      # queryset of ItemCategoryMaster with .item_count
-        'category_count': category_count or total_count,
     }
 
     return render(request,'customer/product_category.html', context)

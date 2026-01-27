@@ -174,10 +174,22 @@ class AllItemMaster(models.Model):
 
 
 class StoreItem(models.Model):
-    fk_store = models.ForeignKey(User_Details, on_delete=models.CASCADE, null=True, blank=True)
-    fk_master = models.ForeignKey(AllItemMaster, on_delete=models.CASCADE, null=True, blank=True)
-    item_price = models.FloatField(blank = True , null = True, default=0)
-    item_description = models.TextField(blank = True , null = True)
+    fk_store = models.ForeignKey(User_Details,on_delete=models.CASCADE,related_name="store_items")
+    fk_master = models.ForeignKey(AllItemMaster,on_delete=models.CASCADE,related_name="store_items")
+    item_image = models.ImageField(upload_to='item_image/', null=True, blank=True)
+    item_price = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)
+    item_description = models.TextField(blank=True,null=True)
+    available_status = models.BooleanField(default = False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('fk_store', 'fk_master')
+        verbose_name = "Store Item"
+        verbose_name_plural = "Store Items"
+
+    def __str__(self):
+        return f"{self.fk_store} - {self.fk_master}"
 
     
     

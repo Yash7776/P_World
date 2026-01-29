@@ -94,39 +94,36 @@
 
                     <!-- Sidebar Filters -->
                     <div class="col-md-3">
-
                         <!-- Pet Type Filter -->
-                        <div class="sidebar sidebar-right mt-sm-30">
-                            <div class="widget">
-                                <h5 class="widget-title line-bottom">Pet type</h5>
-                                <div class="categories">
-                                    <ul class="list list-border angle-double-right" style="max-height:200px; overflow-y: auto; margin-top:10px;">
-                                        <li>
-                                            <a href="?{% if selected_category != 'All' and selected_category %}category={{ selected_category }}{% endif %}"
-                                               class="filter-link {% if selected_pet == 'All' or not selected_pet %}active{% endif %}">
-                                                All <span>({{ total_count }})</span>
-                                            </a>
-                                        </li>
-                                        {% for p in pets %}
+                            <div class="sidebar sidebar-right mt-sm-30">
+                                <div class="widget" style="margin-top:-8%;">
+                                    <h5 class="widget-title line-bottom">Pet Types</h5>
+                                    <div class="categories">
+                                        <ul class="list list-border angle-double-right" style="max-height:200px; overflow-y: auto; margin-top:-6%;">
                                             <li>
-                                                <a href="?pet={{ p.pet_type|urlencode }}{% if selected_category != 'All' and selected_category %}&category={{ selected_category }}{% endif %}"
-                                                   class="filter-link {% if selected_pet == p.pet_type %}active{% endif %}">
-                                                    {{ p.pet_type }} <span>({{ p.item_count }})</span>
+                                                <a href="?{% if selected_category != 'All' and selected_category %}category={{ selected_category }}{% endif %}"
+                                                class="filter-link {% if selected_pet == 'All' or not selected_pet %}active{% endif %}">
+                                                    All <span>({{ total_count }})</span>
                                                 </a>
                                             </li>
-                                        {% endfor %}
-                                    </ul>
+
+                                            {% for p in pets %}
+                                                <li>
+                                                    <a href="?pet={{ p.pet_type|urlencode }}{% if selected_category != 'All' and selected_category %}&category={{ selected_category }}{% endif %}"
+                                                    class="filter-link {% if selected_pet == p.pet_type %}active{% endif %}">
+                                                        {{ p.pet_type }} <span>({{ p.item_count }})</span>
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
                         <!-- Category Filter -->
                         <div class="sidebar sidebar-right mt-sm-30">
                             <div class="widget">
-                                <h5 class="widget-title line-bottom">Filter by Category</h5>
-                            </div>
-                            <div class="widget">
-                                <h5 class="widget-title line-bottom">Categories</h5>
+                                <h5 class="widget-title line-bottom">Filter By Categories</h5>
                                 <div class="categories">
                                     <ul class="list list-border angle-double-right" style="max-height:200px; overflow-y: auto; margin-top:10px;">
                                         <li>

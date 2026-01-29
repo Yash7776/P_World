@@ -16,6 +16,7 @@ import h3
 from haversine import haversine
 from django.db.models import Count, Q
 from django.db.models import Sum
+from collections import defaultdict
 
 def Cart_Count(request):
     if request.session.get('customer_id'):
@@ -490,76 +491,72 @@ def Search_by_PetType_Item(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True) 
 
 def items(request):
-    # Base queryset
-    queryset = AllItemMaster.objects.all()
+    base_qs = AllItemMaster.objects.all()
 
-    # Optional: only items that are actually sold/available somewhere
-    # queryset = queryset.filter(store_items__available_status=True).distinct()
+    # ── Collect all unique pet types + counts ─────────────────────────────
+    pet_type_counts = defaultdict(int)
+    all_pet_types = set()
 
-    # ── Prepare Category list with counts ────────────────────────────────
+    for item in base_qs.exclude(pet_type__isnull=True).exclude(pet_type=''):
+        if item.pet_type:
+            pets = [p.strip() for p in item.pet_type.split(',') if p.strip()]
+            for pet in pets:
+                all_pet_types.add(pet)
+                pet_type_counts[pet] += 1
+
+    # Sort alphabetically
+    unique_pets = sorted(all_pet_types)
+
+    pets_list = [
+        {'pet_type': pet, 'item_count': pet_type_counts[pet]}
+        for pet in unique_pets
+    ]
+
+    total_count = base_qs.count()
+
+    # ── Category preparation (keeping as before) ──────────────────────────
     categories = (
-        queryset
-        .filter(fk_category__isnull=False)          # exclude items without category
-        .values(
-            'fk_category__id',
-            'fk_category__category_name'
-        )
+        base_qs.filter(fk_category__isnull=False)
+        .values('fk_category__id', 'fk_category__category_name')
         .annotate(item_count=Count('id'))
         .order_by('fk_category__category_name')
     )
-
-    # Convert to list of dicts (easier in template)
     category_list = [
-        {
-            'id': cat['fk_category__id'],
-            'category_name': cat['fk_category__category_name'],
-            'item_count': cat['item_count']
-        }
-        for cat in categories
+        {'id': c['fk_category__id'], 'category_name': c['fk_category__category_name'], 'item_count': c['item_count']}
+        for c in categories
     ]
+    category_count = total_count  # or len(base_qs) if you want filtered total
 
-    total_items = queryset.count()
-
-    # ── Pet types (keeping your existing logic) ──────────────────────────
-    pet_types = (
-        queryset
-        .exclude(pet_type__isnull=True)
-        .exclude(pet_type='')
-        .values('pet_type')
-        .annotate(item_count=Count('id'))
-        .order_by('pet_type')
-    )
-
-    # ── Apply filters from GET params ────────────────────────────────────
+    # ── Apply filters ─────────────────────────────────────────────────────
+    selected_pet = request.GET.get('pet')
     selected_category = request.GET.get('category')
-    selected_pet      = request.GET.get('pet')
 
-    filtered_qs = queryset
+    queryset = base_qs
+
+    if selected_pet and selected_pet != 'All':
+        # Important: filter items where pet_type contains the selected value
+        queryset = queryset.filter(pet_type__icontains=selected_pet)
 
     if selected_category and selected_category != 'All':
         try:
             cat_id = int(selected_category)
-            filtered_qs = filtered_qs.filter(fk_category__id=cat_id)
+            queryset = queryset.filter(fk_category__id=cat_id)
         except ValueError:
-            pass  # invalid → ignore
+            pass
 
-    if selected_pet and selected_pet != 'All':
-        filtered_qs = filtered_qs.filter(pet_type=selected_pet)
+    items = queryset.select_related('fk_category').order_by('-created_at')
 
-    # Final items
-    items = filtered_qs.select_related('fk_category').order_by('-created_at')
-
-    item_count = Cart_Count(request)  # your cart function
+    item_count = Cart_Count(request)
 
     context = {
         'item': items,
         'Item_count': item_count,
-        'pets': pet_types,
-        'category': category_list,           # ← this goes to template
-        'total_count': total_items,
-        'category_count': total_items,       # for "All" in category
-        'selected_category': selected_category or 'All',
+        'pets': pets_list,                    # ← updated: list of unique pets with counts
+        'category': category_list,
+        'total_count': total_count,
+        'category_count': category_count,
         'selected_pet': selected_pet or 'All',
+        'selected_category': selected_category or 'All',
     }
 
     return render(request, 'customer/product_category.html', context)

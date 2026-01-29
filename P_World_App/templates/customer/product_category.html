@@ -1,64 +1,88 @@
 {% load static %}
 {% include 'customer/header.html' %}
   
-	<style>
-		p{
-			color: #d5d5d5;
-		}
-		.widget ul.list li, .widget .post {
-		margin-bottom: 0px;
-		padding-bottom: 0px;
-	}
-	.widget .list-border li {
-		margin-bottom: 0;
-		padding: 8px 0;
-	}
-	</style>
-  <!-- Start main-content -->
+<style>
+    p {
+        color: #d5d5d5;
+    }
+    .widget ul.list li, .widget .post {
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+    .widget .list-border li {
+        margin-bottom: 0;
+        padding: 8px 0;
+    }
+
+    /* Active filter highlight */
+    .filter-link {
+        display: block;
+        padding: 6px 12px;
+        color: #eee;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .filter-link:hover,
+    .filter-link.active {
+        background: rgba(223, 49, 79, 0.15);
+        color: #df314f;
+        font-weight: 600;
+        border-left: 4px solid #df314f;
+        padding-left: 16px;
+    }
+</style>
+
+<!-- Start main-content -->
 <div class="main-content">
     
     <section class="">
-		<div class="container" style="width:90%;">
-			<div class="section-content">
-				<div class="row">
-					<button class="login-btn nextBtn btn-danger btn-sm" onclick="window.location.href='/index/'" style="float: right;margin-top: -3%; float:right;" data-toggle="tooltip" data-placement="top" title="Back" tabindex="0"><i class="fa fa-arrow-left" aria-hidden="true" style="cursor:pointer;"></i></button>
-					
+        <div class="container" style="width:90%;">
+            <div class="section-content">
+                <div class="row">
+
+                    <button class="login-btn nextBtn btn-danger btn-sm" 
+                            onclick="window.location.href='/index/'" 
+                            style="float: right; margin-top: -3%;"
+                            data-toggle="tooltip" data-placement="top" title="Back">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i> Back
+                    </button>
+                    
                     <div class="col-md-9" style="max-height:900px; overflow-y: auto;" id="show_item">
                         
                         {% if item %}
                             <div class="row">
                                 {% for product in item %}
-									<div class="col-md-4 col-sm-6" style="margin-bottom: 20px;">
-										<a href="{% url 'product_details' id=product.id %}" 
-										style="text-decoration: none; color: inherit; display: block; cursor: pointer;">
-											<div style="background:#222; border:1px solid #444; border-radius:5px; overflow:hidden; color:#eee; transition: all 0.2s ease;"
-												onmouseover="this.style.borderColor='#df314f'; this.style.boxShadow='0 0 15px rgba(223,49,79,0.3)';"
-												onmouseout="this.style.borderColor='#444'; this.style.boxShadow='none';">
-												
-												{% if product.item_image %}
-													<img src="{{ product.item_image.url }}" alt="{{ product.item_name }}" 
-														style="width:100%; height:180px; object-fit:cover;">
-												{% else %}
-													<div style="width:100%; height:180px; background:#333; display:flex; align-items:center; justify-content:center; color:#777;">
-														No Image
-													</div>
-												{% endif %}
-												
-												<div style="padding:12px 15px;">
-													<h5 style="margin:0 0 8px; font-size:1.1rem; color:#fff;">{{ product.item_name }}</h5>
-													{% if product.fk_category %}
-														<p style="margin:4px 0; font-size:0.9rem;">Category: {{ product.fk_category.category_name }}</p>
-													{% endif %}
-													<p style="margin:4px 0; font-size:0.9rem;">Pet: {{ product.pet_type|default:"—" }}</p>
-												</div>
-											</div>
-										</a>
-									</div>
-								{% empty %}
-									<div class="col-md-12" style="padding:40px; text-align:center;">
-										<p>No products found in this selection.</p>
-									</div>
-								{% endfor %}
+                                    <div class="col-md-4 col-sm-6" style="margin-bottom: 20px;">
+                                        <a href="{% url 'product_details' id=product.id %}" 
+                                           style="text-decoration: none; color: inherit; display: block; cursor: pointer;">
+                                            <div style="background:#222; border:1px solid #444; border-radius:5px; overflow:hidden; color:#eee; transition: all 0.2s ease;"
+                                                 onmouseover="this.style.borderColor='#df314f'; this.style.boxShadow='0 0 15px rgba(223,49,79,0.3)';"
+                                                 onmouseout="this.style.borderColor='#444'; this.style.boxShadow='none';">
+                                                
+                                                {% if product.item_image %}
+                                                    <img src="{{ product.item_image.url }}" alt="{{ product.item_name }}" 
+                                                         style="width:100%; height:180px; object-fit:cover;">
+                                                {% else %}
+                                                    <div style="width:100%; height:180px; background:#333; display:flex; align-items:center; justify-content:center; color:#777;">
+                                                        No Image
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                <div style="padding:12px 15px;">
+                                                    <h5 style="margin:0 0 8px; font-size:1.1rem; color:#fff;">{{ product.item_name }}</h5>
+                                                    {% if product.fk_category %}
+                                                        <p style="margin:4px 0; font-size:0.9rem;">Category: {{ product.fk_category.category_name }}</p>
+                                                    {% endif %}
+                                                    <p style="margin:4px 0; font-size:0.9rem;">Pet: {{ product.pet_type|default:"—" }}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% empty %}
+                                    <div class="col-md-12" style="padding:40px; text-align:center;">
+                                        <p>No products found matching your filters.</p>
+                                    </div>
+                                {% endfor %}
                             </div>
                         {% else %}
                             <div style="padding:60px 20px; text-align:center;">
@@ -66,57 +90,73 @@
                             </div>
                         {% endif %}
 
-					</div>
+                    </div>
 
-					<div class="col-md-3">
-						<div class="sidebar sidebar-right mt-sm-30">
-							<div class="widget">
-								<!-- <h5 class="widget-title line-bottom">Filter by Pet Type</h5> -->
-							</div>
-							<div class="widget" style="margin-top:-8%;">
-								<h5 class="widget-title line-bottom">Pet type</h5>
-								<div class="categories">
-									<ul class="list list-border angle-double-right" style="max-height:200px; overflow-y: auto; margin-top:-6%;">
-										<li><a onclick="Search_by_Pet('All','{{total_count}}')" style="cursor:pointer">All<span id="count_total">({{total_count}})</span></a></li>
-										{% for i in pets %}
-											<li><a href="#" onclick="Search_by_Pet('{{i.pet_type|escapejs}}','{{i.item_count}}')">{{i.pet_type}}<span id="count">({{i.item_count}})</span></a></li>
-										{% endfor %}
-									 
-									</ul>
-								</div>
-							</div>
-						
-						</div>
-					</div>
+                    <!-- Sidebar Filters -->
+                    <div class="col-md-3">
 
-                    <!-- Your original second row with category filter -->
-					<div class="row">
-						<div class="col-md-3">
-						<div class="sidebar sidebar-right mt-sm-30">
-							<div class="widget">
-								<h5 class="widget-title line-bottom">Filter by Category</h5>
-							</div>
-							<div class="widget" style="margin-top:-8%;">
-								<h5 class="widget-title line-bottom">Categories</h5>
-								<div class="categories">
-									<ul class="list list-border angle-double-right" style="max-height:200px; overflow-y: auto; margin-top:-6%;">
-										<li><a onclick="Search_by_Category('All','{{category_count}}')" style="cursor:pointer">All<span id="count">({{category_count}})</span></a></li>
-										{% for i in category %}
-											<li><a href="#" onclick="Search_by_Category('{{i.id}}','{{i.item_count}}')">{{i.category_name}}<span id="count">({{i.item_count}})</span></a></li>
-										{% endfor %}
-									 
-									</ul>
-								</div>
-							</div>
-						
-						</div>
-					</div>
-					</div>
+                        <!-- Pet Type Filter -->
+                        <div class="sidebar sidebar-right mt-sm-30">
+                            <div class="widget">
+                                <h5 class="widget-title line-bottom">Pet type</h5>
+                                <div class="categories">
+                                    <ul class="list list-border angle-double-right" style="max-height:200px; overflow-y: auto; margin-top:10px;">
+                                        <li>
+                                            <a href="?{% if selected_category != 'All' and selected_category %}category={{ selected_category }}{% endif %}"
+                                               class="filter-link {% if selected_pet == 'All' or not selected_pet %}active{% endif %}">
+                                                All <span>({{ total_count }})</span>
+                                            </a>
+                                        </li>
+                                        {% for p in pets %}
+                                            <li>
+                                                <a href="?pet={{ p.pet_type|urlencode }}{% if selected_category != 'All' and selected_category %}&category={{ selected_category }}{% endif %}"
+                                                   class="filter-link {% if selected_pet == p.pet_type %}active{% endif %}">
+                                                    {{ p.pet_type }} <span>({{ p.item_count }})</span>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
 
-				</div>
-				
-			</div>
-		</div>
+                        <!-- Category Filter -->
+                        <div class="sidebar sidebar-right mt-sm-30">
+                            <div class="widget">
+                                <h5 class="widget-title line-bottom">Filter by Category</h5>
+                            </div>
+                            <div class="widget">
+                                <h5 class="widget-title line-bottom">Categories</h5>
+                                <div class="categories">
+                                    <ul class="list list-border angle-double-right" style="max-height:200px; overflow-y: auto; margin-top:10px;">
+                                        <li>
+                                            <a href="?{% if selected_pet != 'All' and selected_pet %}pet={{ selected_pet|urlencode }}{% endif %}"
+                                               class="filter-link {% if selected_category == 'All' or not selected_category %}active{% endif %}">
+                                                All <span>({{ category_count }})</span>
+                                            </a>
+                                        </li>
+                                        {% for cat in category %}
+                                            <li>
+                                                <a href="?category={{ cat.id }}{% if selected_pet != 'All' and selected_pet %}&pet={{ selected_pet|urlencode }}{% endif %}"
+                                                   class="filter-link {% if selected_category == cat.id|stringformat:'s' %}active{% endif %}">
+                                                    {{ cat.category_name }} <span>({{ cat.item_count }})</span>
+                                                </a>
+                                            </li>
+                                        {% empty %}
+                                            <li><em>No categories available</em></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                
+            </div>
+        </div>
     </section>
 </div>
-  {% include 'customer/footer.html' %}
+
+{% include 'customer/footer.html' %}

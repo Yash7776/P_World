@@ -490,11 +490,37 @@ def Search_by_PetType_Item(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True) 
 
 def items(request):
-    # Base queryset - only available items
+    # Base queryset
     queryset = AllItemMaster.objects.all()
 
-    # ── Pet type filter preparation ───────────────────────────────────────
-    # Get distinct pet types + count of available items per pet type
+    # Optional: only items that are actually sold/available somewhere
+    # queryset = queryset.filter(store_items__available_status=True).distinct()
+
+    # ── Prepare Category list with counts ────────────────────────────────
+    categories = (
+        queryset
+        .filter(fk_category__isnull=False)          # exclude items without category
+        .values(
+            'fk_category__id',
+            'fk_category__category_name'
+        )
+        .annotate(item_count=Count('id'))
+        .order_by('fk_category__category_name')
+    )
+
+    # Convert to list of dicts (easier in template)
+    category_list = [
+        {
+            'id': cat['fk_category__id'],
+            'category_name': cat['fk_category__category_name'],
+            'item_count': cat['item_count']
+        }
+        for cat in categories
+    ]
+
+    total_items = queryset.count()
+
+    # ── Pet types (keeping your existing logic) ──────────────────────────
     pet_types = (
         queryset
         .exclude(pet_type__isnull=True)
@@ -504,23 +530,40 @@ def items(request):
         .order_by('pet_type')
     )
 
-    total_count = queryset.count()
+    # ── Apply filters from GET params ────────────────────────────────────
+    selected_category = request.GET.get('category')
+    selected_pet      = request.GET.get('pet')
 
+    filtered_qs = queryset
 
-    # ── Items to display (initially all) ──────────────────────────────────
-    items = queryset.select_related('fk_category').order_by('-created_at')  # or any ordering you prefer
+    if selected_category and selected_category != 'All':
+        try:
+            cat_id = int(selected_category)
+            filtered_qs = filtered_qs.filter(fk_category__id=cat_id)
+        except ValueError:
+            pass  # invalid → ignore
 
-    item_count = Cart_Count(request)
+    if selected_pet and selected_pet != 'All':
+        filtered_qs = filtered_qs.filter(pet_type=selected_pet)
+
+    # Final items
+    items = filtered_qs.select_related('fk_category').order_by('-created_at')
+
+    item_count = Cart_Count(request)  # your cart function
 
     context = {
-        'item': items,               # you'll loop over this in template
+        'item': items,
         'Item_count': item_count,
-        'pets': pet_types,           # list of dicts: {'pet_type': '...', 'item_count': N}
-        'total_count': total_count,
+        'pets': pet_types,
+        'category': category_list,           # ← this goes to template
+        'total_count': total_items,
+        'category_count': total_items,       # for "All" in category
+        'selected_category': selected_category or 'All',
+        'selected_pet': selected_pet or 'All',
     }
 
-    return render(request,'customer/product_category.html', context)
- 
+    return render(request, 'customer/product_category.html', context)
+
 #### product details page
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def product_details(request, id):
